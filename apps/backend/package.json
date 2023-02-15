@@ -6,7 +6,8 @@
     "dev": "node -r ts-node/register src/index.ts",
     "build": "tsc",
     "start:production": "node dist/index.js",
-    "lint": "eslint"
+    "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
+    "prettier": "prettier --check ."
   },
   "dependencies": {
     "dockerode": "^3.3.4",

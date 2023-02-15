@@ -4,7 +4,7 @@ import Docker, {HostConfig} from 'dockerode';
 const docker = new Docker();
 
 export function start() {
-    console.log('hello world');
+    console.log("hello world");
 }
 
 start();

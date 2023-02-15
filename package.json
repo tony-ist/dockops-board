@@ -10,17 +10,17 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "prettier": "turbo run prettier -- --ignore-path ../../.gitignore",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "eslint-config-custom": "*",
-    "prettier": "latest",
+    "prettier": "^2.8.4",
     "turbo": "latest"
   },
   "engines": {
     "node": "18.14.0",
     "npm": "9.3.1"
   },
-  "dependencies": {},
   "packageManager": "npm@9.3.1"
 }

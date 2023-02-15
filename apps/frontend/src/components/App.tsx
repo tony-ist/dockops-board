@@ -5,9 +5,10 @@ import TestComponent from './test-component/TestComponent'
 
 function App() {
   const [count, setCount] = useState(0)
+  const qwe = "sad";
 
   return (
-    <div className="App">
+    <div className='App'>
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
