@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
-    "prettier": "prettier --check .",
+    "prettier": "prettier --write .",
     "preview": "vite preview"
   },
   "dependencies": {

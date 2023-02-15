@@ -7,7 +7,7 @@
     "build": "tsc",
     "start:production": "node dist/index.js",
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
-    "prettier": "prettier --check ."
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "dockerode": "^3.3.4",

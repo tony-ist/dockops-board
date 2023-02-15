@@ -1,10 +1,6 @@
-import Docker, {HostConfig} from 'dockerode';
-
-// TODO: handle connection to docker
-const docker = new Docker();
-
 export function start() {
-    console.log("hello world");
+  // eslint-disable-next-line no-console
+  console.log('hello world');
 }
 
 start();
