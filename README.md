@@ -10,6 +10,7 @@ It also allows you to monitor these services, manipulate them, see logs and so o
 
 ```bash
 npm install
+npm run hooks
 npm run dev
 ```
 

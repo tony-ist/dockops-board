@@ -11,7 +11,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint -- --ignore-path ../../.gitignore",
     "prettier": "turbo run prettier -- --ignore-path ../../.gitignore",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "hooks": "simple-git-hooks"
   },
   "devDependencies": {
     "eslint-config-custom": "*",
