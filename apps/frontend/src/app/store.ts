@@ -1,0 +1,15 @@
+import { configureStore } from '@reduxjs/toolkit';
+
+import containerListReducer from '../features/container-list/containerListSlice';
+
+const store = configureStore({
+  reducer: {
+    containerList: containerListReducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;
+
+export default store;
