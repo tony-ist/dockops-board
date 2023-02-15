@@ -16,11 +16,15 @@
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "^2.8.4",
+    "simple-git-hooks": "^2.8.1",
     "turbo": "latest"
   },
   "engines": {
     "node": "18.14.0",
     "npm": "9.3.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npm run prettier && npm run lint"
   },
   "packageManager": "npm@9.3.1"
 }
