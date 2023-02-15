@@ -4,19 +4,23 @@
   "private": true,
   "scripts": {
     "dev": "node -r ts-node/register src/index.ts",
-    "build": "tsc",
+    "dev:watch": "nodemon src/index.ts",
+    "build": "rimraf dist && tsc",
     "start:production": "node dist/index.js",
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
     "prettier": "prettier --write ."
   },
   "dependencies": {
     "dockerode": "^3.3.4",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.13.0",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.14",
     "eslint": "7.32.0",
     "eslint-config-custom": "*",
+    "nodemon": "^2.0.20",
     "tsconfig": "*",
     "typescript": "^4.5.3"
   }

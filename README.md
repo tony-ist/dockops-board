@@ -9,6 +9,7 @@ It also allows you to monitor these services, manipulate them, see logs and so o
 ## Development
 
 ```bash
+cp apps/backend/.env.template apps/backend/.env # And edit the .env file
 npm install
 npm run hooks
 npm run dev
