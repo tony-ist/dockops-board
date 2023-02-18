@@ -4,14 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "node -r ts-node/register src/index.ts",
-    "dev:watch": "nodemon src/index.ts",
+    "dev:watch": "nodemon",
     "build": "rimraf dist && tsc",
     "start:production": "node dist/index.js",
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
+    "@fastify/swagger": "^8.3.1",
+    "@fastify/swagger-ui": "^1.4.0",
+    "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
+    "@prisma/client": "^4.10.1",
     "dockerode": "^3.3.4",
     "dotenv": "^16.0.3",
     "fastify": "^4.13.0",
@@ -19,9 +25,12 @@
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.14",
+    "@types/node": "^18.13.0",
+    "dotenv-cli": "^7.0.0",
     "eslint": "7.32.0",
     "eslint-config-custom": "*",
     "nodemon": "^2.0.20",
+    "prisma": "^4.10.1",
     "tsconfig": "*",
     "typescript": "^4.5.3"
   }

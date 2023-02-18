@@ -19,7 +19,7 @@ const initialState: ContainerListState = {
 };
 
 export const fetchContainerList = createAsyncThunk('containerList/fetchContainerList', async () => {
-  const response = await fetch(urlJoin(backendUrl, 'containers'));
+  const response = await fetch(urlJoin(backendUrl, 'v1', 'containers'));
   return response.json();
 });
 
@@ -39,7 +39,7 @@ const containerListSlice = createSlice({
         state.containerList = action.payload;
       })
       .addCase(fetchContainerList.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.error.message ?? null;
         state.status = 'failed';
       });
   },

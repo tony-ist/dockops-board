@@ -1,0 +1,4 @@
+{
+  "exec": "npm run prisma:generate && npm run dev",
+  "ignore": ["node_modules", "dist"]
+}
