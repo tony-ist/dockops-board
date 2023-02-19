@@ -7,8 +7,10 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "prettier": {
+      "cache": false
     },
     "lint": {
+      "cache": false,
       "outputs": []
     },
     "dev": {

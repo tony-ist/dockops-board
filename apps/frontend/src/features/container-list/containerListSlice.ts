@@ -19,7 +19,7 @@ const initialState: ContainerListState = {
 };
 
 export const fetchContainerList = createAsyncThunk('containerList/fetchContainerList', async () => {
-  const response = await fetch(urlJoin(backendUrl, 'containers'));
+  const response = await fetch(urlJoin(backendUrl, 'v1', 'containers'));
   return response.json();
 });
 
