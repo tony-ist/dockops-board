@@ -1,5 +1,5 @@
 {
-  "name": "dockops-board-backend",
+  "name": "backend",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,10 +10,13 @@
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
     "prettier": "prettier --write .",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
-    "prisma:generate": "prisma generate"
+    "db:status": "dotenv -e .env.local -- prisma migrate status",
+    "db:generate": "prisma generate",
+    "db:deploy": "dotenv -e .env.local -- prisma migrate deploy"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
+    "@fastify/static": "^6.9.0",
     "@fastify/swagger": "^8.3.1",
     "@fastify/swagger-ui": "^1.4.0",
     "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
