@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchContainerList } from '../../features/container-list/containerListSlice';
 import styles from './ContainerList.module.css';
 
