@@ -6,6 +6,8 @@ import { PrismaClient } from '@prisma/client';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
+import fastifyStatic from '@fastify/static';
+import path from 'path';
 
 const server = Fastify({ logger: true }).withTypeProvider<JsonSchemaToTsProvider>();
 
@@ -26,6 +28,12 @@ async function run() {
 
   if (config.nodeEnv === 'DEVELOPMENT') {
     await server.register(cors);
+  }
+
+  if (config.serveStatic === 'TRUE') {
+    await server.register(fastifyStatic, {
+      root: path.join(__dirname, '..', 'dist', 'public'),
+    });
   }
 
   const getContainersOptions = {
