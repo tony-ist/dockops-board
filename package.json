@@ -9,7 +9,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint -- --fix --ignore-path ../../.gitignore",
+    "lint": "turbo run lint -- --ignore-path ../../.gitignore",
+    "lint:fix": "turbo run lint -- --fix --ignore-path ../../.gitignore",
     "prettier": "turbo run prettier -- --ignore-path ../../.gitignore",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "hooks": "simple-git-hooks"
@@ -26,7 +27,7 @@
     "npm": "9.3.1"
   },
   "simple-git-hooks": {
-    "pre-commit": "npm run prettier && npm run lint"
+    "pre-commit": "npm run prettier && npm run lint:fix"
   },
   "packageManager": "npm@9.3.1",
   "dependencies": {
