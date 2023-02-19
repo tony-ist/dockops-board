@@ -39,7 +39,7 @@ const containerListSlice = createSlice({
         state.containerList = action.payload;
       })
       .addCase(fetchContainerList.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = action.error.message ?? null;
         state.status = 'failed';
       });
   },

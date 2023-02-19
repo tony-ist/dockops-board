@@ -13,13 +13,19 @@ function ContainerList() {
     if (status === 'idle') {
       dispatch(fetchContainerList());
     }
-  });
+  }, [dispatch, status]);
 
   if (error !== null) {
     return <div className={styles.error}>{error}</div>;
   }
 
-  return containerList.map((container, index) => <div key={index}>{container.image}</div>);
+  return (
+    <div>
+      {containerList.map((container, index) => (
+        <div key={index}>{container.image}</div>
+      ))}
+    </div>
+  );
 }
 
 export default ContainerList;
