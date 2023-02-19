@@ -101,7 +101,7 @@ async function run() {
     });
   });
 
-  await server.listen({ port: config.port });
+  await server.listen({ host: '0.0.0.0', port: config.port });
 }
 
 run().catch((error) => {

@@ -11,7 +11,8 @@
     "prettier": "prettier --write .",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:status": "dotenv -e .env.local -- prisma migrate status",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "db:deploy": "dotenv -e .env.local -- prisma migrate deploy"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
