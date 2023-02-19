@@ -1,14 +1,14 @@
-import './App.css';
-import TestComponent from './test-component/TestComponent';
-import ContainerList from './container-list/ContainerList';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import RootPage from '../pages/root/RootPage';
 
-function App() {
-  return (
+const App = () => (
+  <Router>
     <div className="App">
-      <TestComponent></TestComponent>
-      <ContainerList></ContainerList>
+      <Routes>
+        <Route path="/" element={<RootPage />} />
+      </Routes>
     </div>
-  );
-}
+  </Router>
+);
 
 export default App;
