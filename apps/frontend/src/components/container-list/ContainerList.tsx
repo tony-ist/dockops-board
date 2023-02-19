@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchContainerList } from '../../features/container-list/containerListSlice';
 import styles from './ContainerList.module.css';
 
@@ -13,13 +13,19 @@ function ContainerList() {
     if (status === 'idle') {
       dispatch(fetchContainerList());
     }
-  });
+  }, [dispatch, status]);
 
   if (error !== null) {
     return <div className={styles.error}>{error}</div>;
   }
 
-  return containerList.map((container, index) => <div key={index}>{container.image}</div>);
+  return (
+    <div>
+      {containerList.map((container, index) => (
+        <div key={index}>{container.image}</div>
+      ))}
+    </div>
+  );
 }
 
 export default ContainerList;
