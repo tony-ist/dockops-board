@@ -8,6 +8,7 @@
       <excludeFolder url="file://$MODULE_DIR$/apps/backend/.turbo" />
       <excludeFolder url="file://$MODULE_DIR$/apps/backend/dist" />
       <excludeFolder url="file://$MODULE_DIR$/apps/frontend/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -8,12 +8,21 @@ It also allows you to monitor these services, manipulate them, see logs and so o
 
 ## Requirements
 
-- PostgreSQL 15.2
+- SQLite 3
 
 ## Development
 
+Create DB
+
 ```bash
-psql -c "CREATE DATABASE dockops_board_local"
+sqlite3 apps/backend/prisma/local.db
+.databases
+.exit
+```
+
+Start the app
+
+```bash
 cp apps/frontend/.env.template apps/frontend/.env.local # And edit the .env file
 cp apps/backend/.env.template apps/backend/.env.local # And edit the .env file
 npm install
