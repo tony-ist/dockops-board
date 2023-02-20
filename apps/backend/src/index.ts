@@ -1,20 +1,37 @@
-import Docker from 'dockerode';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import * as config from './config';
-import { PrismaClient } from '@prisma/client';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
+import { userController } from './controllers/user-controller';
+import { prismaPlugin } from './plugins/prisma-plugin';
+import { dockerodePlugin } from './plugins/dockerode-plugin';
+import { containerController } from './controllers/container-controller';
 
-const server = Fastify({ logger: true }).withTypeProvider<JsonSchemaToTsProvider>();
+function getLoggerOptions(environment: string) {
+  if (environment === 'PRODUCTION') {
+    return true;
+  } else if (environment === 'DEVELOPMENT') {
+    return {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          translateTime: 'HH:MM:ss Z',
+          ignore: 'pid,hostname',
+        },
+      },
+    };
+  } else {
+    return true;
+  }
+}
+
+const server = Fastify({ logger: getLoggerOptions(config.nodeEnv) }).withTypeProvider<JsonSchemaToTsProvider>();
 
 async function run() {
-  const docker = new Docker({ socketPath: config.dockerSockPath });
-  const prisma = new PrismaClient();
-
   await server.register(fastifySwagger, {
     swagger: {
       info: {
@@ -36,75 +53,20 @@ async function run() {
     });
   }
 
-  const getContainersOptions = {
-    schema: {
-      response: {
-        200: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              image: { type: 'string' },
-            },
-          },
-        },
-      },
-    },
-  } as const;
-
-  server.get('/v1/containers', getContainersOptions, async (request, reply) => {
-    const containerInfos = await docker.listContainers();
-    const response = containerInfos.map((info) => ({ image: info.Image }));
-    reply.send(response);
-  });
-
-  const postUsersNewOptions = {
-    schema: {
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            id: { type: 'number' },
-            email: { type: 'string' },
-            password: { type: 'string' },
-            githubToken: { type: ['string', 'null'] },
-            createdAt: { type: 'string' },
-            updatedAt: { type: 'string' },
-          },
-        },
-      },
-      body: {
-        type: 'object',
-        properties: {
-          email: { type: 'string' },
-          password: { type: 'string' },
-          githubToken: { type: 'string' },
-        },
-        required: ['email', 'password'],
-      },
-    },
-  } as const;
-
-  server.post('/v1/users/new', postUsersNewOptions, async (request, reply) => {
-    const result = await prisma.user.create({
-      data: {
-        email: request.body.email,
-        passwordHash: '12345',
-        githubToken: request.body.githubToken ?? null,
-      },
-    });
-
-    reply.send({
-      ...result,
-      createdAt: result.createdAt.toString(),
-      updatedAt: result.updatedAt.toString(),
-    });
-  });
+  await server.register(prismaPlugin);
+  await server.register(dockerodePlugin);
+  await server.register(userController, { prefix: '/v1/user' });
+  await server.register(containerController, { prefix: '/v1/container' });
 
   await server.listen({ host: '0.0.0.0', port: config.port });
 }
 
 run().catch((error) => {
+  server.log.error(error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (error) => {
   server.log.error(error);
   process.exit(1);
 });

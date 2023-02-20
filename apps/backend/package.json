@@ -8,7 +8,8 @@
     "build": "rimraf dist && tsc",
     "start:production": "node dist/index.js",
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
-    "prettier": "prettier --write .",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:status": "dotenv -e .env.local -- prisma migrate status",
     "db:generate": "prisma generate",
@@ -24,6 +25,7 @@
     "dockerode": "^3.3.4",
     "dotenv": "^16.0.3",
     "fastify": "^4.13.0",
+    "fastify-plugin": "^4.5.0",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
@@ -33,6 +35,7 @@
     "eslint": "7.32.0",
     "eslint-config-custom": "*",
     "nodemon": "^2.0.20",
+    "pino-pretty": "^9.3.0",
     "prisma": "^4.10.1",
     "tsconfig": "*",
     "typescript": "^4.5.3"

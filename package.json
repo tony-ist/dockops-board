@@ -12,8 +12,9 @@
     "lint": "turbo run lint -- --ignore-path ../../.gitignore",
     "lint:fix": "turbo run lint -- --fix --ignore-path ../../.gitignore",
     "prettier": "turbo run prettier -- --ignore-path ../../.gitignore",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "hooks": "simple-git-hooks"
+    "prettier:fix": "turbo run prettier:fix -- --ignore-path ../../.gitignore",
+    "style:fix": "npm run prettier:fix && npm run lint:fix",
+    "hooks:install": "simple-git-hooks"
   },
   "devDependencies": {
     "eslint-config-custom": "*",
@@ -27,7 +28,7 @@
     "npm": "9.3.1"
   },
   "simple-git-hooks": {
-    "pre-commit": "npm run prettier && npm run lint:fix"
+    "pre-commit": "npm run prettier && npm run lint || (echo \"Style errors found. Try npm run style:fix\" && exit 1)"
   },
   "packageManager": "npm@9.3.1",
   "dependencies": {

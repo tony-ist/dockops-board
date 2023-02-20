@@ -9,7 +9,14 @@
     "prettier": {
       "cache": false
     },
+    "prettier:fix": {
+      "cache": false
+    },
     "lint": {
+      "cache": false,
+      "outputs": []
+    },
+    "lint:fix": {
       "cache": false,
       "outputs": []
     },
