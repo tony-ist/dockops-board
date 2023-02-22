@@ -6,3 +6,4 @@ out/
 **/*.db
 **/*.db-journal
 !apps/backend/prisma/production_empty.db
+apps/backend/tmp/

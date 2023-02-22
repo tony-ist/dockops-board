@@ -1,35 +1,14 @@
-import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import * as config from './config';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
-import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
 import { userController } from './controllers/user-controller';
 import { prismaPlugin } from './plugins/prisma-plugin';
 import { dockerodePlugin } from './plugins/dockerode-plugin';
 import { containerController } from './controllers/container-controller';
-
-function getLoggerOptions(environment: string) {
-  if (environment === 'PRODUCTION') {
-    return true;
-  } else if (environment === 'DEVELOPMENT') {
-    return {
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          translateTime: 'HH:MM:ss Z',
-          ignore: 'pid,hostname',
-        },
-      },
-    };
-  } else {
-    return true;
-  }
-}
-
-const server = Fastify({ logger: getLoggerOptions(config.nodeEnv) }).withTypeProvider<JsonSchemaToTsProvider>();
+import { server } from './server';
 
 async function run() {
   await server.register(fastifySwagger, {

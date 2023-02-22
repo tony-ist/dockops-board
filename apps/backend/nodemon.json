@@ -1,4 +1,4 @@
 {
   "exec": "npm run dev",
-  "ignore": ["node_modules", "dist"]
+  "ignore": ["node_modules", "dist", "tmp"]
 }

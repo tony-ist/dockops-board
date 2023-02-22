@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
+  ignorePatterns: ['apps/backend/tmp/'],
   rules: {
     'no-var': 'error',
     'no-redeclare': 'error',
@@ -18,5 +20,6 @@ module.exports = {
     '@typescript-eslint/quotes': ['error', 'single', { allowTemplateLiterals: true }],
     '@typescript-eslint/no-unused-vars': 'error',
     'semi': 'error',
+    'object-curly-spacing': ['error', 'always'],
   },
 };

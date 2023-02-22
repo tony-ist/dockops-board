@@ -112,3 +112,5 @@ fabric.properties
 # SQLite DB
 *.db
 *.db-journal
+
+apps/backend/tmp/
