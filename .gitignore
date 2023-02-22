@@ -114,3 +114,4 @@ fabric.properties
 *.db-journal
 
 apps/backend/tmp/
+apps/frontend/openapitools.json

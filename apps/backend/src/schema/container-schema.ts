@@ -7,6 +7,7 @@ export const getContainerAllSchema = {
         properties: {
           image: { type: 'string' },
         },
+        required: ['image'],
       },
     },
   },

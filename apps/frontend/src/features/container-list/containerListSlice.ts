@@ -2,9 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Container } from '../../types/models/containerType';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
-import urlJoin from 'url-join';
-
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import { api } from '../../api/backend-api';
 
 interface ContainerListState {
   containerList: Array<Container>;
@@ -18,10 +16,7 @@ const initialState: ContainerListState = {
   error: null,
 };
 
-export const fetchContainerList = createAsyncThunk('containerList/fetchContainerList', async () => {
-  const response = await fetch(urlJoin(backendUrl, 'v1', 'containers'));
-  return response.json();
-});
+export const fetchContainerList = createAsyncThunk('containerList/fetchContainerList', () => api.v1ContainerAllGet());
 
 const containerListSlice = createSlice({
   name: 'containerList',
