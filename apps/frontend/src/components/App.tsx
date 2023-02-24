@@ -10,4 +10,3 @@ export const App = () => (
     </div>
   </Router>
 );
-
