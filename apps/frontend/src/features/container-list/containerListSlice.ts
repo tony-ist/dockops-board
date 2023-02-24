@@ -16,7 +16,9 @@ const initialState: ContainerListState = {
   error: null,
 };
 
-export const fetchContainerList = createAsyncThunk('containerList/fetchContainerList', () => api.v1ContainerAllGet());
+export const fetchContainerListThunk = createAsyncThunk('containerList/fetchContainerList', () =>
+  api.v1ContainerAllGet()
+);
 
 const containerListSlice = createSlice({
   name: 'containerList',
@@ -24,20 +26,20 @@ const containerListSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchContainerList.pending, (state) => {
+      .addCase(fetchContainerListThunk.pending, (state) => {
         state.error = null;
         state.status = 'loading';
       })
-      .addCase(fetchContainerList.fulfilled, (state, action) => {
+      .addCase(fetchContainerListThunk.fulfilled, (state, action) => {
         state.error = null;
         state.status = 'succeeded';
         state.containerList = action.payload;
       })
-      .addCase(fetchContainerList.rejected, (state, action) => {
+      .addCase(fetchContainerListThunk.rejected, (state, action) => {
         state.error = action.error.message ?? null;
         state.status = 'failed';
       });
   },
 });
 
-export default containerListSlice.reducer;
+export const containerListReducer = containerListSlice.reducer;

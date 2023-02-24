@@ -1,9 +1,9 @@
 import { getContainerAllSchema, postContainerNewSchema } from '../schema/container-schema';
 import { dockerService } from '../services/docker-service';
-import stream from 'node:stream/promises';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
 import { sourceFetchService } from '../services/source-fetch-service';
+import stream from 'node:stream/promises';
 
 export async function containerController(fastify: FastifyInstance) {
   const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider>();
@@ -27,6 +27,7 @@ export async function containerController(fastify: FastifyInstance) {
       const imageName = 'tempimage';
       const containerName = request.body.containerName ?? 'tempcontainer';
       const dockerfileName = request.body.dockerfileName ?? 'Dockerfile';
+      const { containerPort, hostPort } = request.body;
 
       await sourceFetchService.extractZipFromGithub(fastify, githubURL);
 
@@ -34,11 +35,22 @@ export async function containerController(fastify: FastifyInstance) {
       buildStream.on('data', (data) => fastify.log.info(data.toString()));
       await stream.finished(buildStream);
 
-      const runStream = await dockerService.createAndRun(fastify, { containerName, imageName });
-      runStream.on('data', (data) => fastify.log.info(data.toString()));
-      await stream.finished(runStream);
+      const socket = fastify.socketManager.get();
+      const { containerId, runStream } = await dockerService.createAndRun(fastify, {
+        containerName,
+        imageName,
+        containerPort,
+        hostPort,
+      });
+      runStream.on('data', (data) => {
+        const message = data.toString();
+        if (socket !== null) {
+          socket.emit('message', message);
+        }
+        fastify.log.info(message);
+      });
 
-      reply.send('Success');
+      reply.send({ containerId });
     },
   });
 }

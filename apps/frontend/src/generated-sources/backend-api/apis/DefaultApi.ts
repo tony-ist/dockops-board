@@ -15,6 +15,7 @@
 import * as runtime from '../runtime';
 import type {
   V1ContainerAllGet200ResponseInner,
+  V1ContainerNewPost200Response,
   V1ContainerNewPostRequest,
   V1UserNewPost200Response,
   V1UserNewPostRequest,
@@ -22,6 +23,8 @@ import type {
 import {
   V1ContainerAllGet200ResponseInnerFromJSON,
   V1ContainerAllGet200ResponseInnerToJSON,
+  V1ContainerNewPost200ResponseFromJSON,
+  V1ContainerNewPost200ResponseToJSON,
   V1ContainerNewPostRequestFromJSON,
   V1ContainerNewPostRequestToJSON,
   V1UserNewPost200ResponseFromJSON,
@@ -80,7 +83,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerNewPostRaw(
     requestParameters: V1ContainerNewPostOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<void>> {
+  ): Promise<runtime.ApiResponse<V1ContainerNewPost200Response>> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -98,7 +101,7 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.VoidApiResponse(response);
+    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerNewPost200ResponseFromJSON(jsonValue));
   }
 
   /**
@@ -106,8 +109,9 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerNewPost(
     requestParameters: V1ContainerNewPostOperationRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<void> {
-    await this.v1ContainerNewPostRaw(requestParameters, initOverrides);
+  ): Promise<V1ContainerNewPost200Response> {
+    const response = await this.v1ContainerNewPostRaw(requestParameters, initOverrides);
+    return await response.value();
   }
 
   /**

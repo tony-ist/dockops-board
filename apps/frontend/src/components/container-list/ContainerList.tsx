@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchContainerList } from '../../features/container-list/containerListSlice';
+import { fetchContainerListThunk } from '../../features/container-list/containerListSlice';
 import styles from './ContainerList.module.css';
 
 function ContainerList() {
@@ -11,7 +11,7 @@ function ContainerList() {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchContainerList());
+      dispatch(fetchContainerListThunk());
     }
   }, [dispatch, status]);
 

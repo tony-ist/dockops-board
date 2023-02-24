@@ -92,6 +92,6 @@ export const dockerService = {
     const startResult = await container.start();
     fastify.log.info(`Started container: ${startResult.toString()}`);
 
-    return runStream;
+    return { containerId: container.id, runStream };
   },
 };
