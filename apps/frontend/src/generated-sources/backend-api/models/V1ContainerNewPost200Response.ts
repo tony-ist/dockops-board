@@ -24,7 +24,7 @@ export interface V1ContainerNewPost200Response {
    * @type {string}
    * @memberof V1ContainerNewPost200Response
    */
-  containerId: string;
+  message: string;
 }
 
 /**
@@ -32,7 +32,7 @@ export interface V1ContainerNewPost200Response {
  */
 export function instanceOfV1ContainerNewPost200Response(value: object): boolean {
   let isInstance = true;
-  isInstance = isInstance && 'containerId' in value;
+  isInstance = isInstance && 'message' in value;
 
   return isInstance;
 }
@@ -49,7 +49,7 @@ export function V1ContainerNewPost200ResponseFromJSONTyped(
     return json;
   }
   return {
-    containerId: json['containerId'],
+    message: json['message'],
   };
 }
 
@@ -61,6 +61,6 @@ export function V1ContainerNewPost200ResponseToJSON(value?: V1ContainerNewPost20
     return null;
   }
   return {
-    containerId: value.containerId,
+    message: value.message,
   };
 }

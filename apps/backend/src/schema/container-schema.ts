@@ -44,9 +44,9 @@ export const postContainerNewSchema = {
     200: {
       type: 'object',
       properties: {
-        containerId: { type: 'string' },
+        message: { type: 'string' },
       },
-      required: ['containerId'],
+      required: ['message'],
     },
   },
 } as const;

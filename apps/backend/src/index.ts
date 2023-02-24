@@ -10,7 +10,6 @@ import { prismaPlugin } from './plugins/prisma-plugin';
 import { dockerodePlugin } from './plugins/dockerode-plugin';
 import { containerController } from './controllers/container-controller';
 import { server } from './server';
-import { streamPlugin } from './plugins/stream-plugin';
 import { socketPlugin } from './plugins/socket-plugin';
 
 async function run() {
@@ -42,7 +41,6 @@ async function run() {
     });
   }
 
-  await server.register(streamPlugin);
   await server.register(socketPlugin);
   await server.register(prismaPlugin);
   await server.register(dockerodePlugin);
@@ -63,6 +61,7 @@ run().catch((error) => {
 });
 
 process.on('unhandledRejection', (error) => {
+  server.log.error('Unhandled promise rejection error.');
   server.log.error(error);
   process.exit(1);
 });

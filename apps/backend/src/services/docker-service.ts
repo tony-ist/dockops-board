@@ -4,18 +4,24 @@ import fs from 'node:fs';
 import recursiveReadDir from 'recursive-readdir';
 import { FastifyInstance } from 'fastify';
 import * as config from '../config';
+import stream from 'node:stream/promises';
 
 export interface BuildImageOptions {
+  fastify: FastifyInstance;
   imageName: string;
   dockerfileName: string;
 }
 
+// TODO: Move FastifyInstance in this interface and in similar places
 export interface CreateAndRunOptions {
+  fastify: FastifyInstance;
   containerName: string;
   imageName: string;
   containerPort?: string;
   hostPort?: string;
 }
+
+export type BuildAndRunOptions = BuildImageOptions & CreateAndRunOptions;
 
 export const dockerService = {
   async getAllContainers(docker: Dockerode) {
@@ -23,8 +29,8 @@ export const dockerService = {
     return containerInfos.map((info) => ({ image: info.Image }));
   },
 
-  async buildImage(fastify: FastifyInstance, options: BuildImageOptions) {
-    const { imageName, dockerfileName } = options;
+  async buildImage(options: BuildImageOptions) {
+    const { fastify, imageName, dockerfileName } = options;
     const temporaryDirectoryPath = config.temporaryDirectoryPath;
     const docker = fastify.docker;
 
@@ -56,8 +62,8 @@ export const dockerService = {
     return buildStream;
   },
 
-  async createAndRun(fastify: FastifyInstance, options: CreateAndRunOptions) {
-    const { containerName, containerPort, hostPort, imageName } = options;
+  async createAndRun(options: CreateAndRunOptions) {
+    const { fastify, containerName, containerPort, hostPort, imageName } = options;
 
     const docker = fastify.docker;
     const portForwardOptions: Partial<ContainerCreateOptions> = {};
@@ -93,5 +99,40 @@ export const dockerService = {
     fastify.log.info(`Started container: ${startResult.toString()}`);
 
     return { containerId: container.id, runStream };
+  },
+
+  async buildAndRun(options: BuildAndRunOptions) {
+    const { fastify, imageName, containerPort, hostPort, dockerfileName, containerName } = options;
+
+    const socket = fastify.socketManager.get();
+    const buildStream = await dockerService.buildImage({ fastify, imageName, dockerfileName });
+    buildStream.on('data', (data) => {
+      const message = data.toString();
+      if (socket !== null) {
+        socket.emit('message', message);
+      }
+      fastify.log.info(message);
+    });
+
+    await stream.finished(buildStream);
+
+    const { containerId, runStream } = await dockerService.createAndRun({
+      fastify,
+      containerName,
+      imageName,
+      containerPort,
+      hostPort,
+    });
+    runStream.on('data', (data) => {
+      const message = data.toString();
+      if (socket !== null) {
+        socket.emit('message', message);
+      }
+      fastify.log.info(message);
+    });
+
+    await stream.finished(runStream);
+
+    return containerId;
   },
 };

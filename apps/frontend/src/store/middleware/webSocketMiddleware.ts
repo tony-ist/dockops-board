@@ -9,7 +9,7 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
     return next(action);
   }
 
-  socket = io(import.meta.env.VITE_BACKEND_URL);
+  socket = io(import.meta.env.VITE_BACKEND_URL, { transports: ['websocket'] });
 
   socket.on('connect', () => {
     // eslint-disable-next-line no-console

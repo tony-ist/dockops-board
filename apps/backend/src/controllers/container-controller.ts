@@ -2,8 +2,7 @@ import { getContainerAllSchema, postContainerNewSchema } from '../schema/contain
 import { dockerService } from '../services/docker-service';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
-import { sourceFetchService } from '../services/source-fetch-service';
-import stream from 'node:stream/promises';
+import { containerService } from '../services/container-service';
 
 export async function containerController(fastify: FastifyInstance) {
   const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider>();
@@ -29,28 +28,25 @@ export async function containerController(fastify: FastifyInstance) {
       const dockerfileName = request.body.dockerfileName ?? 'Dockerfile';
       const { containerPort, hostPort } = request.body;
 
-      await sourceFetchService.extractZipFromGithub(fastify, githubURL);
-
-      const buildStream = await dockerService.buildImage(fastify, { imageName, dockerfileName });
-      buildStream.on('data', (data) => fastify.log.info(data.toString()));
-      await stream.finished(buildStream);
-
       const socket = fastify.socketManager.get();
-      const { containerId, runStream } = await dockerService.createAndRun(fastify, {
-        containerName,
-        imageName,
-        containerPort,
-        hostPort,
-      });
-      runStream.on('data', (data) => {
-        const message = data.toString();
-        if (socket !== null) {
-          socket.emit('message', message);
-        }
-        fastify.log.info(message);
-      });
+      containerService
+        .fetchSourceBuildImageAndRunContainer({
+          fastify,
+          githubURL,
+          imageName,
+          containerName,
+          dockerfileName,
+          containerPort,
+          hostPort,
+        })
+        .catch((error) => {
+          if (socket !== null) {
+            socket.emit('message', error.message);
+          }
+          fastify.log.error(error);
+        });
 
-      reply.send({ containerId });
+      reply.send({ message: 'Fetching sources, building and starting a container. Sending results via websocket...' });
     },
   });
 }
