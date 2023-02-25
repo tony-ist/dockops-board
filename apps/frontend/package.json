@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
-    "prettier": "prettier --write .",
-    "preview": "vite preview"
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "preview": "npm run build && vite preview",
+    "openapi:generate": "dotenv -e .env.local src/scripts/generate-backend-api.sh"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -22,12 +24,16 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.1",
     "redux": "^4.2.1",
+    "socket.io-client": "^4.6.1",
     "url-join": "^5.0.0"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.2",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
+    "cross-var": "^1.1.0",
+    "dotenv-cli": "^7.0.0",
     "eslint": "7.32.0",
     "eslint-config-custom": "*",
     "typescript": "^4.9.3",
