@@ -2,9 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Container } from '../../types/models/containerType';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
-import urlJoin from 'url-join';
-
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import { api } from '../../api/backend-api';
 
 interface ContainerListState {
   containerList: Array<Container>;
@@ -18,10 +16,9 @@ const initialState: ContainerListState = {
   error: null,
 };
 
-export const fetchContainerList = createAsyncThunk('containerList/fetchContainerList', async () => {
-  const response = await fetch(urlJoin(backendUrl, 'v1', 'containers'));
-  return response.json();
-});
+export const fetchContainerListThunk = createAsyncThunk('containerList/fetchContainerList', () =>
+  api.v1ContainerAllGet()
+);
 
 const containerListSlice = createSlice({
   name: 'containerList',
@@ -29,20 +26,20 @@ const containerListSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchContainerList.pending, (state) => {
+      .addCase(fetchContainerListThunk.pending, (state) => {
         state.error = null;
         state.status = 'loading';
       })
-      .addCase(fetchContainerList.fulfilled, (state, action) => {
+      .addCase(fetchContainerListThunk.fulfilled, (state, action) => {
         state.error = null;
         state.status = 'succeeded';
         state.containerList = action.payload;
       })
-      .addCase(fetchContainerList.rejected, (state, action) => {
+      .addCase(fetchContainerListThunk.rejected, (state, action) => {
         state.error = action.error.message ?? null;
         state.status = 'failed';
       });
   },
 });
 
-export default containerListSlice.reducer;
+export const containerListReducer = containerListSlice.reducer;
