@@ -27,6 +27,7 @@ cp apps/frontend/.env.template apps/frontend/.env.local # And edit the .env file
 cp apps/backend/.env.template apps/backend/.env.local # And edit the .env file
 npm install
 npm run hooks:install
+npm run db:generate -w=apps/backend
 npm run dev
 ```
 

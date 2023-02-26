@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { useEffect } from 'react';
 import { webSocketActions } from '../features/web-socket/webSocketSlice';
 
-const App = () => {
+export const App = () => {
   const dispatch = useAppDispatch();
   const isWebSocketConnected = useAppSelector((state) => state.webSocket.isConnected);
 
@@ -28,5 +28,3 @@ const App = () => {
     </Router>
   );
 };
-
-export default App;
