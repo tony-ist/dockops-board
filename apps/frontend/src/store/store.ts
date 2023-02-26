@@ -5,7 +5,7 @@ import { webSocketMiddleware } from './middleware/webSocketMiddleware';
 import { webSocketReducer } from '../features/web-socket/webSocketSlice';
 import { newContainerReducer } from '../features/container-new/newContainerSlice';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     containerList: containerListReducer,
     newContainer: newContainerReducer,
@@ -17,5 +17,3 @@ const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
-
-export default store;

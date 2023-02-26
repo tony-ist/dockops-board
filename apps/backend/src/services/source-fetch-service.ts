@@ -15,11 +15,6 @@ export const sourceFetchService = {
     const { fastify, githubURL } = options;
     const temporaryDirectory = config.temporaryDirectoryPath;
 
-    if (fs.existsSync(temporaryDirectory)) {
-      fastify.log.info(`Deleting temporary directory "${temporaryDirectory}"`);
-      fs.rmSync(temporaryDirectory, { recursive: true, force: true });
-    }
-
     fastify.log.info(`Creating temporary directory "${temporaryDirectory}"`);
     fs.mkdirSync(temporaryDirectory);
 
