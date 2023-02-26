@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchContainerListThunk } from '../../features/container-list/containerListSlice';
 import styles from './ContainerList.module.css';
 
-function ContainerList() {
+export function ContainerList() {
   const dispatch = useAppDispatch();
   const status = useAppSelector((state) => state.containerList.status);
   const containerList = useAppSelector((state) => state.containerList.containerList);
@@ -27,5 +27,3 @@ function ContainerList() {
     </div>
   );
 }
-
-export default ContainerList;

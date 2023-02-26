@@ -1,4 +1,4 @@
-import ContainerList from '../../components/container-list/ContainerList';
+import { ContainerList } from '../../components/container-list/ContainerList';
 import { useAppDispatch } from '../../store/hooks';
 import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { Button } from '@mui/material';
