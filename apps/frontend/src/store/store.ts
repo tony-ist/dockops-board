@@ -3,12 +3,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { containerListReducer } from '../features/container-list/containerListSlice';
 import { webSocketMiddleware } from './middleware/webSocketMiddleware';
 import { webSocketReducer } from '../features/web-socket/webSocketSlice';
-import { newContainerReducer } from '../features/container-new/newContainerSlice';
+import { createContainerReducer } from '../features/container-new/createContainerSlice';
 
 export const store = configureStore({
   reducer: {
     containerList: containerListReducer,
-    newContainer: newContainerReducer,
+    createContainer: createContainerReducer,
     webSocket: webSocketReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(webSocketMiddleware),

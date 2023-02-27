@@ -2,14 +2,14 @@ import { ContainerList } from '../../components/container-list/ContainerList';
 import { useAppDispatch } from '../../store/hooks';
 import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { Button } from '@mui/material';
-import { newContainerThunk } from '../../features/container-new/newContainerSlice';
+import { createContainerThunk } from '../../features/container-new/createContainerSlice';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
 
-  function postNewContainer() {
+  function dispatchCreateContainer() {
     dispatch(
-      newContainerThunk({
+      createContainerThunk({
         containerName: 'temp-echo-server',
         githubURL: 'https://github.com/mendhak/docker-http-https-echo/archive/refs/heads/master.zip',
         dockerfileName: 'Dockerfile',
@@ -21,7 +21,7 @@ export const RootPage = () => {
 
   return (
     <div>
-      <Button variant="contained" onClick={postNewContainer}>
+      <Button variant="contained" onClick={dispatchCreateContainer}>
         Deploy Echo Server!
       </Button>
       <ContainerList></ContainerList>

@@ -15,3 +15,25 @@ model User {
   email        String   @unique
   githubToken  String?
 }
+
+model Container {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  dockerId     String
+  image        String
+  dockerName   String
+  dockerState  String        @default("created")
+  doesExist    Boolean       @default(true)
+  portForwards PortForward[]
+}
+
+model PortForward {
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  hostPort      String
+  containerPort String
+  container     Container @relation(fields: [containerId], references: [id])
+  containerId   Int
+}
