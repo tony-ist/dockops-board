@@ -21,6 +21,18 @@ import { exists, mapValues } from '../runtime';
 export interface V1ContainerAllGet200ResponseInner {
   /**
    *
+   * @type {number}
+   * @memberof V1ContainerAllGet200ResponseInner
+   */
+  id: number;
+  /**
+   *
+   * @type {string}
+   * @memberof V1ContainerAllGet200ResponseInner
+   */
+  dockerId: string;
+  /**
+   *
    * @type {string}
    * @memberof V1ContainerAllGet200ResponseInner
    */
@@ -32,6 +44,8 @@ export interface V1ContainerAllGet200ResponseInner {
  */
 export function instanceOfV1ContainerAllGet200ResponseInner(value: object): boolean {
   let isInstance = true;
+  isInstance = isInstance && 'id' in value;
+  isInstance = isInstance && 'dockerId' in value;
   isInstance = isInstance && 'image' in value;
 
   return isInstance;
@@ -49,6 +63,8 @@ export function V1ContainerAllGet200ResponseInnerFromJSONTyped(
     return json;
   }
   return {
+    id: json['id'],
+    dockerId: json['dockerId'],
     image: json['image'],
   };
 }
@@ -61,6 +77,8 @@ export function V1ContainerAllGet200ResponseInnerToJSON(value?: V1ContainerAllGe
     return null;
   }
   return {
+    id: value.id,
+    dockerId: value.dockerId,
     image: value.image,
   };
 }
