@@ -3,6 +3,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { Button } from '@mui/material';
 import { createContainerThunk } from '../../features/container-new/createContainerSlice';
+import { DashboardLayout } from '../../layouts/dashboard/dashboard';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
@@ -20,12 +21,14 @@ export const RootPage = () => {
   }
 
   return (
-    <div>
-      <Button variant="contained" onClick={dispatchCreateContainer}>
-        Deploy Echo Server!
-      </Button>
-      <ContainerList></ContainerList>
-      <WebSocketMessages></WebSocketMessages>
-    </div>
+    <>
+      <DashboardLayout>
+        <Button variant="contained" onClick={dispatchCreateContainer}>
+          Deploy Echo Server!
+        </Button>
+        <ContainerList></ContainerList>
+        <WebSocketMessages></WebSocketMessages>
+      </DashboardLayout>
+    </>
   );
 };
