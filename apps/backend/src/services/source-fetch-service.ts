@@ -15,8 +15,10 @@ export const sourceFetchService = {
     const { fastify, githubURL } = options;
     const temporaryDirectory = config.temporaryDirectoryPath;
 
-    fastify.log.info(`Creating temporary directory "${temporaryDirectory}"`);
-    fs.mkdirSync(temporaryDirectory);
+    if (!fs.existsSync(temporaryDirectory)) {
+      fastify.log.info(`Creating temporary directory "${temporaryDirectory}"`);
+      fs.mkdirSync(temporaryDirectory);
+    }
 
     const githubResponse = await fetch(githubURL);
     const extractStream = unzip.Extract({ path: temporaryDirectory });

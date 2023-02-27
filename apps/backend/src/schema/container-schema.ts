@@ -1,3 +1,10 @@
+const containerIdParams = {
+  type: 'object',
+  properties: {
+    containerId: { type: 'number' },
+  },
+};
+
 export const getContainerAllSchema = {
   response: {
     200: {
@@ -5,30 +12,17 @@ export const getContainerAllSchema = {
       items: {
         type: 'object',
         properties: {
+          id: { type: 'number' },
+          dockerId: { type: 'string' },
           image: { type: 'string' },
         },
-        required: ['image'],
+        required: ['id', 'dockerId', 'image'],
       },
     },
   },
 } as const;
 
-export const getContainerLogsSchema = {
-  response: {
-    200: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          image: { type: 'string' },
-        },
-        required: ['image'],
-      },
-    },
-  },
-} as const;
-
-export const postContainerNewSchema = {
+export const postContainerCreateSchema = {
   body: {
     type: 'object',
     properties: {
@@ -39,6 +33,51 @@ export const postContainerNewSchema = {
       containerPort: { type: 'string' },
     },
     required: ['containerName', 'githubURL'],
+  },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+      },
+      required: ['message'],
+    },
+  },
+} as const;
+
+export const postContainerStartSchema = {
+  params: containerIdParams,
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+      },
+      required: ['message'],
+    },
+  },
+} as const;
+
+export const postContainerAttachSchema = {
+  params: containerIdParams,
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+      },
+      required: ['message'],
+    },
+  },
+} as const;
+
+export const getContainerLogsSchema = {
+  params: containerIdParams,
+  querystring: {
+    type: 'object',
+    properties: {
+      tail: { type: 'number' },
+    },
   },
   response: {
     200: {
