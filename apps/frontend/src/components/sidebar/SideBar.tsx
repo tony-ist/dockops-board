@@ -15,6 +15,7 @@ import { ViewList } from '@mui/icons-material';
 import MuiDrawer from '@mui/material/Drawer';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
 
+// Drawer config taken from //AppBar config got from https://mui.com/material-ui/react-drawer/#MiniDrawer.tsx
 const openedMixin = (theme: Theme): CSSObject => ({
   width: SIDEBAR_WIDTH,
   transition: theme.transitions.create('width', {
@@ -66,42 +67,40 @@ export const SideBar = () => {
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
 
   return (
-    <>
-      <Drawer variant="permanent" open={isOpen}>
-        <DrawerHeader>
-          <IconButton
-            onClick={() => {
-              dispatch(sideBarActions.toggle());
+    <Drawer variant="permanent" open={isOpen}>
+      <DrawerHeader>
+        <IconButton
+          onClick={() => {
+            dispatch(sideBarActions.toggle());
+          }}
+        >
+          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        </IconButton>
+      </DrawerHeader>
+      <Divider />
+      <List>
+        <ListItem key={'containers'} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: isOpen ? 'initial' : 'center',
+              px: 2.5,
             }}
           >
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          <ListItem key={'containers'} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
+            <ListItemIcon
               sx={{
-                minHeight: 48,
-                justifyContent: isOpen ? 'initial' : 'center',
-                px: 2.5,
+                minWidth: 0,
+                mr: isOpen ? 3 : 'auto',
+                justifyContent: 'center',
               }}
             >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: isOpen ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <ViewList></ViewList>
-              </ListItemIcon>
-              <ListItemText primary={'containers'} sx={{ opacity: isOpen ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <Divider />
-      </Drawer>
-    </>
+              <ViewList></ViewList>
+            </ListItemIcon>
+            <ListItemText primary={'containers'} sx={{ opacity: isOpen ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+      <Divider />
+    </Drawer>
   );
 };

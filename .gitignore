@@ -117,6 +117,5 @@ fabric.properties
 apps/backend/tmp/
 apps/frontend/openapitools.json
 
-
 # vite
 apps/frontend/vite.config.ts.*

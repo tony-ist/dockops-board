@@ -14,6 +14,7 @@ interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
+//AppBar config taken from https://mui.com/material-ui/react-drawer/#MiniDrawer.tsx
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
@@ -36,28 +37,26 @@ export const Header = () => {
   const dispatch = useAppDispatch();
   const isSideBarOpen = useAppSelector((state) => state.sideBar.isOpen);
   return (
-    <>
-      <AppBar position="fixed" open={isSideBarOpen}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => {
-              dispatch(sideBarActions.toggle());
-            }}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(isSideBarOpen && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Dockops dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </>
+    <AppBar position="fixed" open={isSideBarOpen}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={() => {
+            dispatch(sideBarActions.toggle());
+          }}
+          edge="start"
+          sx={{
+            marginRight: 5,
+            ...(isSideBarOpen && { display: 'none' }),
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" noWrap component="div">
+          Dockops dashboard
+        </Typography>
+      </Toolbar>
+    </AppBar>
   );
 };
