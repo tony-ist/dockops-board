@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:debug": "vite -d",
     "build": "tsc && vite build",
     "lint": "eslint {**/*,*}.{js,ts,jsx,tsx}",
     "prettier": "prettier --check .",
