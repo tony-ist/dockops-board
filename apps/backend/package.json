@@ -32,7 +32,8 @@
     "socket.io": "^4.6.1",
     "ts-node": "^10.9.1",
     "unzip-stream": "^0.3.1",
-    "wtfnode": "^0.9.1"
+    "wtfnode": "^0.9.1",
+    "common-src": "*"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.14",

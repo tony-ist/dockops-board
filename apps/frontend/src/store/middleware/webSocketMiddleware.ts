@@ -5,6 +5,11 @@ import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 let socket: Socket;
 
 export const webSocketMiddleware: Middleware = (store) => (next) => (action) => {
+  if (socket !== undefined && store.getState().webSocket.isConnected && webSocketActions.sendMessage.match(action)) {
+    socket.emit('message', action.payload);
+    return next(action);
+  }
+
   if (socket !== undefined || !webSocketActions.startConnecting.match(action)) {
     return next(action);
   }
@@ -18,7 +23,7 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   });
 
   socket.on('message', (message) => {
-    store.dispatch(webSocketActions.receiveMessage({ text: message }));
+    store.dispatch(webSocketActions.receiveMessage(message));
   });
 
   next(action);
