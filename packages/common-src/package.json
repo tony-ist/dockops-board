@@ -1,0 +1,9 @@
+{
+  "name": "common-src",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

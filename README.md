@@ -9,8 +9,17 @@ It also allows you to monitor these services, manipulate them, see logs and so o
 ## Requirements
 
 - SQLite 3
+- Java 11.0.17
+- Preferably Ubuntu Linux or macOS, WSL2 works too but worse
 
 ## Development
+
+Install dependencies
+
+```bash
+sudo apt install sqlite3
+sudo apt install default-jre
+```
 
 Create DB
 

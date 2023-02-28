@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WebSocketMessage } from '../../types/models/webSocketMessageType';
+import { WebSocketMessage } from 'common-src';
 
 export interface WebSocketState {
   isEstablishingConnection: boolean;
@@ -27,6 +27,8 @@ const webSocketSlice = createSlice({
     receiveMessage: (state, action: PayloadAction<WebSocketMessage>) => {
       state.messages.push(action.payload);
     },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+    sendMessage: (state, action: PayloadAction<WebSocketMessage>) => {},
   },
 });
 
