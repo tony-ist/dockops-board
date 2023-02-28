@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import { createContainerThunk } from '../../features/container-new/createContainerSlice';
 import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 import { WebSocketRequest } from 'common-src';
+import { DashboardLayout } from '../../layouts/dashboard/dashboard';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
@@ -26,18 +27,20 @@ export const RootPage = () => {
   }
 
   return (
-    <div>
-      <Button variant="contained" onClick={dispatchCreateContainer}>
-        Deploy Echo Server!
-      </Button>
-      <Button variant="contained" onClick={() => emit(3)}>
-        Emit 3
-      </Button>
-      <Button variant="contained" onClick={() => emit(5)}>
-        Emit 5
-      </Button>
-      <ContainerList></ContainerList>
-      <WebSocketMessages></WebSocketMessages>
-    </div>
+    <>
+      <DashboardLayout>
+        <Button variant="contained" onClick={dispatchCreateContainer}>
+          Deploy Echo Server!
+        </Button>
+        <Button variant="contained" onClick={() => emit(3)}>
+          Emit 3
+        </Button>
+        <Button variant="contained" onClick={() => emit(5)}>
+          Emit 5
+        </Button>
+        <ContainerList></ContainerList>
+        <WebSocketMessages></WebSocketMessages>
+      </DashboardLayout>
+    </>
   );
 };
