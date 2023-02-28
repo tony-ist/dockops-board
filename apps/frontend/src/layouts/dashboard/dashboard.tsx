@@ -1,13 +1,17 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
 import { SideBar } from '../../components/sidebar/SideBar';
-import React from 'react';
 import { Header } from '../../components/header/Header';
 
 export const DashboardLayout = (props: { children: React.ReactNode }) => {
   return (
-    <>
-      <SideBar></SideBar>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
       <Header></Header>
-      {props.children}
-    </>
+      <SideBar></SideBar>
+
+      <Box sx={{ flexGrow: 1, p: 3, mt: 8 }}>{props.children}</Box>
+    </Box>
   );
 };
