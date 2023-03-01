@@ -9,12 +9,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint -- --ignore-path ../../.gitignore",
-    "lint:fix": "turbo run lint -- --fix --ignore-path ../../.gitignore",
-    "prettier": "turbo run prettier -- --ignore-path ../../.gitignore",
-    "prettier:fix": "turbo run prettier:fix -- --ignore-path ../../.gitignore",
     "style:fix": "npm run prettier:fix && npm run lint:fix",
-    "hooks:install": "simple-git-hooks"
+    "hooks:install": "simple-git-hooks",
+    "lint": "npm run lint -w=apps/backend -w=apps/frontend",
+    "lint:fix": "npm run lint:fix -w=apps/backend -w=apps/frontend",
+    "prettier": "npm run prettier -w=apps/backend -w=apps/frontend",
+    "prettier:fix": "npm run prettier:fix -w=apps/backend -w=apps/frontend"
   },
   "devDependencies": {
     "eslint-config-custom": "*",

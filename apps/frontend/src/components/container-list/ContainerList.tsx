@@ -3,10 +3,8 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchContainerListThunk } from '../../features/container-list/containerListSlice';
 import styles from './ContainerList.module.css';
 import { Container } from '../../types/models/containerType';
-import { Grid, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { Label } from '@mui/icons-material';
+import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 
 const ContainerListItem = (props: { container: Container; index: number }) => {
