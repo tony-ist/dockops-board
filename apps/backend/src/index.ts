@@ -13,6 +13,7 @@ import { server } from './server';
 import { socketPlugin } from './plugins/socket-plugin';
 import { WebSocketMessage, WebSocketRequestEvents } from 'common-src';
 import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services/web-socket-event-handlers';
+import { fastifyCookie } from '@fastify/cookie';
 
 async function run() {
   await server.register(fastifySwagger, {
@@ -27,10 +28,13 @@ async function run() {
   await server.register(fastifySwaggerUI);
 
   if (config.nodeEnv === 'DEVELOPMENT') {
-    await server.register(cors);
+    await server.register(cors, {
+      origin: config.frontendURL,
+      credentials: true,
+    });
     await server.register(fastifySocketIO, {
       cors: {
-        origin: '*',
+        origin: config.frontendURL,
       },
     });
   } else {
@@ -43,6 +47,7 @@ async function run() {
     });
   }
 
+  await server.register(fastifyCookie);
   await server.register(socketPlugin);
   await server.register(prismaPlugin);
   await server.register(dockerodePlugin);

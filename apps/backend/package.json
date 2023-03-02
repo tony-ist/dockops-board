@@ -16,12 +16,14 @@
     "db:deploy": "dotenv -e .env.local -- prisma migrate deploy"
   },
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.2.0",
     "@fastify/static": "^6.9.0",
     "@fastify/swagger": "^8.3.1",
     "@fastify/swagger-ui": "^1.4.0",
     "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "@prisma/client": "^4.10.1",
+    "common-src": "*",
     "dockerode": "^3.3.4",
     "dotenv": "^16.0.3",
     "fastify": "^4.13.0",
@@ -32,8 +34,7 @@
     "socket.io": "^4.6.1",
     "ts-node": "^10.9.1",
     "unzip-stream": "^0.3.1",
-    "wtfnode": "^0.9.1",
-    "common-src": "*"
+    "wtfnode": "^0.9.1"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.14",
