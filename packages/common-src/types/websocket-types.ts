@@ -13,7 +13,7 @@ export enum WebSocketRequestEvents {
   CreateContainerRequest = 'CreateContainerRequest',
 }
 
-export interface WebSocketContainerLogsRequest extends WebSocketMessage {
+export interface WebSocketContainerLogsSubscribe extends WebSocketMessage {
   dbContainerId: number;
   tail?: number;
 }

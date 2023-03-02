@@ -1,16 +1,15 @@
 import { ActionCreatorWithOptionalPayload, createAction } from '@reduxjs/toolkit';
 import {
+  ContainerLogsRequest,
   CreateContainerRequest,
-  WebSocketContainerLogsRequest,
   WebSocketRequestEvents,
   WebSocketResponseEvents,
 } from 'common-src';
 import { containersActions } from '../container/containersSlice';
 import { containerLogsActions } from './containerLogsSlice';
 
-// TODO: Normalize types of web socket actions
 export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
-export const containerLogsRequest = createAction<WebSocketContainerLogsRequest>('containers/containerLogsRequest');
+export const containerLogsRequest = createAction<ContainerLogsRequest>('containers/containerLogsRequest');
 export const webSocketRequestActions = [createContainerRequest, containerLogsRequest];
 export const webSocketEventsByAction = {
   [createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,

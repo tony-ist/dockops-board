@@ -47,6 +47,13 @@ export const logSchema = {
   required: ['text'],
 } as const;
 
+export const containerLogsRequestSchema = {
+  type: 'object',
+  properties: {
+    tail: { type: 'number' },
+  },
+} as const;
+
 const containerIdParams = {
   type: 'object',
   properties: {
@@ -83,12 +90,7 @@ export const postContainerAttachSchema = {
 
 export const getContainerLogsSchema = {
   params: containerIdParams,
-  querystring: {
-    type: 'object',
-    properties: {
-      tail: { type: 'number' },
-    },
-  },
+  querystring: containerLogsRequestSchema,
   response: {
     200: messageSchema,
   },
