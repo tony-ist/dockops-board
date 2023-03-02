@@ -19,7 +19,7 @@ const initialState = containersAdapter.getInitialState<ContainersState>({
 
 export const fetchContainersThunk = createAsyncThunk<ContainerAllResponse, ContainerAllRequest>(
   'containers/fetchContainers',
-  () => api.v1ContainerAllGet(),
+  () => api.v1ContainerAllGet()
 );
 
 const containersSlice = createSlice({

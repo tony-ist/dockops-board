@@ -1,9 +1,4 @@
-import {
-  WebSocketCreateContainerResponse,
-  WebSocketLogs,
-  WebSocketMessage,
-  WebSocketResponseEvents,
-} from 'common-src';
+import { WebSocketCreateContainerResponse, WebSocketLogs, WebSocketMessage, WebSocketResponseEvents } from 'common-src';
 import { AnyAction, Dispatch, Middleware, MiddlewareAPI } from 'redux';
 import { io, Socket } from 'socket.io-client';
 import { webSocketActions } from '../../features/web-socket/webSocketSlice';

@@ -18,7 +18,7 @@ const initialState: ContainerListState = {
 
 export const createContainerThunk = createAsyncThunk<CreateContainerResponse, CreateContainerRequest>(
   'createContainer/createContainer',
-  (container) => api.v1ContainerCreatePost({ body: container }),
+  (container) => api.v1ContainerCreatePost({ body: container })
 );
 
 const createContainerSlice = createSlice({

@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io';
 
 export class SocketManager {
-  private socketsByIds = new Map<string, Socket>()
+  private socketsByIds = new Map<string, Socket>();
 
   public get(id: string) {
     return this.socketsByIds.get(id);

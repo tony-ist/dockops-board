@@ -4,10 +4,7 @@ import { CreateContainerRequest, WebSocketContainerLogsRequest, WebSocketRequest
 // TODO: Normalize types of web socket actions
 export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
 export const containerLogsRequest = createAction<WebSocketContainerLogsRequest>('containers/containerLogsRequest');
-export const webSocketRequestActions = [
-  createContainerRequest,
-  containerLogsRequest,
-];
+export const webSocketRequestActions = [createContainerRequest, containerLogsRequest];
 export const webSocketEventsByAction = {
   [createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
   [containerLogsRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribe,

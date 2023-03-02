@@ -43,9 +43,13 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
     const castMessage = message as WebSocketCreateContainerRequest;
     const imageName = 'tempimage';
     const containerName = castMessage.containerName ?? 'tempcontainer';
-    await containerService.fetchSourceBuildImageAndCreateContainer(
-      { fastify, ...castMessage, imageName, containerName, socket }
-    );
+    await containerService.fetchSourceBuildImageAndCreateContainer({
+      fastify,
+      ...castMessage,
+      imageName,
+      containerName,
+      socket,
+    });
   },
 };
 

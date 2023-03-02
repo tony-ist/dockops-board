@@ -4,8 +4,9 @@ import stream from 'node:stream/promises';
 import { Socket } from 'socket.io';
 import { WebSocketResponseEvents } from 'common-src';
 
-export type FetchSourceBuildImageAndCreateContainerOptions =
-  ExtractZipFromGithubOptions & BuildImageOptions & CreateContainerOptions & { socket?: Socket };
+export type FetchSourceBuildImageAndCreateContainerOptions = ExtractZipFromGithubOptions &
+  BuildImageOptions &
+  CreateContainerOptions & { socket?: Socket };
 
 export const containerService = {
   async fetchSourceBuildImageAndCreateContainer(options: FetchSourceBuildImageAndCreateContainerOptions) {

@@ -10,20 +10,24 @@ export const RootPage = () => {
   const dispatch = useAppDispatch();
 
   function createContainer(containerName: string, hostPort: string) {
-    dispatch(createContainerRequest({
-      containerName,
-      githubURL: 'https://github.com/mendhak/docker-http-https-echo/archive/refs/heads/master.zip',
-      dockerfileName: 'Dockerfile',
-      containerPort: '8080',
-      hostPort,
-    }));
+    dispatch(
+      createContainerRequest({
+        containerName,
+        githubURL: 'https://github.com/mendhak/docker-http-https-echo/archive/refs/heads/master.zip',
+        dockerfileName: 'Dockerfile',
+        containerPort: '8080',
+        hostPort,
+      })
+    );
   }
 
   function subscribeToLogs(dbContainerId: number) {
-    dispatch(containerLogsRequest({
-      event: WebSocketRequestEvents.ContainerLogsSubscribe,
-      dbContainerId,
-    }));
+    dispatch(
+      containerLogsRequest({
+        event: WebSocketRequestEvents.ContainerLogsSubscribe,
+        dbContainerId,
+      })
+    );
   }
 
   return (
