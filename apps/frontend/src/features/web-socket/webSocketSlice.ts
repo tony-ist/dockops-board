@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WebSocketMessage } from 'common-src';
+import { WebSocketContainerLogsRequest, WebSocketContainerLogs, WebSocketMessage } from 'common-src';
 
 export interface WebSocketState {
   isEstablishingConnection: boolean;
   isConnected: boolean;
-  messages: WebSocketMessage[];
+  messages: WebSocketContainerLogs[];
 }
 
 const initialState: WebSocketState = {
@@ -24,11 +24,15 @@ const webSocketSlice = createSlice({
       state.isConnected = true;
       state.isEstablishingConnection = false;
     },
-    receiveMessage: (state, action: PayloadAction<WebSocketMessage>) => {
+    receiveMessage: (state, action: PayloadAction<WebSocketContainerLogs>) => {
       state.messages.push(action.payload);
     },
+    buildLogs: (state, action: PayloadAction<WebSocketContainerLogs>) => {
+      state.messages.push(action.payload);
+    },
+    // TODO: Replace this with createAction from @redux/toolkit
     // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-    sendMessage: (state, action: PayloadAction<WebSocketMessage>) => {},
+    sendMessage: (state, action: PayloadAction<WebSocketContainerLogsRequest>) => {},
   },
 });
 

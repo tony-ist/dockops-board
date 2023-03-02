@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { containerListReducer } from '../features/container-list/containerListSlice';
+import { containerListReducer } from '../features/container/containerListSlice';
 import { webSocketMiddleware } from './middleware/webSocketMiddleware';
 import { webSocketReducer } from '../features/web-socket/webSocketSlice';
-import { createContainerReducer } from '../features/container-new/createContainerSlice';
-import { sideBarReducer } from '../features/sidebar/sideBar';
+import { createContainerReducer } from '../features/container/createContainerSlice';
+import { sideBarReducer } from '../features/sidebar/sideBarSlice';
+import { containersReducer } from '../features/container/containersSlice';
 
 export const store = configureStore({
   reducer: {
+    containers: containersReducer,
     containerList: containerListReducer,
     createContainer: createContainerReducer,
     webSocket: webSocketReducer,

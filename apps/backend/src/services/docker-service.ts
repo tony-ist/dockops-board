@@ -8,20 +8,10 @@ import * as config from '../config';
 export interface BuildImageOptions {
   fastify: FastifyInstance;
   imageName: string;
-  dockerfileName: string;
+  dockerfileName?: string;
 }
 
-export interface CreateAndRunOptions {
-  fastify: FastifyInstance;
-  containerName: string;
-  imageName: string;
-  containerPort?: string;
-  hostPort?: string;
-}
-
-export type BuildAndRunOptions = BuildImageOptions & CreateAndRunOptions;
-
-interface CreateContainerOptions {
+export interface CreateContainerOptions {
   fastify: FastifyInstance;
   containerName: string;
   imageName: string;
@@ -48,6 +38,15 @@ interface ContainerLogsOptions {
   tail?: number;
 }
 
+// TODO: Refactor services using classes and maybe decorate fastify instance with services instances (via plugins)
+// class DockerService {
+//   fastify: FastifyInstance;
+//
+//   constructor(fastify: FastifyInstance) {
+//     this.fastify = fastify;
+//   }
+// }
+
 export const dockerService = {
   async getAllContainers(docker: Dockerode) {
     const containerInfos = await docker.listContainers({ all: true });
@@ -58,6 +57,7 @@ export const dockerService = {
     const { fastify, imageName, dockerfileName } = options;
     const temporaryDirectoryPath = config.temporaryDirectoryPath;
     const docker = fastify.docker;
+    const dockerfile = dockerfileName ?? 'Dockerfile';
 
     const tempFiles = fs.readdirSync(temporaryDirectoryPath);
     const repoDirName = tempFiles[0];
@@ -70,7 +70,7 @@ export const dockerService = {
 
     const dockerignorePath = path.join(repoPath, '.dockerignore');
     // If Dockerfile is in .dockerignore then you will get error "Cannot locate specified Dockerfile: Dockerfile"
-    fs.appendFileSync(dockerignorePath, `\n!${dockerfileName}\n`);
+    fs.appendFileSync(dockerignorePath, `\n!${dockerfile}\n`);
 
     const buildStream = await docker.buildImage(
       {
@@ -80,7 +80,7 @@ export const dockerService = {
       {
         forcerm: true,
         t: imageName,
-        dockerfile: dockerfileName,
+        dockerfile,
       }
     );
 

@@ -36,6 +36,11 @@ export async function containerController(fastify: FastifyInstance) {
       const { containerPort, hostPort } = request.body;
 
       const socket = fastify.socketManager.get();
+
+      if (socket === null) {
+        throw new Error('Socket manager returned null socket');
+      }
+
       containerService
         .fetchSourceBuildImageAndCreateContainer({
           fastify,
@@ -45,6 +50,7 @@ export async function containerController(fastify: FastifyInstance) {
           dockerfileName,
           containerPort,
           hostPort,
+          socket,
         })
         .catch((error) => {
           if (socket !== null) {

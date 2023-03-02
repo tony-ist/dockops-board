@@ -11,7 +11,7 @@ import { dockerodePlugin } from './plugins/dockerode-plugin';
 import { containerController } from './controllers/container-controller';
 import { server } from './server';
 import { socketPlugin } from './plugins/socket-plugin';
-import { WebSocketMessage, WebSocketRequest } from 'common-src';
+import { WebSocketMessage, WebSocketRequestEvents } from 'common-src';
 import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services/web-socket-event-handlers';
 
 async function run() {
@@ -51,10 +51,10 @@ async function run() {
 
   server.io.on('connection', (socket) => {
     socket.on('message', (message: WebSocketMessage) => {
-      const handler: EventHandler | undefined = webSocketEventHandlers[message.event as WebSocketRequest];
+      const handler: EventHandler | undefined = webSocketEventHandlers[message.event as WebSocketRequestEvents];
 
       if (isNotUndefined(handler)) {
-        handler(socket, message).catch((error: { message: string }) => {
+        handler(server, socket, message).catch((error: { message: string }) => {
           server.log.error(error);
           socket.emit('message', error.message);
         });

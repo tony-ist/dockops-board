@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchContainerListThunk } from '../../features/container-list/containerListSlice';
+import { fetchContainerListThunk } from '../../features/container/containerListSlice';
 import styles from './ContainerList.module.css';
 
 export function ContainerList() {
