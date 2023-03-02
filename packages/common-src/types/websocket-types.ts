@@ -1,4 +1,4 @@
-import { Container } from './model-types';
+import { Container, CreateContainerRequest, Log } from './model-types';
 
 export enum WebSocketResponseEvents {
   ContainerLogs = 'ContainerLogs',
@@ -8,10 +8,8 @@ export enum WebSocketResponseEvents {
 }
 
 export enum WebSocketRequestEvents {
-  // TODO: Rename ContainerLogsSubscribe
-  ContainerLogsRequest = 'ContainerLogsRequest',
+  ContainerLogsSubscribe = 'ContainerLogsSubscribe',
   InteractiveShellRequest = 'InteractiveShellRequest',
-  // TODO: Create container via REST API, but rename this to BuildImageLogsSubscribe?
   CreateContainerRequest = 'CreateContainerRequest',
 }
 
@@ -20,25 +18,12 @@ export interface WebSocketContainerLogsRequest extends WebSocketMessage {
   tail?: number;
 }
 
-export interface WebSocketCreateContainerRequest extends WebSocketMessage {
-  githubURL: string;
-  imageName?: string;
-  dockerfileName?: string;
-  containerName?: string;
-  containerPort?: string;
-  hostPort?: string;
-}
+export interface WebSocketCreateContainerRequest extends WebSocketMessage, CreateContainerRequest {}
 
-export interface WebSocketLogs extends WebSocketMessage {
-  text: string;
-}
+export interface WebSocketLogs extends WebSocketMessage, Log {}
 
 export interface WebSocketInteractiveShellRequest extends WebSocketMessage {
   dbContainerId: number;
-}
-
-export interface WebSocketInteractiveShellResponse extends WebSocketMessage {
-  text: string;
 }
 
 export interface WebSocketCreateContainerResponse extends WebSocketMessage {

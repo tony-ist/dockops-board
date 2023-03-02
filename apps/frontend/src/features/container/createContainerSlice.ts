@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { CreateContainerRequest, CreateContainerResponse } from '../../types/models/containerType';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
+import { CreateContainerRequest, CreateContainerResponse } from 'common-src';
 
 interface ContainerListState {
   container: CreateContainerResponse | null;
@@ -18,7 +18,7 @@ const initialState: ContainerListState = {
 
 export const createContainerThunk = createAsyncThunk<CreateContainerResponse, CreateContainerRequest>(
   'createContainer/createContainer',
-  (container) => api.v1ContainerCreatePost({ body: container })
+  (container) => api.v1ContainerCreatePost({ body: container }),
 );
 
 const createContainerSlice = createSlice({

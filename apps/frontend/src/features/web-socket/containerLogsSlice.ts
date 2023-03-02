@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WebSocketLogs } from 'common-src';
+import { Log } from 'common-src';
 
 export interface ContainerLogsState {
-  messages: WebSocketLogs[];
+  messages: Log[];
 }
 
 const initialState: ContainerLogsState = {
@@ -13,10 +13,10 @@ const containerLogsSlice = createSlice({
   name: 'containerLogs',
   initialState,
   reducers: {
-    receiveContainerLogs: (state, action: PayloadAction<WebSocketLogs>) => {
+    receiveContainerLogs: (state, action: PayloadAction<Log>) => {
       state.messages.push(action.payload);
     },
-    receiveBuildLogs: (state, action: PayloadAction<WebSocketLogs>) => {
+    receiveBuildLogs: (state, action: PayloadAction<Log>) => {
       state.messages.push(action.payload);
     },
   },

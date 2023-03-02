@@ -21,7 +21,7 @@ export const RootPage = () => {
 
   function subscribeToLogs(dbContainerId: number) {
     dispatch(containerLogsRequest({
-      event: WebSocketRequestEvents.ContainerLogsRequest,
+      event: WebSocketRequestEvents.ContainerLogsSubscribe,
       dbContainerId,
     }));
   }

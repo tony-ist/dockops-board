@@ -2,8 +2,8 @@ import { Socket } from 'socket.io';
 import { dockerService } from './docker-service';
 import { server } from '../server';
 import {
-  WebSocketCreateContainerRequest,
   WebSocketContainerLogsRequest,
+  WebSocketCreateContainerRequest,
   WebSocketInteractiveShellRequest,
   WebSocketMessage,
   WebSocketRequestEvents,
@@ -16,7 +16,7 @@ export type EventHandler = (fastify: FastifyInstance, socket: Socket, message: W
 
 // TODO: Think about returning stream from the handler instead of passing socket as an argument
 export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHandler } = {
-  [WebSocketRequestEvents.ContainerLogsRequest]: async (fastify, socket, message) => {
+  [WebSocketRequestEvents.ContainerLogsSubscribe]: async (fastify, socket, message) => {
     const castMessage = message as WebSocketContainerLogsRequest;
     const logsStream = await dockerService.containerLogs({
       fastify: server,
@@ -41,7 +41,7 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
 
   [WebSocketRequestEvents.CreateContainerRequest]: async (fastify, socket, message) => {
     const castMessage = message as WebSocketCreateContainerRequest;
-    const imageName = castMessage.imageName ?? 'tempimage';
+    const imageName = 'tempimage';
     const containerName = castMessage.containerName ?? 'tempcontainer';
     await containerService.fetchSourceBuildImageAndCreateContainer(
       { fastify, ...castMessage, imageName, containerName, socket }

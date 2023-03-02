@@ -1,6 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { WebSocketContainerLogsRequest, WebSocketRequestEvents } from 'common-src';
-import { CreateContainerRequest } from '../../types/models/containerType';
+import { CreateContainerRequest, WebSocketContainerLogsRequest, WebSocketRequestEvents } from 'common-src';
 
 // TODO: Normalize types of web socket actions
 export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
@@ -11,5 +10,5 @@ export const webSocketRequestActions = [
 ];
 export const webSocketEventsByAction = {
   [createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
-  [containerLogsRequest.type]: WebSocketRequestEvents.ContainerLogsRequest,
+  [containerLogsRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribe,
 };

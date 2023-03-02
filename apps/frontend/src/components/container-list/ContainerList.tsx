@@ -12,7 +12,7 @@ export function ContainerList() {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchContainersThunk());
+      dispatch(fetchContainersThunk({}));
     }
   }, [dispatch, status]);
 
