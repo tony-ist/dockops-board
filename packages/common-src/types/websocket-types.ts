@@ -1,4 +1,5 @@
-// TODO: Move schemas from backend here and use json-schema-to-ts package to produce types
+import { Container } from './model-types';
+
 export enum WebSocketResponseEvents {
   ContainerLogs = 'ContainerLogs',
   InteractiveShellLogs = 'InteractiveShellLogs',
@@ -7,8 +8,10 @@ export enum WebSocketResponseEvents {
 }
 
 export enum WebSocketRequestEvents {
+  // TODO: Rename ContainerLogsSubscribe
   ContainerLogsRequest = 'ContainerLogsRequest',
   InteractiveShellRequest = 'InteractiveShellRequest',
+  // TODO: Create container via REST API, but rename this to BuildImageLogsSubscribe?
   CreateContainerRequest = 'CreateContainerRequest',
 }
 
@@ -41,7 +44,7 @@ export interface WebSocketInteractiveShellResponse extends WebSocketMessage {
 }
 
 export interface WebSocketCreateContainerResponse extends WebSocketMessage {
-  container: unknown;
+  container: Container;
 }
 
 export interface WebSocketMessage {

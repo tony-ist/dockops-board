@@ -1,3 +1,13 @@
+export const containerSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'number' },
+    dockerId: { type: 'string' },
+    image: { type: 'string' },
+  },
+  required: ['id', 'dockerId', 'image'],
+} as const;
+
 const containerIdParams = {
   type: 'object',
   properties: {
@@ -9,15 +19,7 @@ export const getContainerAllSchema = {
   response: {
     200: {
       type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'number' },
-          dockerId: { type: 'string' },
-          image: { type: 'string' },
-        },
-        required: ['id', 'dockerId', 'image'],
-      },
+      items: containerSchema,
     },
   },
 } as const;

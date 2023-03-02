@@ -64,8 +64,7 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   socket.on('message', (message: WebSocketMessage) => {
     if (message.event === WebSocketResponseEvents.CreateContainerResponse) {
       const castMessage = message as WebSocketCreateContainerResponse;
-      // TODO: Get rid of "as Container" when container will have proper type
-      store.dispatch(containersActions.createContainerFulfilled(castMessage.container as Container));
+      store.dispatch(containersActions.createContainerFulfilled(castMessage.container));
     } else if (message.event === WebSocketResponseEvents.BuildImageLogs) {
       const castMessage = message as WebSocketBuildImageLogs;
       store.dispatch(webSocketActions.buildLogs(castMessage));

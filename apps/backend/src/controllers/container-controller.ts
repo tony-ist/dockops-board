@@ -4,7 +4,7 @@ import {
   postContainerCreateSchema,
   postContainerAttachSchema,
   getContainerLogsSchema,
-} from '../schema/container-schema';
+} from 'common-src';
 import { dockerService } from '../services/docker-service';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';

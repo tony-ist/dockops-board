@@ -1,6 +1,6 @@
-import { postUsersNewSchema } from '../schema/user-schema';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
+import {postUsersNewSchema} from 'common-src';
 
 export async function userController(fastify: FastifyInstance) {
   const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider>();
