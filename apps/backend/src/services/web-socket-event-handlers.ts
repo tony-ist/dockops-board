@@ -4,7 +4,6 @@ import { server } from '../server';
 import {
   WebSocketContainerLogsRequest,
   WebSocketCreateContainerRequest,
-  WebSocketInteractiveShellRequest,
   WebSocketMessage,
   WebSocketRequestEvents,
   WebSocketResponseEvents,
@@ -31,13 +30,13 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
     });
   },
 
-  [WebSocketRequestEvents.InteractiveShellRequest]: async (fastify, socket, message) => {
-    const castMessage = message as WebSocketInteractiveShellRequest;
-    socket.emit('message', {
-      event: WebSocketResponseEvents.InteractiveShellLogs,
-      text: `requested shell for db container id ${castMessage.dbContainerId}`,
-    });
-  },
+  // [WebSocketRequestEvents.InteractiveShellRequest]: async (fastify, socket, message) => {
+  //   const castMessage = message as WebSocketInteractiveShellRequest;
+  //   socket.emit('message', {
+  //     event: WebSocketResponseEvents.InteractiveShellLogs,
+  //     text: `requested shell for db container id ${castMessage.dbContainerId}`,
+  //   });
+  // },
 
   [WebSocketRequestEvents.CreateContainerRequest]: async (fastify, socket, message) => {
     const castMessage = message as WebSocketCreateContainerRequest;

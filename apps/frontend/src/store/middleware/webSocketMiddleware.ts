@@ -1,10 +1,12 @@
-import { WebSocketCreateContainerResponse, WebSocketLogs, WebSocketMessage, WebSocketResponseEvents } from 'common-src';
+import { WebSocketMessage, WebSocketResponseEvents } from 'common-src';
 import { AnyAction, Dispatch, Middleware, MiddlewareAPI } from 'redux';
 import { io, Socket } from 'socket.io-client';
 import { webSocketActions } from '../../features/web-socket/webSocketSlice';
-import { containersActions } from '../../features/container/containersSlice';
-import { webSocketEventsByAction, webSocketRequestActions } from '../../features/web-socket/webSocketActions';
-import { containerLogsActions } from '../../features/web-socket/containerLogsSlice';
+import {
+  actionsByResponseEvents,
+  webSocketEventsByAction,
+  webSocketRequestActions,
+} from '../../features/web-socket/webSocketActions';
 
 let socket: Socket;
 
@@ -47,16 +49,13 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   });
 
   socket.on('message', (message: WebSocketMessage) => {
-    // TODO: Use object to dispatch needed action instead of if-else
-    if (message.event === WebSocketResponseEvents.CreateContainerResponse) {
-      const castMessage = message as WebSocketCreateContainerResponse;
-      store.dispatch(containersActions.createContainerFulfilled(castMessage.container));
-    } else if (message.event === WebSocketResponseEvents.BuildImageLogs) {
-      const castMessage = message as WebSocketLogs;
-      store.dispatch(containerLogsActions.receiveBuildLogs(castMessage));
-    } else if (message.event === WebSocketResponseEvents.ContainerLogs) {
-      const castMessage = message as WebSocketLogs;
-      store.dispatch(containerLogsActions.receiveContainerLogs(castMessage));
+    const action = actionsByResponseEvents[message.event as WebSocketResponseEvents];
+
+    if (action === undefined) {
+      // eslint-disable-next-line no-console
+      console.error(`Unknown event type ${message.event} for web socket message ${message}.`);
+    } else {
+      store.dispatch(action(message));
     }
   });
 

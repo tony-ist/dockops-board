@@ -2,14 +2,14 @@ import { Container, CreateContainerRequest, Log } from './model-types';
 
 export enum WebSocketResponseEvents {
   ContainerLogs = 'ContainerLogs',
-  InteractiveShellLogs = 'InteractiveShellLogs',
+  // InteractiveShellLogs = 'InteractiveShellLogs',
   BuildImageLogs = 'BuildImageLogs',
   CreateContainerResponse = 'CreateContainerResponse',
 }
 
 export enum WebSocketRequestEvents {
   ContainerLogsSubscribe = 'ContainerLogsSubscribe',
-  InteractiveShellRequest = 'InteractiveShellRequest',
+  // InteractiveShellRequest = 'InteractiveShellRequest',
   CreateContainerRequest = 'CreateContainerRequest',
 }
 
