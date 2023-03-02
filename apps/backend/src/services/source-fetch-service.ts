@@ -22,15 +22,6 @@ export const sourceFetchService = {
 
     const githubResponse = await fetch(githubURL);
     const extractStream = unzip.Extract({ path: temporaryDirectory });
-    extractStream.on('finish', () => {
-      const socket = fastify.socketManager.get();
-      const message = 'Finished extracting downloaded archive.';
-      if (socket) {
-        socket.emit('message', message);
-      }
-      fastify.log.info(message);
-    });
-
     await stream.pipeline(githubResponse.body, extractStream);
   },
 };

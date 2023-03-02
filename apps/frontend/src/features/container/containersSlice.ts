@@ -1,8 +1,9 @@
-import { createAction, createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Container, CreateContainerRequest, CreateContainerResponse } from '../../types/models/containerType';
+import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Container } from '../../types/models/containerType';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
+import { RootState } from '../../types/storeTypes';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -20,8 +21,6 @@ export const fetchContainersThunk = createAsyncThunk(
   'containers/fetchContainers',
   () => api.v1ContainerAllGet()
 );
-
-export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
 
 const containersSlice = createSlice({
   name: 'containers',
@@ -51,3 +50,4 @@ const containersSlice = createSlice({
 
 export const containersActions = containersSlice.actions;
 export const containersReducer = containersSlice.reducer;
+export const containersSelectors = containersAdapter.getSelectors<RootState>((state) => state.containers);

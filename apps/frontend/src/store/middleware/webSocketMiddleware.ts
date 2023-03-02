@@ -1,31 +1,20 @@
 import {
-  WebSocketBuildImageLogs,
-  WebSocketContainerLogs,
   WebSocketCreateContainerResponse,
-  WebSocketMessage, WebSocketRequestEvents,
+  WebSocketLogs,
+  WebSocketMessage,
   WebSocketResponseEvents,
 } from 'common-src';
 import { AnyAction, Dispatch, Middleware, MiddlewareAPI } from 'redux';
 import { io, Socket } from 'socket.io-client';
 import { webSocketActions } from '../../features/web-socket/webSocketSlice';
-import { containersActions, createContainerRequest } from '../../features/container/containersSlice';
-import { Container } from '../../types/models/containerType';
+import { containersActions } from '../../features/container/containersSlice';
+import { webSocketEventsByAction, webSocketRequestActions } from '../../features/web-socket/webSocketActions';
+import { containerLogsActions } from '../../features/web-socket/containerLogsSlice';
 
 let socket: Socket;
 
-// TODO: Move this and all web socket request actions to proper place (maybe features/web-socket?)
-const webSocketRequests = [
-  webSocketActions.sendMessage,
-  createContainerRequest,
-];
-
-const webSocketEvents = {
-  [createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
-  [webSocketActions.sendMessage.type]: WebSocketRequestEvents.ContainerLogsRequest,
-};
-
 function getWebSocketEvent(actionType: string) {
-  return webSocketEvents[actionType];
+  return webSocketEventsByAction[actionType];
 }
 
 function isSocketConnected(socket: Socket, store: MiddlewareAPI<Dispatch<AnyAction>>) {
@@ -33,7 +22,7 @@ function isSocketConnected(socket: Socket, store: MiddlewareAPI<Dispatch<AnyActi
 }
 
 function isWebSocketRequestAction(action: AnyAction) {
-  return webSocketRequests.some((r) => r.match(action));
+  return webSocketRequestActions.some((r) => r.match(action));
 }
 
 function isStartConnectingAction(socket: Socket, action: AnyAction) {
@@ -63,15 +52,16 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   });
 
   socket.on('message', (message: WebSocketMessage) => {
+    // TODO: Use object to dispatch needed action instead of if-else
     if (message.event === WebSocketResponseEvents.CreateContainerResponse) {
       const castMessage = message as WebSocketCreateContainerResponse;
       store.dispatch(containersActions.createContainerFulfilled(castMessage.container));
     } else if (message.event === WebSocketResponseEvents.BuildImageLogs) {
-      const castMessage = message as WebSocketBuildImageLogs;
-      store.dispatch(webSocketActions.buildLogs(castMessage));
-    } else {
-      const castMessage = message as WebSocketContainerLogs;
-      store.dispatch(webSocketActions.receiveMessage(castMessage));
+      const castMessage = message as WebSocketLogs;
+      store.dispatch(containerLogsActions.receiveBuildLogs(castMessage));
+    } else if (message.event === WebSocketResponseEvents.ContainerLogs) {
+      const castMessage = message as WebSocketLogs;
+      store.dispatch(containerLogsActions.receiveContainerLogs(castMessage));
     }
   });
 

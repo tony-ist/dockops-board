@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchContainerListThunk } from '../../features/container/containerListSlice';
 import styles from './ContainerList.module.css';
+import { containersSelectors, fetchContainersThunk } from '../../features/container/containersSlice';
+import { store } from '../../store/store';
 
 export function ContainerList() {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.containerList.status);
-  const containerList = useAppSelector((state) => state.containerList.containerList);
-  const error = useAppSelector((state) => state.containerList.error);
+  const status = useAppSelector((state) => state.containers.status);
+  const error = useAppSelector((state) => state.containers.error);
+  const containerList = containersSelectors.selectAll(store.getState());
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchContainerListThunk());
+      dispatch(fetchContainersThunk());
     }
   }, [dispatch, status]);
 
@@ -22,7 +23,11 @@ export function ContainerList() {
   return (
     <div>
       {containerList.map((container, index) => (
-        <div key={index}>{container.image}</div>
+        <div key={index}>
+          <div>{container.id}</div>
+          <div>{container.dockerId}</div>
+          <div>{container.image}</div>
+        </div>
       ))}
     </div>
   );

@@ -1,15 +1,17 @@
 import {
   getContainerAllSchema,
-  postContainerStartSchema,
-  postContainerCreateSchema,
-  postContainerAttachSchema,
   getContainerLogsSchema,
+  postContainerAttachSchema,
+  postContainerCreateSchema,
+  postContainerStartSchema,
+  WebSocketResponseEvents,
 } from 'common-src';
 import { dockerService } from '../services/docker-service';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
 import { containerService } from '../services/container-service';
 
+// TODO: Add autosubscribe field to request schema, if true, then send logs via socket
 export async function containerController(fastify: FastifyInstance) {
   const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider>();
 
@@ -34,12 +36,7 @@ export async function containerController(fastify: FastifyInstance) {
       const containerName = request.body.containerName ?? 'tempcontainer';
       const dockerfileName = request.body.dockerfileName ?? 'Dockerfile';
       const { containerPort, hostPort } = request.body;
-
-      const socket = fastify.socketManager.get();
-
-      if (socket === null) {
-        throw new Error('Socket manager returned null socket');
-      }
+      const socket = request.ioSocket;
 
       containerService
         .fetchSourceBuildImageAndCreateContainer({
@@ -53,9 +50,10 @@ export async function containerController(fastify: FastifyInstance) {
           socket,
         })
         .catch((error) => {
-          if (socket !== null) {
-            socket.emit('message', error.message);
-          }
+          socket?.emit('message', {
+            event: WebSocketResponseEvents.BuildImageLogs,
+            text: error,
+          });
           fastify.log.error(error);
         });
 
@@ -82,13 +80,11 @@ export async function containerController(fastify: FastifyInstance) {
     schema: postContainerAttachSchema,
     handler: async (request, reply) => {
       const { containerId } = request.params;
-      const socket = fastify.socketManager.get();
+      const socket = request.ioSocket;
       const runStream = await dockerService.attachContainer({ fastify, dbContainerId: containerId });
       runStream.on('data', (data) => {
         const message = data.toString();
-        if (socket !== null) {
-          socket.emit('message', message);
-        }
+        socket?.emit('message', message);
         fastify.log.info(message);
       });
       reply.send({ message: 'Sending container logs via websocket.' });
@@ -102,7 +98,7 @@ export async function containerController(fastify: FastifyInstance) {
     handler: async (request, reply) => {
       const { containerId } = request.params as ContainerIdParams['Params'];
       const { tail } = request.query;
-      const socket = fastify.socketManager.get();
+      const socket = request.ioSocket;
       const logsStream = await dockerService.containerLogs({
         fastify,
         dbContainerId: containerId,
@@ -110,9 +106,7 @@ export async function containerController(fastify: FastifyInstance) {
       });
       logsStream.on('data', (data) => {
         const message = data.toString();
-        if (socket !== null) {
-          socket.emit('message', message);
-        }
+        socket?.emit('message', message);
         fastify.log.info(message);
       });
       reply.send({ message: 'Sending container logs via websocket.' });

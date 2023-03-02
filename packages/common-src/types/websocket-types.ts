@@ -20,18 +20,16 @@ export interface WebSocketContainerLogsRequest extends WebSocketMessage {
   tail?: number;
 }
 
-export interface WebSocketContainerLogs extends WebSocketMessage {
-  text: string;
-}
-
 export interface WebSocketCreateContainerRequest extends WebSocketMessage {
   githubURL: string;
   imageName?: string;
   dockerfileName?: string;
   containerName?: string;
+  containerPort?: string;
+  hostPort?: string;
 }
 
-export interface WebSocketBuildImageLogs extends WebSocketMessage {
+export interface WebSocketLogs extends WebSocketMessage {
   text: string;
 }
 
