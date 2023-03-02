@@ -36,7 +36,7 @@ export const RootPage = () => {
         <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
           Deploy Echo Server on port 8080!
         </Button>
-        <Button variant="contained" onClick={() => subscribeToLogs(11)}>
+        <Button variant="contained" onClick={() => subscribeToLogs(13)}>
           Receive logs from 8080
         </Button>
         <ContainerList></ContainerList>

@@ -1,6 +1,4 @@
 import { Socket } from 'socket.io';
-import { dockerService } from './docker-service';
-import { server } from '../server';
 import {
   WebSocketContainerLogsSubscribe,
   WebSocketCreateContainerRequest,
@@ -9,7 +7,6 @@ import {
   WebSocketResponseEvents,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
-import { containerService } from './container-service';
 
 export type EventHandler = (fastify: FastifyInstance, socket: Socket, message: WebSocketMessage) => Promise<void>;
 
@@ -17,8 +14,7 @@ export type EventHandler = (fastify: FastifyInstance, socket: Socket, message: W
 export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHandler } = {
   [WebSocketRequestEvents.ContainerLogsSubscribe]: async (fastify, socket, message) => {
     const castMessage = message as WebSocketContainerLogsSubscribe;
-    const logsStream = await dockerService.containerLogs({
-      fastify: server,
+    const logsStream = await fastify.dockerService.containerLogs({
       dbContainerId: castMessage.dbContainerId,
       tail: castMessage.tail,
     });
@@ -42,8 +38,7 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
     const castMessage = message as WebSocketCreateContainerRequest;
     const imageName = 'tempimage';
     const containerName = castMessage.containerName ?? 'tempcontainer';
-    await containerService.fetchSourceBuildImageAndCreateContainer({
-      fastify,
+    await fastify.containerService.fetchSourceBuildImageAndCreateContainer({
       ...castMessage,
       imageName,
       containerName,

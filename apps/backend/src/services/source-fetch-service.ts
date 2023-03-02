@@ -6,13 +6,19 @@ import { FastifyInstance } from 'fastify';
 import * as config from '../config';
 
 export interface ExtractZipFromGithubOptions {
-  fastify: FastifyInstance;
   githubURL: string;
 }
 
-export const sourceFetchService = {
+export class SourceFetchService {
+  fastify: FastifyInstance;
+
+  constructor(fastify: FastifyInstance) {
+    this.fastify = fastify;
+  }
+
   async extractZipFromGithub(options: ExtractZipFromGithubOptions) {
-    const { fastify, githubURL } = options;
+    const { githubURL } = options;
+    const { fastify } = this;
     const temporaryDirectory = config.temporaryDirectoryPath;
 
     if (!fs.existsSync(temporaryDirectory)) {
@@ -23,5 +29,5 @@ export const sourceFetchService = {
     const githubResponse = await fetch(githubURL);
     const extractStream = unzip.Extract({ path: temporaryDirectory });
     await stream.pipeline(githubResponse.body, extractStream);
-  },
-};
+  }
+}

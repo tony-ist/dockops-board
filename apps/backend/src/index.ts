@@ -14,6 +14,7 @@ import { socketPlugin } from './plugins/socket-plugin';
 import { WebSocketMessage, WebSocketRequestEvents } from 'common-src';
 import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services/web-socket-event-handlers';
 import { fastifyCookie } from '@fastify/cookie';
+import { servicePlugin } from './plugins/service-plugin';
 
 async function run() {
   await server.register(fastifySwagger, {
@@ -48,6 +49,7 @@ async function run() {
   }
 
   await server.register(fastifyCookie);
+  await server.register(servicePlugin);
   await server.register(socketPlugin);
   await server.register(prismaPlugin);
   await server.register(dockerodePlugin);

@@ -1,16 +1,24 @@
-import { BuildImageOptions, CreateContainerOptions, dockerService } from './docker-service';
-import { ExtractZipFromGithubOptions, sourceFetchService } from './source-fetch-service';
+import { BuildImageOptions, CreateContainerOptions } from './docker-service';
+import { ExtractZipFromGithubOptions } from './source-fetch-service';
 import stream from 'node:stream/promises';
 import { Socket } from 'socket.io';
 import { WebSocketResponseEvents } from 'common-src';
+import { FastifyInstance } from 'fastify';
 
 export type FetchSourceBuildImageAndCreateContainerOptions = ExtractZipFromGithubOptions &
   BuildImageOptions &
   CreateContainerOptions & { socket?: Socket };
 
-export const containerService = {
+export class ContainerService {
+  fastify: FastifyInstance;
+
+  constructor(fastify: FastifyInstance) {
+    this.fastify = fastify;
+  }
+
   async fetchSourceBuildImageAndCreateContainer(options: FetchSourceBuildImageAndCreateContainerOptions) {
-    const { fastify, socket } = options;
+    const { socket } = options;
+    const { fastify } = this;
 
     const startExtractingMessage = 'Start downloading and extracting sources.';
     socket?.emit('message', {
@@ -19,7 +27,7 @@ export const containerService = {
     });
     fastify.log.info(startExtractingMessage);
 
-    await sourceFetchService.extractZipFromGithub(options);
+    await fastify.sourceFetchService.extractZipFromGithub(options);
 
     const finishedExtractingMessage = 'Finished extracting downloaded archive.';
     socket?.emit('message', {
@@ -28,7 +36,7 @@ export const containerService = {
     });
     fastify.log.info(finishedExtractingMessage);
 
-    const buildStream = await dockerService.buildImage(options);
+    const buildStream = await fastify.dockerService.buildImage(options);
     buildStream.on('data', (data) => {
       const message = data.toString();
       socket?.emit('message', {
@@ -40,7 +48,7 @@ export const containerService = {
 
     await stream.finished(buildStream);
 
-    const containerDockerId = await dockerService.createContainer(options);
+    const containerDockerId = await fastify.dockerService.createContainer(options);
 
     const createdContainerMessage = `Created container with docker id "${containerDockerId}".`;
     fastify.log.info(createdContainerMessage);
@@ -57,5 +65,5 @@ export const containerService = {
     });
 
     return container;
-  },
-};
+  }
+}

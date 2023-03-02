@@ -6,13 +6,11 @@ import { FastifyInstance } from 'fastify';
 import * as config from '../config';
 
 export interface BuildImageOptions {
-  fastify: FastifyInstance;
   imageName: string;
   dockerfileName?: string;
 }
 
 export interface CreateContainerOptions {
-  fastify: FastifyInstance;
   containerName: string;
   imageName: string;
   containerPort?: string;
@@ -20,17 +18,14 @@ export interface CreateContainerOptions {
 }
 
 interface RunContainerOptions {
-  fastify: FastifyInstance;
   dbContainerId: number;
 }
 
 interface AttachContainerOptions {
-  fastify: FastifyInstance;
   dbContainerId: number;
 }
 
 interface ContainerLogsOptions {
-  fastify: FastifyInstance;
   dbContainerId: number;
   /**
    * How many last lines of logs to return in the stream. If it's undefined, then return 0 last lines.
@@ -39,22 +34,21 @@ interface ContainerLogsOptions {
 }
 
 // TODO: Refactor services using classes and maybe decorate fastify instance with services instances (via plugins)
-// class DockerService {
-//   fastify: FastifyInstance;
-//
-//   constructor(fastify: FastifyInstance) {
-//     this.fastify = fastify;
-//   }
-// }
+export class DockerService {
+  fastify: FastifyInstance;
 
-export const dockerService = {
+  constructor(fastify: FastifyInstance) {
+    this.fastify = fastify;
+  }
+
   async getAllContainers(docker: Dockerode) {
     const containerInfos = await docker.listContainers({ all: true });
     return containerInfos.map((info) => ({ image: info.Image }));
-  },
+  }
 
   async buildImage(options: BuildImageOptions) {
-    const { fastify, imageName, dockerfileName } = options;
+    const { imageName, dockerfileName } = options;
+    const { fastify } = this;
     const temporaryDirectoryPath = config.temporaryDirectoryPath;
     const docker = fastify.docker;
     const dockerfile = dockerfileName ?? 'Dockerfile';
@@ -85,14 +79,15 @@ export const dockerService = {
     );
 
     return buildStream;
-  },
+  }
 
   /**
    * Creates a docker container in docker and a corresponding entry in the database
    * @returns dockerId of the created docker container (not id from the database)
    */
   async createContainer(options: CreateContainerOptions) {
-    const { fastify, containerName, containerPort, hostPort, imageName } = options;
+    const { containerName, containerPort, hostPort, imageName } = options;
+    const { fastify } = this;
     const { prisma, docker } = fastify;
 
     const portForwardOptions: Partial<ContainerCreateOptions> = {};
@@ -128,36 +123,37 @@ export const dockerService = {
     });
 
     return containerCreateResult.id;
-  },
+  }
 
   async runContainer(options: RunContainerOptions) {
-    const { fastify, dbContainerId } = options;
-    const dockerContainer = await dockerService.getDockerContainerByDbContainerId(fastify, dbContainerId);
+    const { dbContainerId } = options;
+    const { fastify } = this;
+    const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
     const startResult = await dockerContainer.start();
 
     fastify.log.info(`Started container with id "${dbContainerId}". Additional info: "${startResult.toString()}"`);
 
     return startResult;
-  },
+  }
 
   async attachContainer(options: AttachContainerOptions) {
-    const { fastify, dbContainerId } = options;
-    const dockerContainer = await dockerService.getDockerContainerByDbContainerId(fastify, dbContainerId);
+    const { dbContainerId } = options;
+    const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
     const runStream = await dockerContainer.attach({
       stream: true,
       stdout: true,
       stderr: true,
     });
     return runStream;
-  },
+  }
 
   /**
    * Attach and listen for container logs
    * @return - readable stream of logs
    */
   async containerLogs(options: ContainerLogsOptions) {
-    const { fastify, dbContainerId, tail } = options;
-    const dockerContainer = await dockerService.getDockerContainerByDbContainerId(fastify, dbContainerId);
+    const { dbContainerId, tail } = options;
+    const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
 
     const logsStream = await dockerContainer.logs({
       timestamps: true,
@@ -167,17 +163,17 @@ export const dockerService = {
       follow: true,
     });
     return logsStream;
-  },
+  }
 
   /**
    * Returns dockerode container instance by container id from the database
-   * @param fastify - server instance
    * @param dbContainerId - container id from the database
    */
-  async getDockerContainerByDbContainerId(fastify: FastifyInstance, dbContainerId: number) {
+  async getDockerContainerByDbContainerId(dbContainerId: number) {
+    const { fastify } = this;
     const { prisma, docker } = fastify;
     const dbContainer = await prisma.container.findFirstOrThrow({ where: { id: dbContainerId } });
     const dockerContainer = docker.getContainer(dbContainer.dockerId);
     return dockerContainer;
-  },
-};
+  }
+}

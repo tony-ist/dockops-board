@@ -6,10 +6,8 @@ import {
   postContainerStartSchema,
   WebSocketResponseEvents,
 } from 'common-src';
-import { dockerService } from '../services/docker-service';
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
-import { containerService } from '../services/container-service';
 
 // TODO: Add autosubscribe field to request schema, if true, then send logs via socket
 export async function containerController(fastify: FastifyInstance) {
@@ -38,9 +36,8 @@ export async function containerController(fastify: FastifyInstance) {
       const { containerPort, hostPort } = request.body;
       const socket = request.ioSocket;
 
-      containerService
+      fastify.containerService
         .fetchSourceBuildImageAndCreateContainer({
-          fastify,
           githubURL,
           imageName,
           containerName,
@@ -69,7 +66,7 @@ export async function containerController(fastify: FastifyInstance) {
     schema: postContainerStartSchema,
     handler: async (request, reply) => {
       const { containerId } = request.params;
-      const result = await dockerService.runContainer({ fastify, dbContainerId: containerId });
+      const result = await fastify.dockerService.runContainer({ dbContainerId: containerId });
       reply.send({ message: 'Container started.', result });
     },
   });
@@ -81,7 +78,7 @@ export async function containerController(fastify: FastifyInstance) {
     handler: async (request, reply) => {
       const { containerId } = request.params;
       const socket = request.ioSocket;
-      const runStream = await dockerService.attachContainer({ fastify, dbContainerId: containerId });
+      const runStream = await fastify.dockerService.attachContainer({ dbContainerId: containerId });
       runStream.on('data', (data) => {
         const message = data.toString();
         socket?.emit('message', message);
@@ -99,8 +96,7 @@ export async function containerController(fastify: FastifyInstance) {
       const { containerId } = request.params as ContainerIdParams['Params'];
       const { tail } = request.query;
       const socket = request.ioSocket;
-      const logsStream = await dockerService.containerLogs({
-        fastify,
+      const logsStream = await fastify.dockerService.containerLogs({
         dbContainerId: containerId,
         tail,
       });
