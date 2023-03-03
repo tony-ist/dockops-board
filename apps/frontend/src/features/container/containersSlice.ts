@@ -1,5 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Container, ContainerAllRequest, ContainerAllResponse } from 'common-src';
+import { Container, ContainerAllRequest, ContainerAllResponse, WebSocketCreateContainerResponse } from 'common-src';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
@@ -26,8 +26,8 @@ const containersSlice = createSlice({
   name: 'containers',
   initialState,
   reducers: {
-    createContainerFulfilled: (state, action: PayloadAction<Container>) => {
-      containersAdapter.upsertOne(state, action.payload);
+    createContainerFulfilled: (state, action: PayloadAction<WebSocketCreateContainerResponse>) => {
+      containersAdapter.upsertOne(state, action.payload.container);
     },
   },
   extraReducers(builder) {

@@ -51,12 +51,15 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   socket.on('message', (message: WebSocketMessage) => {
     const action = actionsByResponseEvents[message.event as WebSocketResponseEvents];
 
-    if (action === undefined) {
-      // eslint-disable-next-line no-console
-      console.error(`Unknown event type ${message.event} for web socket message ${message}.`);
-    } else {
+    if (action !== undefined) {
       store.dispatch(action(message));
+      return;
     }
+
+    const errorMessage = `Unknown event type ${message.event} for web socket message ${message}.`;
+    // eslint-disable-next-line no-console
+    console.error(errorMessage);
+    window.alert(errorMessage);
   });
 
   next(action);

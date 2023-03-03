@@ -1,3 +1,4 @@
+// TODO: Extract model schema
 export const postUsersNewSchema = {
   response: {
     200: {

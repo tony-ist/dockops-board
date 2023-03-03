@@ -22,32 +22,28 @@ import type {
 } from '../models';
 import {
   V1ContainerAllGet200ResponseInnerFromJSON,
-  V1ContainerAllGet200ResponseInnerToJSON,
   V1ContainerCreatePost200ResponseFromJSON,
-  V1ContainerCreatePost200ResponseToJSON,
-  V1ContainerCreatePostRequestFromJSON,
   V1ContainerCreatePostRequestToJSON,
   V1UserNewPost200ResponseFromJSON,
-  V1UserNewPost200ResponseToJSON,
-  V1UserNewPostRequestFromJSON,
   V1UserNewPostRequestToJSON,
 } from '../models';
 
-export interface V1ContainerContainerIdAttachPostRequest {
-  containerId: number;
+export interface V1ContainerCreatePostOperationRequest {
+  body?: V1ContainerCreatePostRequest;
 }
 
-export interface V1ContainerContainerIdLogsGetRequest {
-  containerId: number;
+export interface V1ContainerDbContainerIdAttachPostRequest {
+  dbContainerId: number;
+}
+
+export interface V1ContainerDbContainerIdLogsGetRequest {
+  dbContainerId: number;
+  dbContainerId2: number;
   tail?: number;
 }
 
-export interface V1ContainerContainerIdStartPostRequest {
-  containerId: number;
-}
-
-export interface V1ContainerCreatePostOperationRequest {
-  body?: V1ContainerCreatePostRequest;
+export interface V1ContainerDbContainerIdStartPostRequest {
+  dbContainerId: number;
 }
 
 export interface V1UserNewPostOperationRequest {
@@ -93,139 +89,6 @@ export class DefaultApi extends runtime.BaseAPI {
 
   /**
    */
-  async v1ContainerContainerIdAttachPostRaw(
-    requestParameters: V1ContainerContainerIdAttachPostRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
-    if (requestParameters.containerId === null || requestParameters.containerId === undefined) {
-      throw new runtime.RequiredError(
-        'containerId',
-        'Required parameter requestParameters.containerId was null or undefined when calling v1ContainerContainerIdAttachPost.'
-      );
-    }
-
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    const response = await this.request(
-      {
-        path: `/v1/container/{containerId}/attach`.replace(
-          `{${'containerId'}}`,
-          encodeURIComponent(String(requestParameters.containerId))
-        ),
-        method: 'POST',
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
-
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
-  }
-
-  /**
-   */
-  async v1ContainerContainerIdAttachPost(
-    requestParameters: V1ContainerContainerIdAttachPostRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1ContainerCreatePost200Response> {
-    const response = await this.v1ContainerContainerIdAttachPostRaw(requestParameters, initOverrides);
-    return await response.value();
-  }
-
-  /**
-   */
-  async v1ContainerContainerIdLogsGetRaw(
-    requestParameters: V1ContainerContainerIdLogsGetRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
-    if (requestParameters.containerId === null || requestParameters.containerId === undefined) {
-      throw new runtime.RequiredError(
-        'containerId',
-        'Required parameter requestParameters.containerId was null or undefined when calling v1ContainerContainerIdLogsGet.'
-      );
-    }
-
-    const queryParameters: any = {};
-
-    if (requestParameters.tail !== undefined) {
-      queryParameters['tail'] = requestParameters.tail;
-    }
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    const response = await this.request(
-      {
-        path: `/v1/container/{containerId}/logs`.replace(
-          `{${'containerId'}}`,
-          encodeURIComponent(String(requestParameters.containerId))
-        ),
-        method: 'GET',
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
-
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
-  }
-
-  /**
-   */
-  async v1ContainerContainerIdLogsGet(
-    requestParameters: V1ContainerContainerIdLogsGetRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1ContainerCreatePost200Response> {
-    const response = await this.v1ContainerContainerIdLogsGetRaw(requestParameters, initOverrides);
-    return await response.value();
-  }
-
-  /**
-   */
-  async v1ContainerContainerIdStartPostRaw(
-    requestParameters: V1ContainerContainerIdStartPostRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
-    if (requestParameters.containerId === null || requestParameters.containerId === undefined) {
-      throw new runtime.RequiredError(
-        'containerId',
-        'Required parameter requestParameters.containerId was null or undefined when calling v1ContainerContainerIdStartPost.'
-      );
-    }
-
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    const response = await this.request(
-      {
-        path: `/v1/container/{containerId}/start`.replace(
-          `{${'containerId'}}`,
-          encodeURIComponent(String(requestParameters.containerId))
-        ),
-        method: 'POST',
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides
-    );
-
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
-  }
-
-  /**
-   */
-  async v1ContainerContainerIdStartPost(
-    requestParameters: V1ContainerContainerIdStartPostRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1ContainerCreatePost200Response> {
-    const response = await this.v1ContainerContainerIdStartPostRaw(requestParameters, initOverrides);
-    return await response.value();
-  }
-
-  /**
-   */
   async v1ContainerCreatePostRaw(
     requestParameters: V1ContainerCreatePostOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
@@ -257,6 +120,150 @@ export class DefaultApi extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction
   ): Promise<V1ContainerCreatePost200Response> {
     const response = await this.v1ContainerCreatePostRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
+   */
+  async v1ContainerDbContainerIdAttachPostRaw(
+    requestParameters: V1ContainerDbContainerIdAttachPostRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
+    if (requestParameters.dbContainerId === null || requestParameters.dbContainerId === undefined) {
+      throw new runtime.RequiredError(
+        'dbContainerId',
+        'Required parameter requestParameters.dbContainerId was null or undefined when calling v1ContainerDbContainerIdAttachPost.'
+      );
+    }
+
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    const response = await this.request(
+      {
+        path: `/v1/container/{dbContainerId}/attach`.replace(
+          `{${'dbContainerId'}}`,
+          encodeURIComponent(String(requestParameters.dbContainerId))
+        ),
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
+  }
+
+  /**
+   */
+  async v1ContainerDbContainerIdAttachPost(
+    requestParameters: V1ContainerDbContainerIdAttachPostRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<V1ContainerCreatePost200Response> {
+    const response = await this.v1ContainerDbContainerIdAttachPostRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
+   */
+  async v1ContainerDbContainerIdLogsGetRaw(
+    requestParameters: V1ContainerDbContainerIdLogsGetRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
+    if (requestParameters.dbContainerId === null || requestParameters.dbContainerId === undefined) {
+      throw new runtime.RequiredError(
+        'dbContainerId',
+        'Required parameter requestParameters.dbContainerId was null or undefined when calling v1ContainerDbContainerIdLogsGet.'
+      );
+    }
+
+    if (requestParameters.dbContainerId2 === null || requestParameters.dbContainerId2 === undefined) {
+      throw new runtime.RequiredError(
+        'dbContainerId2',
+        'Required parameter requestParameters.dbContainerId2 was null or undefined when calling v1ContainerDbContainerIdLogsGet.'
+      );
+    }
+
+    const queryParameters: any = {};
+
+    if (requestParameters.dbContainerId !== undefined) {
+      queryParameters['dbContainerId'] = requestParameters.dbContainerId;
+    }
+
+    if (requestParameters.tail !== undefined) {
+      queryParameters['tail'] = requestParameters.tail;
+    }
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    const response = await this.request(
+      {
+        path: `/v1/container/{dbContainerId}/logs`.replace(
+          `{${'dbContainerId'}}`,
+          encodeURIComponent(String(requestParameters.dbContainerId2))
+        ),
+        method: 'GET',
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
+  }
+
+  /**
+   */
+  async v1ContainerDbContainerIdLogsGet(
+    requestParameters: V1ContainerDbContainerIdLogsGetRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<V1ContainerCreatePost200Response> {
+    const response = await this.v1ContainerDbContainerIdLogsGetRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
+   */
+  async v1ContainerDbContainerIdStartPostRaw(
+    requestParameters: V1ContainerDbContainerIdStartPostRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
+    if (requestParameters.dbContainerId === null || requestParameters.dbContainerId === undefined) {
+      throw new runtime.RequiredError(
+        'dbContainerId',
+        'Required parameter requestParameters.dbContainerId was null or undefined when calling v1ContainerDbContainerIdStartPost.'
+      );
+    }
+
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    const response = await this.request(
+      {
+        path: `/v1/container/{dbContainerId}/start`.replace(
+          `{${'dbContainerId'}}`,
+          encodeURIComponent(String(requestParameters.dbContainerId))
+        ),
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
+  }
+
+  /**
+   */
+  async v1ContainerDbContainerIdStartPost(
+    requestParameters: V1ContainerDbContainerIdStartPostRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<V1ContainerCreatePost200Response> {
+    const response = await this.v1ContainerDbContainerIdStartPostRaw(requestParameters, initOverrides);
     return await response.value();
   }
 

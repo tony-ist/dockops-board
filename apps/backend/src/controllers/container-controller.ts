@@ -58,27 +58,27 @@ export async function containerController(fastify: FastifyInstance) {
     },
   });
 
-  type ContainerIdParams = { Params: { containerId: number } };
+  type ContainerIdParams = { Params: { dbContainerId: number } };
 
   fastifyTyped.route<ContainerIdParams>({
     method: 'POST',
-    url: '/:containerId/start',
+    url: '/:dbContainerId/start',
     schema: postContainerStartSchema,
     handler: async (request, reply) => {
-      const { containerId } = request.params;
-      const result = await fastify.dockerService.runContainer({ dbContainerId: containerId });
+      const { dbContainerId } = request.params;
+      const result = await fastify.dockerService.runContainer({ dbContainerId });
       reply.send({ message: 'Container started.', result });
     },
   });
 
   fastifyTyped.route<ContainerIdParams>({
     method: 'POST',
-    url: '/:containerId/attach',
+    url: '/:dbContainerId/attach',
     schema: postContainerAttachSchema,
     handler: async (request, reply) => {
-      const { containerId } = request.params;
+      const { dbContainerId } = request.params;
       const socket = request.ioSocket;
-      const runStream = await fastify.dockerService.attachContainer({ dbContainerId: containerId });
+      const runStream = await fastify.dockerService.attachContainer({ dbContainerId });
       runStream.on('data', (data) => {
         const message = data.toString();
         socket?.emit('message', message);
@@ -90,14 +90,14 @@ export async function containerController(fastify: FastifyInstance) {
 
   fastifyTyped.route({
     method: 'GET',
-    url: '/:containerId/logs',
+    url: '/:dbContainerId/logs',
     schema: getContainerLogsSchema,
     handler: async (request, reply) => {
-      const { containerId } = request.params as ContainerIdParams['Params'];
+      const { dbContainerId } = request.params as ContainerIdParams['Params'];
       const { tail } = request.query;
       const socket = request.ioSocket;
       const logsStream = await fastify.dockerService.containerLogs({
-        dbContainerId: containerId,
+        dbContainerId,
         tail,
       });
       logsStream.on('data', (data) => {
