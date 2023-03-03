@@ -9,10 +9,10 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint -- --ignore-path ../../.gitignore",
-    "lint:fix": "turbo run lint -- --fix --ignore-path ../../.gitignore",
-    "prettier": "turbo run prettier -- --ignore-path ../../.gitignore",
-    "prettier:fix": "turbo run prettier:fix -- --ignore-path ../../.gitignore",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "prettier": "turbo run prettier",
+    "prettier:fix": "turbo run prettier:fix",
     "style:fix": "npm run prettier:fix && npm run lint:fix",
     "hooks:install": "simple-git-hooks"
   },
