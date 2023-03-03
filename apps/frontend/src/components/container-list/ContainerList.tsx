@@ -54,5 +54,11 @@ export const ContainerList = () => {
     return <div className={styles.error}>{error}</div>;
   }
 
-  return containerList.map((container, index) => <ContainerListItem container={container} index={index} key={index} />);
+  return (
+    <>
+      {containerList.map((container, index) => (
+        <ContainerListItem container={container} index={index} key={index} />
+      ))}
+    </>
+  );
 };
