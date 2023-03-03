@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { webSocketActions } from '../features/web-socket/webSocketSlice';
 import { createTheme, ThemeProvider } from '@mui/material';
 
-export const appTheme = createTheme({
+const appTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
