@@ -8,3 +8,4 @@ export const nodeEnv = process.env.NODE_ENV ?? 'PRODUCTION';
 export const sqliteURL = process.env.SQLITE_URL ?? 'file:/etc/dockerops-board/db/production.db';
 export const serveStatic = process.env.SERVE_STATIC ?? 'TRUE';
 export const temporaryDirectoryPath = process.env.TEMPORARY_DIRECTORY_PATH ?? '/etc/dockerops-board/repos';
+export const frontendURL = process.env.FRONTEND_URL ?? 'http://localhost:5173';

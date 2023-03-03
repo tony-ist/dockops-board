@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { styled } from '@mui/material/styles';
-import { sideBarActions } from '../../features/sidebar/sideBar';
+import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar/AppBar';

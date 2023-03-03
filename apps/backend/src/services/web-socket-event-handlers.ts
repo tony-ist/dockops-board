@@ -1,29 +1,48 @@
 import { Socket } from 'socket.io';
-import { dockerService } from './docker-service';
-import { server } from '../server';
-import { WebSocketMessage, WebSocketRequest, WebSocketResponse } from 'common-src';
+import {
+  WebSocketContainerLogsSubscribe,
+  WebSocketCreateContainerRequest,
+  WebSocketMessage,
+  WebSocketRequestEvents,
+  WebSocketResponseEvents,
+} from 'common-src';
+import { FastifyInstance } from 'fastify';
 
-export type EventHandler = (socket: Socket, message: WebSocketMessage) => Promise<void>;
+export type EventHandler = (fastify: FastifyInstance, socket: Socket, message: WebSocketMessage) => Promise<void>;
 
-export const webSocketEventHandlers: { [key in WebSocketRequest]: EventHandler } = {
-  [WebSocketRequest.ContainerLogsRequest]: async (socket, message) => {
-    const logsStream = await dockerService.containerLogs({
-      fastify: server,
-      // TODO: Get rid of "as number", make message type-safe
-      dbContainerId: message.dbContainerId as number,
-      tail: message.tail,
+// TODO: Think about returning stream from the handler instead of passing socket as an argument
+export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHandler } = {
+  [WebSocketRequestEvents.ContainerLogsSubscribe]: async (fastify, socket, message) => {
+    const castMessage = message as WebSocketContainerLogsSubscribe;
+    const logsStream = await fastify.dockerService.containerLogs({
+      dbContainerId: castMessage.dbContainerId,
+      tail: castMessage.tail,
     });
     logsStream.on('data', (data) => {
       socket.emit('message', {
-        event: WebSocketResponse.ContainerLogsResponse,
+        event: WebSocketResponseEvents.ContainerLogs,
         text: data.toString(),
       });
     });
   },
-  [WebSocketRequest.InteractiveShellRequest]: async (socket, message) => {
-    socket.emit('message', {
-      event: WebSocketResponse.InteractiveShellResponse,
-      text: message.command,
+
+  // [WebSocketRequestEvents.InteractiveShellRequest]: async (fastify, socket, message) => {
+  //   const castMessage = message as WebSocketInteractiveShellRequest;
+  //   socket.emit('message', {
+  //     event: WebSocketResponseEvents.InteractiveShellLogs,
+  //     text: `requested shell for db container id ${castMessage.dbContainerId}`,
+  //   });
+  // },
+
+  [WebSocketRequestEvents.CreateContainerRequest]: async (fastify, socket, message) => {
+    const castMessage = message as WebSocketCreateContainerRequest;
+    const imageName = 'tempimage';
+    const containerName = castMessage.containerName ?? 'tempcontainer';
+    await fastify.containerService.fetchSourceBuildImageAndCreateContainer({
+      ...castMessage,
+      imageName,
+      containerName,
+      socket,
     });
   },
 };

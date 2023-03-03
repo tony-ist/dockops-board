@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { sideBarActions } from '../../features/sidebar/sideBar';
+import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { ViewList } from '@mui/icons-material';
 import MuiDrawer from '@mui/material/Drawer';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
