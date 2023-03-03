@@ -4,20 +4,22 @@
 
 .containerListItem {
   /*background-color: lightgray;*/
-  border: 2px solid lightgray;
+  border: 2px solid transparent;
   border-radius: 5px;
   padding: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   transition: border 0.2s ease-out;
   text-decoration: none;
 }
+
 .containerListItem:hover {
-  border: 2px solid gray;
+  /*border: 2px solid gray;*/
 }
 
-/*.containerListItem > td {*/
-/*    border-bottom: none;*/
-/*    !*border: solid 1px #000;*!*/
-/*    !*border-style: none solid solid none;*!*/
-/*    !*padding: 10px;*!*/
-/*}*/
+.containerList {
+  height: calc(100vh - 160px);
+  padding-right: 10px;
+  position: relative;
+  top: 50px;
+  /*display: block;*/
+}

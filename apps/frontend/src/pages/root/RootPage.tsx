@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import { DashboardLayout } from '../../layouts/dashboard/dashboard';
 import { containerLogsRequest, createContainerRequest } from '../../features/web-socket/webSocketActions';
 import { startContainerThunk } from '../../features/container/startContainerSlice';
+import Box from '@mui/material/Box';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
@@ -41,19 +42,21 @@ export const RootPage = () => {
   return (
     <>
       <DashboardLayout>
-        <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
-          Deploy Echo Server on port 8080!
-        </Button>
-        {dbCreatedContainerId && (
-          <>
-            <Button variant="contained" onClick={() => startContainer(dbCreatedContainerId)}>
-              Start Container
-            </Button>
-            <Button variant="contained" onClick={() => subscribeToLogs(dbCreatedContainerId)}>
-              Receive logs
-            </Button>
-          </>
-        )}
+        <Box right={30} position={'fixed'}>
+          <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
+            Deploy Echo Server on port 8080!
+          </Button>
+          {dbCreatedContainerId && (
+            <>
+              <Button variant="contained" onClick={() => startContainer(dbCreatedContainerId)}>
+                Start Container
+              </Button>
+              <Button variant="contained" onClick={() => subscribeToLogs(dbCreatedContainerId)}>
+                Receive logs
+              </Button>
+            </>
+          )}
+        </Box>
         <ContainerList></ContainerList>
         <WebSocketMessages></WebSocketMessages>
       </DashboardLayout>
