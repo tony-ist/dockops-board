@@ -1,13 +1,4 @@
-export const containerSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'number' },
-    dockerId: { type: 'string' },
-    image: { type: 'string' },
-  },
-  required: ['id', 'dockerId', 'image'],
-  additionalProperties: false,
-} as const;
+import { containerSchema, dbContainerIdSchema, messageSchema } from './model-schema';
 
 export const containerCreateRequestSchema = {
   type: 'object',
@@ -30,36 +21,15 @@ export const containerAllResponseSchema = {
   items: containerSchema,
 } as const;
 
-export const messageSchema = {
-  type: 'object',
-  properties: {
-    message: { type: 'string' },
-  },
-  required: ['message'],
-  additionalProperties: false,
-} as const;
-
-export const logSchema = {
-  type: 'object',
-  properties: {
-    text: { type: 'string' },
-  },
-  required: ['text'],
-} as const;
-
 export const containerLogsRequestSchema = {
   type: 'object',
   properties: {
+    dbContainerId: { type: 'number' },
     tail: { type: 'number' },
   },
+  required: ['dbContainerId'],
+  additionalProperties: false,
 } as const;
-
-const containerIdParams = {
-  type: 'object',
-  properties: {
-    containerId: { type: 'number' },
-  },
-};
 
 export const getContainerAllSchema = {
   response: {
@@ -75,21 +45,21 @@ export const postContainerCreateSchema = {
 } as const;
 
 export const postContainerStartSchema = {
-  params: containerIdParams,
+  params: dbContainerIdSchema,
   response: {
     200: messageSchema,
   },
 } as const;
 
 export const postContainerAttachSchema = {
-  params: containerIdParams,
+  params: dbContainerIdSchema,
   response: {
     200: messageSchema,
   },
 } as const;
 
 export const getContainerLogsSchema = {
-  params: containerIdParams,
+  params: dbContainerIdSchema,
   querystring: containerLogsRequestSchema,
   response: {
     200: messageSchema,

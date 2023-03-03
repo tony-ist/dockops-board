@@ -1,13 +1,14 @@
 import { ContainerList } from '../../components/container-list/ContainerList';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { Button } from '@mui/material';
-import { WebSocketRequestEvents } from 'common-src';
 import { DashboardLayout } from '../../layouts/dashboard/dashboard';
 import { containerLogsRequest, createContainerRequest } from '../../features/web-socket/webSocketActions';
+import { startContainerThunk } from '../../features/container/startContainerSlice';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
+  const dbCreatedContainerId = useAppSelector((state) => state.createContainer.dbContainerId);
 
   function createContainer(containerName: string, hostPort: string) {
     dispatch(
@@ -21,10 +22,17 @@ export const RootPage = () => {
     );
   }
 
+  function startContainer(dbContainerId: number) {
+    dispatch(
+      startContainerThunk({
+        dbContainerId,
+      })
+    );
+  }
+
   function subscribeToLogs(dbContainerId: number) {
     dispatch(
       containerLogsRequest({
-        event: WebSocketRequestEvents.ContainerLogsSubscribe,
         dbContainerId,
       })
     );
@@ -36,9 +44,16 @@ export const RootPage = () => {
         <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
           Deploy Echo Server on port 8080!
         </Button>
-        <Button variant="contained" onClick={() => subscribeToLogs(13)}>
-          Receive logs from 8080
-        </Button>
+        {dbCreatedContainerId && (
+          <>
+            <Button variant="contained" onClick={() => startContainer(dbCreatedContainerId)}>
+              Start Container
+            </Button>
+            <Button variant="contained" onClick={() => subscribeToLogs(dbCreatedContainerId)}>
+              Receive logs
+            </Button>
+          </>
+        )}
         <ContainerList></ContainerList>
         <WebSocketMessages></WebSocketMessages>
       </DashboardLayout>

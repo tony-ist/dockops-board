@@ -2,22 +2,23 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
-import { CreateContainerRequest, CreateContainerResponse } from 'common-src';
+import { CreateContainerRequest, RestCreateContainerResponse } from 'common-src';
+import { containersActions } from './containersSlice';
 
 interface ContainerListState {
-  container: CreateContainerResponse | null;
+  dbContainerId: number | null;
   status: Status;
   error: Error;
 }
 
 const initialState: ContainerListState = {
-  container: null,
+  dbContainerId: null,
   status: 'idle',
   error: null,
 };
 
-export const createContainerThunk = createAsyncThunk<CreateContainerResponse, CreateContainerRequest>(
-  'createContainer/createContainer',
+export const createContainerThunk = createAsyncThunk<RestCreateContainerResponse, CreateContainerRequest>(
+  'containers/createContainer',
   (container) => api.v1ContainerCreatePost({ body: container })
 );
 
@@ -31,11 +32,12 @@ const createContainerSlice = createSlice({
         state.error = null;
         state.status = 'loading';
       })
-      .addCase(createContainerThunk.fulfilled, (state, action) => {
+      .addCase(containersActions.createContainerFulfilled, (state, action) => {
         state.error = null;
         state.status = 'succeeded';
-        state.container = action.payload;
+        state.dbContainerId = action.payload.container.id;
       })
+      // TODO: Handle containersActions.createContainerRejected instead
       .addCase(createContainerThunk.rejected, (state, action) => {
         state.error = action.error.message ?? null;
         state.status = 'failed';
