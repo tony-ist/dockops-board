@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchContainerListThunk } from '../../features/container-list/containerListSlice';
 import styles from './ContainerList.module.css';
-import { Container } from '../../types/models/containerType';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
+import { containersSelectors, fetchContainersThunk } from '../../features/container/containersSlice';
+import { store } from '../../store/store';
+import { Container } from 'common-src';
 
 const ContainerListItem = (props: { container: Container; index: number }) => {
   const { index, container } = props;
@@ -39,13 +40,13 @@ const ContainerListItem = (props: { container: Container; index: number }) => {
 
 export const ContainerList = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector((state) => state.containerList.status);
-  const containerList = useAppSelector((state) => state.containerList.containerList);
-  const error = useAppSelector((state) => state.containerList.error);
+  const status = useAppSelector((state) => state.containers.status);
+  const error = useAppSelector((state) => state.containers.error);
+  const containerList = containersSelectors.selectAll(store.getState());
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchContainerListThunk());
+      dispatch(fetchContainersThunk({}));
     }
   }, [dispatch, status]);
 
@@ -53,5 +54,5 @@ export const ContainerList = () => {
     return <div className={styles.error}>{error}</div>;
   }
 
-  return containerList.map((container, index) => <ContainerListItem container={container} index={index} />);
+  return containerList.map((container, index) => <ContainerListItem container={container} index={index} key={index} />);
 };

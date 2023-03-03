@@ -1,13 +1,13 @@
 import { Socket } from 'socket.io';
 
 export class SocketManager {
-  private socket: Socket | null = null;
+  private socketsByIds = new Map<string, Socket>();
 
-  public get() {
-    return this.socket;
+  public get(id: string) {
+    return this.socketsByIds.get(id);
   }
 
-  public set(stream: Socket) {
-    this.socket = stream;
+  public set(socket: Socket) {
+    this.socketsByIds.set(socket.id, socket);
   }
 }

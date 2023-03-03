@@ -11,6 +11,10 @@ import { dockerodePlugin } from './plugins/dockerode-plugin';
 import { containerController } from './controllers/container-controller';
 import { server } from './server';
 import { socketPlugin } from './plugins/socket-plugin';
+import { WebSocketMessage, WebSocketRequestEvents } from 'common-src';
+import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services/web-socket-event-handlers';
+import { fastifyCookie } from '@fastify/cookie';
+import { servicePlugin } from './plugins/service-plugin';
 
 async function run() {
   await server.register(fastifySwagger, {
@@ -25,10 +29,13 @@ async function run() {
   await server.register(fastifySwaggerUI);
 
   if (config.nodeEnv === 'DEVELOPMENT') {
-    await server.register(cors);
+    await server.register(cors, {
+      origin: config.frontendURL,
+      credentials: true,
+    });
     await server.register(fastifySocketIO, {
       cors: {
-        origin: '*',
+        origin: config.frontendURL,
       },
     });
   } else {
@@ -41,6 +48,8 @@ async function run() {
     });
   }
 
+  await server.register(fastifyCookie);
+  await server.register(servicePlugin);
   await server.register(socketPlugin);
   await server.register(prismaPlugin);
   await server.register(dockerodePlugin);
@@ -48,6 +57,22 @@ async function run() {
   await server.register(containerController, { prefix: '/v1/container' });
 
   server.io.on('connection', (socket) => {
+    socket.on('message', (message: WebSocketMessage) => {
+      const handler: EventHandler | undefined = webSocketEventHandlers[message.event as WebSocketRequestEvents];
+
+      if (isNotUndefined(handler)) {
+        handler(server, socket, message).catch((error: { message: string }) => {
+          server.log.error(error);
+          socket.emit('message', error.message);
+        });
+        return;
+      }
+
+      const errorMessage = `Unrecognized websocket event "${message.event}".`;
+      server.log.error(errorMessage);
+      socket.emit('message', errorMessage);
+    });
+
     server.log.info(`Socket connection established: ${socket.id}`);
     server.socketManager.set(socket);
   });

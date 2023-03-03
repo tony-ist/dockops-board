@@ -1,0 +1,12 @@
+{
+  "name": "common-src",
+  "version": "0.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "json-schema-to-ts": "^2.7.2"
+  }
+}

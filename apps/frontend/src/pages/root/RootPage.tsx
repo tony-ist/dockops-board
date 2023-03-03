@@ -2,20 +2,30 @@ import { ContainerList } from '../../components/container-list/ContainerList';
 import { useAppDispatch } from '../../store/hooks';
 import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { Button } from '@mui/material';
-import { createContainerThunk } from '../../features/container-new/createContainerSlice';
+import { WebSocketRequestEvents } from 'common-src';
 import { DashboardLayout } from '../../layouts/dashboard/dashboard';
+import { containerLogsRequest, createContainerRequest } from '../../features/web-socket/webSocketActions';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
 
-  function dispatchCreateContainer() {
+  function createContainer(containerName: string, hostPort: string) {
     dispatch(
-      createContainerThunk({
-        containerName: 'temp-echo-server',
+      createContainerRequest({
+        containerName,
         githubURL: 'https://github.com/mendhak/docker-http-https-echo/archive/refs/heads/master.zip',
         dockerfileName: 'Dockerfile',
         containerPort: '8080',
-        hostPort: '8080',
+        hostPort,
+      })
+    );
+  }
+
+  function subscribeToLogs(dbContainerId: number) {
+    dispatch(
+      containerLogsRequest({
+        event: WebSocketRequestEvents.ContainerLogsSubscribe,
+        dbContainerId,
       })
     );
   }
@@ -23,8 +33,11 @@ export const RootPage = () => {
   return (
     <>
       <DashboardLayout>
-        <Button variant="contained" onClick={dispatchCreateContainer}>
-          Deploy Echo Server!
+        <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
+          Deploy Echo Server on port 8080!
+        </Button>
+        <Button variant="contained" onClick={() => subscribeToLogs(13)}>
+          Receive logs from 8080
         </Button>
         <ContainerList></ContainerList>
         <WebSocketMessages></WebSocketMessages>
