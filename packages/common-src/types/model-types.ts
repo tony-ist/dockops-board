@@ -6,7 +6,7 @@ export type DbContainerId = FromSchema<typeof dbContainerIdSchema>;
 export type Log = FromSchema<typeof logSchema>;
 
 export type CreateContainerRequest = FromSchema<typeof containerCreateRequestSchema>;
-export type CreateContainerResponse = FromSchema<typeof containerSchema>;
+export type CreateContainerResponse = { container: FromSchema<typeof containerSchema> };
 export type ContainerLogsSubscribeRequest = FromSchema<typeof containerLogsRequestSchema> & DbContainerId;
 export type ContainerLogsResponse = Log & DbContainerId;
 export type BuildImageLogsResponse = Log & DbContainerId;

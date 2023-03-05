@@ -4,6 +4,7 @@ import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
 import { RootState } from '../../types/storeTypes';
 import { Container, ContainerAllResponse } from '../../generated-sources/backend-api';
+import { WebSocketCreateContainerResponse } from 'common-src';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -25,7 +26,7 @@ const containersSlice = createSlice({
   name: 'containers',
   initialState,
   reducers: {
-    createContainerFulfilled: (state, action: PayloadAction<{ container: Container }>) => {
+    createContainerFulfilled: (state, action: PayloadAction<WebSocketCreateContainerResponse>) => {
       containersAdapter.upsertOne(state, action.payload.container);
     },
   },

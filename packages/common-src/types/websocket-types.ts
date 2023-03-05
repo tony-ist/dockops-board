@@ -1,4 +1,10 @@
-import { ContainerLogsResponse, ContainerLogsSubscribeRequest, CreateContainerRequest } from './model-types';
+import {
+  BuildImageLogsResponse,
+  ContainerLogsResponse,
+  ContainerLogsSubscribeRequest,
+  CreateContainerRequest,
+  CreateContainerResponse
+} from './model-types';
 
 export enum WebSocketRequestEvents {
   ContainerLogsSubscribeRequest = 'ContainerLogsSubscribeRequest',
@@ -25,11 +31,11 @@ export interface WebSocketCreateContainerRequest extends WebSocketMessage, Creat
   event: WebSocketRequestEvents.CreateContainerRequest;
 }
 
-export interface WebSocketCreateContainerResponse extends WebSocketMessage {
+export interface WebSocketCreateContainerResponse extends WebSocketMessage, CreateContainerResponse {
   event: WebSocketResponseEvents.CreateContainerResponse;
 }
 
-export interface WebSocketBuildImageLogsResponse extends WebSocketMessage {
+export interface WebSocketBuildImageLogsResponse extends WebSocketMessage, BuildImageLogsResponse {
   event: WebSocketResponseEvents.BuildImageLogsResponse;
 }
 
