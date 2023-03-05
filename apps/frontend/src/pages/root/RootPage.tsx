@@ -65,7 +65,7 @@ export const RootPage = () => {
       </Container>
       <Container maxWidth={'xl'}>
         <ContainerList></ContainerList>
-        {/*<WebSocketMessages></WebSocketMessages>*/}
+        <WebSocketMessages></WebSocketMessages>
       </Container>
     </DashboardLayout>
   );
