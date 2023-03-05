@@ -85,9 +85,36 @@ export const ContainerList = () => {
   }
 
   return (
-    <ScrollableBox className={styles.containerList}>
+    <ScrollableBox
+      sx={{
+        height: 'calc(100vh - 165px)',
+        paddingRight: 2,
+        marginTop: 2,
+      }}
+    >
       {containerList.map((container, index) => (
-        <ContainerListItem container={container} index={index} key={index} />
+        <>
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+          <ContainerListItem container={container} index={index} key={index} />
+        </>
       ))}
     </ScrollableBox>
   );
