@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { ViewList } from '@mui/icons-material';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
-import { Drawer, useMediaQuery } from '@mui/material';
+import { CSSObject, Drawer, useMediaQuery } from '@mui/material';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -31,6 +31,13 @@ export const SideBar = () => {
   const isMobile = !useMediaQuery('(min-width:800px)');
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
   const closedWidth = isMobile ? 0 : `calc(${theme.spacing(7)} + 1px)`;
+  const sxProps: CSSObject = {
+    width: isOpen ? SIDEBAR_WIDTH : closedWidth,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  };
 
   useEffect(() => {
     if (isMobile) {
@@ -44,14 +51,9 @@ export const SideBar = () => {
       open={isOpen}
       onClose={() => dispatch(sideBarActions.close())}
       // onClose={() => (console.log('close'))}
+      sx={sxProps}
       PaperProps={{
-        sx: {
-          width: isOpen ? SIDEBAR_WIDTH : closedWidth,
-          transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-        },
+        sx: sxProps,
       }}
     >
       <DrawerHeader>

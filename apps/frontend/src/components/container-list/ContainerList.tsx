@@ -29,6 +29,7 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
           '&:hover': {
             border: `2px solid ${appTheme.palette.primary.main}`,
           },
+          boxShadow: 2,
         }}
       >
         <Grid item xs={1} sx={{ color: appTheme.palette.text.primary }}>
@@ -93,28 +94,7 @@ export const ContainerList = () => {
       }}
     >
       {containerList.map((container, index) => (
-        <>
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-          <ContainerListItem container={container} index={index} key={index} />
-        </>
+        <ContainerListItem container={container} index={index} key={index} />
       ))}
     </ScrollableBox>
   );

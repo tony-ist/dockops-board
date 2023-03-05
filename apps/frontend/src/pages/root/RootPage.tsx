@@ -52,12 +52,6 @@ export const RootPage = () => {
         <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
           Deploy Echo Server on port 8080!
         </Button>
-        <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
-          Deploy
-        </Button>
-        <Button variant="contained" onClick={() => createContainer('temp-echo-server', '8080')}>
-          8080!
-        </Button>
         {dbCreatedContainerId && (
           <>
             <Button variant="contained" onClick={() => startContainer(dbCreatedContainerId)}>
