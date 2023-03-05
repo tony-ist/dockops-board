@@ -9,6 +9,7 @@ import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar/AppBar';
+import { useMediaQuery } from '@mui/material';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -36,8 +37,9 @@ const AppBar = styled(MuiAppBar, {
 export const Header = () => {
   const dispatch = useAppDispatch();
   const isSideBarOpen = useAppSelector((state) => state.sideBar.isOpen);
+  const isSideBarTemporary = !useMediaQuery('(min-width:600px)');
   return (
-    <AppBar position="fixed" open={isSideBarOpen}>
+    <AppBar position="fixed" open={isSideBarOpen && !isSideBarTemporary}>
       <Toolbar>
         <IconButton
           color="inherit"
@@ -48,7 +50,7 @@ export const Header = () => {
           edge="start"
           sx={{
             marginRight: 5,
-            ...(isSideBarOpen && { display: 'none' }),
+            ...(isSideBarOpen && !isSideBarTemporary && { display: 'none' }),
           }}
         >
           <MenuIcon />

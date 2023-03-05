@@ -29,6 +29,7 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
           '&:hover': {
             border: `2px solid ${appTheme.palette.primary.main}`,
           },
+          boxShadow: 2,
         }}
       >
         <Grid item xs={1} sx={{ color: appTheme.palette.text.primary }}>
@@ -85,7 +86,13 @@ export const ContainerList = () => {
   }
 
   return (
-    <ScrollableBox className={styles.containerList}>
+    <ScrollableBox
+      sx={{
+        height: 'calc(100vh - 165px)',
+        paddingRight: 2,
+        marginTop: 2,
+      }}
+    >
       {containerList.map((container, index) => (
         <ContainerListItem container={container} index={index} key={index} />
       ))}

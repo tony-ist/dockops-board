@@ -7,16 +7,16 @@ import { createTheme, ThemeProvider } from '@mui/material';
 
 const appTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
     primary: {
-      main: '#5893df',
+      main: '#1976d2',
     },
     secondary: {
-      main: '#2ec5d3',
+      main: '#f50057',
     },
     background: {
-      default: '#192231',
-      paper: '#24344d',
+      paper: '#ffffff',
+      default: '#eeeeee',
     },
   },
 });

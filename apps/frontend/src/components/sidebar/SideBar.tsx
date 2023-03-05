@@ -8,49 +8,13 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
-import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles';
+import { useEffect } from 'react';
+import { styled, useTheme } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { ViewList } from '@mui/icons-material';
-import MuiDrawer from '@mui/material/Drawer';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
-
-// Drawer config taken from //AppBar config got from https://mui.com/material-ui/react-drawer/#MiniDrawer.tsx
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: SIDEBAR_WIDTH,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: 'hidden',
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
-  width: SIDEBAR_WIDTH,
-  flexShrink: 0,
-  whiteSpace: 'nowrap',
-  boxSizing: 'border-box',
-  ...(open && {
-    ...openedMixin(theme),
-    '& .MuiDrawer-paper': openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    '& .MuiDrawer-paper': closedMixin(theme),
-  }),
-}));
+import { CSSObject, Drawer, useMediaQuery } from '@mui/material';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -64,10 +28,33 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const SideBar = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
+  const isSideBarTemporary = !useMediaQuery('(min-width:600px)');
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
+  const closedWidth = isSideBarTemporary ? 0 : `calc(${theme.spacing(7)} + 1px)`;
+  const sxProps: CSSObject = {
+    width: isOpen ? SIDEBAR_WIDTH : closedWidth,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  };
+
+  useEffect(() => {
+    if (isSideBarTemporary) {
+      dispatch(sideBarActions.close());
+    }
+  }, []);
 
   return (
-    <Drawer variant="permanent" open={isOpen}>
+    <Drawer
+      variant={isSideBarTemporary ? 'temporary' : 'permanent'}
+      open={isOpen}
+      onClose={() => dispatch(sideBarActions.close())}
+      sx={sxProps}
+      PaperProps={{
+        sx: sxProps,
+      }}
+    >
       <DrawerHeader>
         <IconButton
           onClick={() => {
