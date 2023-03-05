@@ -22,7 +22,7 @@ export class ContainerService {
 
     const startExtractingMessage = 'Start downloading and extracting sources.';
     socket?.emit('message', {
-      event: WebSocketResponseEvents.BuildImageLogs,
+      event: WebSocketResponseEvents.BuildImageLogsResponse,
       text: startExtractingMessage,
     });
     fastify.log.info(startExtractingMessage);
@@ -31,7 +31,7 @@ export class ContainerService {
 
     const finishedExtractingMessage = 'Finished extracting downloaded archive.';
     socket?.emit('message', {
-      event: WebSocketResponseEvents.BuildImageLogs,
+      event: WebSocketResponseEvents.BuildImageLogsResponse,
       text: finishedExtractingMessage,
     });
     fastify.log.info(finishedExtractingMessage);
@@ -40,7 +40,7 @@ export class ContainerService {
     buildStream.on('data', (data) => {
       const message = data.toString();
       socket?.emit('message', {
-        event: WebSocketResponseEvents.BuildImageLogs,
+        event: WebSocketResponseEvents.BuildImageLogsResponse,
         text: data.toString(),
       });
       fastify.log.info(message);
@@ -53,7 +53,7 @@ export class ContainerService {
     const createdContainerMessage = `Created container with docker id "${containerDockerId}".`;
     fastify.log.info(createdContainerMessage);
     socket?.emit('message', {
-      event: WebSocketResponseEvents.BuildImageLogs,
+      event: WebSocketResponseEvents.BuildImageLogsResponse,
       text: createdContainerMessage,
     });
 

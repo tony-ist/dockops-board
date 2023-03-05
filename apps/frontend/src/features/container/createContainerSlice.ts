@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
-import { CreateContainerRequest, RestCreateContainerResponse } from 'common-src';
 import { containersActions } from './containersSlice';
+import { Message, V1ContainerCreatePostRequest } from '../../generated-sources/backend-api';
 
 interface ContainerListState {
   dbContainerId: number | null;
@@ -17,7 +17,7 @@ const initialState: ContainerListState = {
   error: null,
 };
 
-export const createContainerThunk = createAsyncThunk<RestCreateContainerResponse, CreateContainerRequest>(
+export const createContainerThunk = createAsyncThunk<Message, V1ContainerCreatePostRequest>(
   'containers/createContainer',
   (container) => api.v1ContainerCreatePost({ body: container })
 );
