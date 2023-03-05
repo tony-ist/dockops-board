@@ -1,6 +1,8 @@
 import {
+  containerSchema,
   getContainerAllSchema,
   getContainerLogsSchema,
+  messageSchema,
   postContainerAttachSchema,
   postContainerCreateSchema,
   postContainerStartSchema,
@@ -9,9 +11,11 @@ import {
 import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
 
-// TODO: Add autosubscribe field to request schema, if true, then send logs via socket
+type ProviderOptions = { references: [typeof containerSchema, typeof messageSchema] };
+
+// TODO: Add subscribe boolean field to request schema, if true, then send logs via socket
 export async function containerController(fastify: FastifyInstance) {
-  const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider>();
+  const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider<ProviderOptions>>();
 
   fastifyTyped.route({
     method: 'GET',
@@ -48,7 +52,7 @@ export async function containerController(fastify: FastifyInstance) {
         })
         .catch((error) => {
           socket?.emit('message', {
-            event: WebSocketResponseEvents.BuildImageLogs,
+            event: WebSocketResponseEvents.BuildImageLogsResponse,
             text: error,
           });
           fastify.log.error(error);

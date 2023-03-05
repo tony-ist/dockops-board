@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
-import { StartContainerRequest, StartContainerResponse } from 'common-src';
+import { Message, V1ContainerDbContainerIdStartPostRequest } from '../../generated-sources/backend-api';
 
 interface StartContainerState {
   status: Status;
@@ -14,7 +14,7 @@ const initialState: StartContainerState = {
   error: null,
 };
 
-export const startContainerThunk = createAsyncThunk<StartContainerResponse, StartContainerRequest>(
+export const startContainerThunk = createAsyncThunk<Message, V1ContainerDbContainerIdStartPostRequest>(
   'containers/startContainer',
   (startContainerRequest) => api.v1ContainerDbContainerIdStartPost(startContainerRequest)
 );

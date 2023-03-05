@@ -1,4 +1,4 @@
-import { containerSchema, dbContainerIdSchema, messageSchema } from './model-schema';
+import { dbContainerIdSchema } from './model-schema';
 
 export const containerCreateRequestSchema = {
   type: 'object',
@@ -13,21 +13,30 @@ export const containerCreateRequestSchema = {
 } as const;
 
 export const containerAllRequestSchema = {
+  $id: 'dockops-board/containerAllRequest',
+  title: 'ContainerAllRequest',
   type: 'object',
+  additionalProperties: false,
 } as const;
 
 export const containerAllResponseSchema = {
+  $id: 'dockops-board/containerAllResponse',
+  title: 'ContainerAllResponse',
   type: 'array',
-  items: containerSchema,
+  items: { $ref: 'dockops-board/container' },
+  // This workaround is due to a bug in OpenAPI generator
+  // https://github.com/OpenAPITools/openapi-generator/issues/7802
+  properties: {
+    length: { type: 'number' },
+  },
+  additionalProperties: false,
 } as const;
 
 export const containerLogsRequestSchema = {
   type: 'object',
   properties: {
-    dbContainerId: { type: 'number' },
     tail: { type: 'number' },
   },
-  required: ['dbContainerId'],
   additionalProperties: false,
 } as const;
 
@@ -40,21 +49,21 @@ export const getContainerAllSchema = {
 export const postContainerCreateSchema = {
   body: containerCreateRequestSchema,
   response: {
-    200: messageSchema,
+    200: { $ref: 'dockops-board/message' },
   },
 } as const;
 
 export const postContainerStartSchema = {
   params: dbContainerIdSchema,
   response: {
-    200: messageSchema,
+    200: { $ref: 'dockops-board/message' },
   },
 } as const;
 
 export const postContainerAttachSchema = {
   params: dbContainerIdSchema,
   response: {
-    200: messageSchema,
+    200: { $ref: 'dockops-board/message' },
   },
 } as const;
 
@@ -62,6 +71,6 @@ export const getContainerLogsSchema = {
   params: dbContainerIdSchema,
   querystring: containerLogsRequestSchema,
   response: {
-    200: messageSchema,
+    200: { $ref: 'dockops-board/message' },
   },
 } as const;

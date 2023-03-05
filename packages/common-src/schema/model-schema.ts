@@ -1,4 +1,6 @@
 export const containerSchema = {
+  $id: 'dockops-board/container',
+  title: 'Container',
   type: 'object',
   properties: {
     id: { type: 'number' },
@@ -10,6 +12,8 @@ export const containerSchema = {
 } as const;
 
 export const messageSchema = {
+  $id: 'dockops-board/message',
+  title: 'Message',
   type: 'object',
   properties: {
     message: { type: 'string' },
@@ -19,6 +23,8 @@ export const messageSchema = {
 } as const;
 
 export const logSchema = {
+  $id: 'dockops-board/log',
+  title: 'Log',
   type: 'object',
   properties: {
     text: { type: 'string' },
@@ -28,6 +34,8 @@ export const logSchema = {
 } as const;
 
 export const dbContainerIdSchema = {
+  $id: 'dockops-board/dbContainerId',
+  title: 'DbContainerId',
   type: 'object',
   properties: {
     dbContainerId: { type: 'number' },

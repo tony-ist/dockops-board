@@ -14,15 +14,15 @@
 
 import * as runtime from '../runtime';
 import type {
-  V1ContainerAllGet200ResponseInner,
-  V1ContainerCreatePost200Response,
+  Container,
+  Message,
   V1ContainerCreatePostRequest,
   V1UserNewPost200Response,
   V1UserNewPostRequest,
 } from '../models';
 import {
-  V1ContainerAllGet200ResponseInnerFromJSON,
-  V1ContainerCreatePost200ResponseFromJSON,
+  ContainerFromJSON,
+  MessageFromJSON,
   V1ContainerCreatePostRequestToJSON,
   V1UserNewPost200ResponseFromJSON,
   V1UserNewPostRequestToJSON,
@@ -38,7 +38,6 @@ export interface V1ContainerDbContainerIdAttachPostRequest {
 
 export interface V1ContainerDbContainerIdLogsGetRequest {
   dbContainerId: number;
-  dbContainerId2: number;
   tail?: number;
 }
 
@@ -58,7 +57,7 @@ export class DefaultApi extends runtime.BaseAPI {
    */
   async v1ContainerAllGetRaw(
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<Array<V1ContainerAllGet200ResponseInner>>> {
+  ): Promise<runtime.ApiResponse<Array<Container>>> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -73,16 +72,12 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      jsonValue.map(V1ContainerAllGet200ResponseInnerFromJSON)
-    );
+    return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ContainerFromJSON));
   }
 
   /**
    */
-  async v1ContainerAllGet(
-    initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<Array<V1ContainerAllGet200ResponseInner>> {
+  async v1ContainerAllGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Container>> {
     const response = await this.v1ContainerAllGetRaw(initOverrides);
     return await response.value();
   }
@@ -92,7 +87,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerCreatePostRaw(
     requestParameters: V1ContainerCreatePostOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
+  ): Promise<runtime.ApiResponse<Message>> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -110,7 +105,7 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
+    return new runtime.JSONApiResponse(response, (jsonValue) => MessageFromJSON(jsonValue));
   }
 
   /**
@@ -118,7 +113,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerCreatePost(
     requestParameters: V1ContainerCreatePostOperationRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1ContainerCreatePost200Response> {
+  ): Promise<Message> {
     const response = await this.v1ContainerCreatePostRaw(requestParameters, initOverrides);
     return await response.value();
   }
@@ -128,7 +123,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerDbContainerIdAttachPostRaw(
     requestParameters: V1ContainerDbContainerIdAttachPostRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
+  ): Promise<runtime.ApiResponse<Message>> {
     if (requestParameters.dbContainerId === null || requestParameters.dbContainerId === undefined) {
       throw new runtime.RequiredError(
         'dbContainerId',
@@ -153,7 +148,7 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
+    return new runtime.JSONApiResponse(response, (jsonValue) => MessageFromJSON(jsonValue));
   }
 
   /**
@@ -161,7 +156,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerDbContainerIdAttachPost(
     requestParameters: V1ContainerDbContainerIdAttachPostRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1ContainerCreatePost200Response> {
+  ): Promise<Message> {
     const response = await this.v1ContainerDbContainerIdAttachPostRaw(requestParameters, initOverrides);
     return await response.value();
   }
@@ -171,7 +166,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerDbContainerIdLogsGetRaw(
     requestParameters: V1ContainerDbContainerIdLogsGetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
+  ): Promise<runtime.ApiResponse<Message>> {
     if (requestParameters.dbContainerId === null || requestParameters.dbContainerId === undefined) {
       throw new runtime.RequiredError(
         'dbContainerId',
@@ -179,18 +174,7 @@ export class DefaultApi extends runtime.BaseAPI {
       );
     }
 
-    if (requestParameters.dbContainerId2 === null || requestParameters.dbContainerId2 === undefined) {
-      throw new runtime.RequiredError(
-        'dbContainerId2',
-        'Required parameter requestParameters.dbContainerId2 was null or undefined when calling v1ContainerDbContainerIdLogsGet.'
-      );
-    }
-
     const queryParameters: any = {};
-
-    if (requestParameters.dbContainerId !== undefined) {
-      queryParameters['dbContainerId'] = requestParameters.dbContainerId;
-    }
 
     if (requestParameters.tail !== undefined) {
       queryParameters['tail'] = requestParameters.tail;
@@ -202,7 +186,7 @@ export class DefaultApi extends runtime.BaseAPI {
       {
         path: `/v1/container/{dbContainerId}/logs`.replace(
           `{${'dbContainerId'}}`,
-          encodeURIComponent(String(requestParameters.dbContainerId2))
+          encodeURIComponent(String(requestParameters.dbContainerId))
         ),
         method: 'GET',
         headers: headerParameters,
@@ -211,7 +195,7 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
+    return new runtime.JSONApiResponse(response, (jsonValue) => MessageFromJSON(jsonValue));
   }
 
   /**
@@ -219,7 +203,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerDbContainerIdLogsGet(
     requestParameters: V1ContainerDbContainerIdLogsGetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1ContainerCreatePost200Response> {
+  ): Promise<Message> {
     const response = await this.v1ContainerDbContainerIdLogsGetRaw(requestParameters, initOverrides);
     return await response.value();
   }
@@ -229,7 +213,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerDbContainerIdStartPostRaw(
     requestParameters: V1ContainerDbContainerIdStartPostRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1ContainerCreatePost200Response>> {
+  ): Promise<runtime.ApiResponse<Message>> {
     if (requestParameters.dbContainerId === null || requestParameters.dbContainerId === undefined) {
       throw new runtime.RequiredError(
         'dbContainerId',
@@ -254,7 +238,7 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1ContainerCreatePost200ResponseFromJSON(jsonValue));
+    return new runtime.JSONApiResponse(response, (jsonValue) => MessageFromJSON(jsonValue));
   }
 
   /**
@@ -262,7 +246,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1ContainerDbContainerIdStartPost(
     requestParameters: V1ContainerDbContainerIdStartPostRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1ContainerCreatePost200Response> {
+  ): Promise<Message> {
     const response = await this.v1ContainerDbContainerIdStartPostRaw(requestParameters, initOverrides);
     return await response.value();
   }
