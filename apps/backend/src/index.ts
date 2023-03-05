@@ -17,12 +17,14 @@ import {
   dbContainerIdSchema,
   logSchema,
   messageSchema,
+  userSchema,
   WebSocketMessage,
   WebSocketRequestEvents,
 } from 'common-src';
 import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services/web-socket-event-handlers';
 import { fastifyCookie } from '@fastify/cookie';
 import { servicePlugin } from './plugins/service-plugin';
+import { authenticatePlugin } from './plugins/authenticate-plugin';
 
 async function run() {
   await server.register(fastifySwagger, {
@@ -62,6 +64,8 @@ async function run() {
   }
 
   await server.register(fastifyCookie);
+
+  await server.register(authenticatePlugin);
   await server.register(servicePlugin);
   await server.register(socketPlugin);
   await server.register(prismaPlugin);
@@ -69,6 +73,7 @@ async function run() {
   await server.register(userController, { prefix: '/v1/user' });
   await server.register(containerController, { prefix: '/v1/container' });
 
+  server.addSchema(userSchema);
   server.addSchema(containerSchema);
   server.addSchema(messageSchema);
   server.addSchema(logSchema);

@@ -1,26 +1,25 @@
 import {
-  containerSchema,
+  ContainerLogsRequest,
+  CreateContainerRequest,
+  DbContainerId,
   getContainerAllSchema,
   getContainerLogsSchema,
-  messageSchema,
+  Message,
   postContainerAttachSchema,
   postContainerCreateSchema,
   postContainerStartSchema,
   WebSocketResponseEvents,
 } from 'common-src';
-import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
-
-type ProviderOptions = { references: [typeof containerSchema, typeof messageSchema] };
+import { ContainerAllResponse } from 'frontend/src/generated-sources/backend-api';
 
 // TODO: Add subscribe boolean field to request schema, if true, then send logs via socket
 export async function containerController(fastify: FastifyInstance) {
-  const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider<ProviderOptions>>();
-
-  fastifyTyped.route({
+  fastify.route<{ Reply: ContainerAllResponse }>({
     method: 'GET',
     url: '/all',
     schema: getContainerAllSchema,
+    onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const prisma = fastify.prisma;
       const containers = await prisma.container.findMany();
@@ -28,10 +27,11 @@ export async function containerController(fastify: FastifyInstance) {
     },
   });
 
-  fastifyTyped.route({
+  fastify.route<{ Body: CreateContainerRequest; Reply: Message }>({
     method: 'POST',
     url: '/create',
     schema: postContainerCreateSchema,
+    onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const githubURL = request.body.githubURL;
       const imageName = 'tempimage';
@@ -62,20 +62,18 @@ export async function containerController(fastify: FastifyInstance) {
     },
   });
 
-  type ContainerIdParams = { Params: { dbContainerId: number } };
-
-  fastifyTyped.route<ContainerIdParams>({
+  fastify.route<{ Params: DbContainerId; Reply: Message }>({
     method: 'POST',
     url: '/:dbContainerId/start',
     schema: postContainerStartSchema,
     handler: async (request, reply) => {
       const { dbContainerId } = request.params;
       const result = await fastify.dockerService.runContainer({ dbContainerId });
-      reply.send({ message: 'Container started.', result });
+      reply.send({ message: `Container with id "${dbContainerId}" started: "${JSON.stringify(result, null, 2)}".` });
     },
   });
 
-  fastifyTyped.route<ContainerIdParams>({
+  fastify.route<{ Params: DbContainerId; Reply: Message }>({
     method: 'POST',
     url: '/:dbContainerId/attach',
     schema: postContainerAttachSchema,
@@ -92,12 +90,12 @@ export async function containerController(fastify: FastifyInstance) {
     },
   });
 
-  fastifyTyped.route({
+  fastify.route<{ Params: DbContainerId; Querystring: ContainerLogsRequest; Reply: Message }>({
     method: 'GET',
     url: '/:dbContainerId/logs',
     schema: getContainerLogsSchema,
     handler: async (request, reply) => {
-      const { dbContainerId } = request.params as ContainerIdParams['Params'];
+      const { dbContainerId } = request.params;
       const { tail } = request.query;
       const socket = request.ioSocket;
       const logsStream = await fastify.dockerService.containerLogs({

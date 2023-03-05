@@ -1,16 +1,13 @@
-import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 import { FastifyInstance } from 'fastify';
-import { postUsersNewSchema } from 'common-src';
+import { postUsersNewSchema, User, UserNewRequest } from 'common-src';
 
 export async function userController(fastify: FastifyInstance) {
-  const fastifyTyped = fastify.withTypeProvider<JsonSchemaToTsProvider>();
-
-  fastifyTyped.route({
+  fastify.route<{ Body: UserNewRequest; Reply: User }>({
     method: 'POST',
     url: '/new',
     schema: postUsersNewSchema,
     handler: async (request, reply) => {
-      const result = await fastifyTyped.prisma.user.create({
+      const result = await fastify.prisma.user.create({
         data: {
           email: request.body.email,
           passwordHash: '12345',
@@ -19,7 +16,9 @@ export async function userController(fastify: FastifyInstance) {
       });
 
       reply.send({
-        ...result,
+        id: result.id,
+        email: result.email,
+        githubToken: result.githubToken,
         createdAt: result.createdAt.toString(),
         updatedAt: result.updatedAt.toString(),
       });
