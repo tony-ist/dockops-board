@@ -2,6 +2,16 @@ import fastifyPlugin from 'fastify-plugin';
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import { fastifyJwt } from '@fastify/jwt';
 import * as config from '../config';
+import { User } from '@prisma/client';
+
+type JwtToken = { userId: number };
+
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    payload: JwtToken
+    user: User
+  }
+}
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -14,8 +24,11 @@ export const authenticatePlugin: FastifyPluginAsync = fastifyPlugin(async (fasti
 
   fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const verificationResult = await request.jwtVerify();
-      console.log(verificationResult);
+      const verificationResult = await request.jwtVerify<JwtToken>();
+      const { userId } = verificationResult;
+      const user = await fastify.prisma.user.findFirstOrThrow({ where: { id: userId } });
+      console.log({ verificationResult });
+      request.user = user;
     } catch (err) {
       reply.send(err);
     }

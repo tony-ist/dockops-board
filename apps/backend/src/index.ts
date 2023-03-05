@@ -25,6 +25,8 @@ import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services
 import { fastifyCookie } from '@fastify/cookie';
 import { servicePlugin } from './plugins/service-plugin';
 import { authenticatePlugin } from './plugins/authenticate-plugin';
+import { loginController } from './controllers/login-controller';
+import fastifyBcrypt from 'fastify-bcrypt';
 
 async function run() {
   await server.register(fastifySwagger, {
@@ -63,6 +65,9 @@ async function run() {
     });
   }
 
+  await server.register(fastifyBcrypt, {
+    saltWorkFactor: config.bcryptSaltWorkFactor,
+  });
   await server.register(fastifyCookie);
 
   await server.register(authenticatePlugin);
@@ -70,6 +75,7 @@ async function run() {
   await server.register(socketPlugin);
   await server.register(prismaPlugin);
   await server.register(dockerodePlugin);
+  await server.register(loginController, { prefix: '/v1/login' });
   await server.register(userController, { prefix: '/v1/user' });
   await server.register(containerController, { prefix: '/v1/container' });
 

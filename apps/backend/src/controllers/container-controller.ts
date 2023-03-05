@@ -21,6 +21,7 @@ export async function containerController(fastify: FastifyInstance) {
     schema: getContainerAllSchema,
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
+      console.log(`getAllContainers:`, request.user);
       const prisma = fastify.prisma;
       const containers = await prisma.container.findMany();
       reply.send(containers);
@@ -66,6 +67,7 @@ export async function containerController(fastify: FastifyInstance) {
     method: 'POST',
     url: '/:dbContainerId/start',
     schema: postContainerStartSchema,
+    onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const { dbContainerId } = request.params;
       const result = await fastify.dockerService.runContainer({ dbContainerId });
@@ -77,6 +79,7 @@ export async function containerController(fastify: FastifyInstance) {
     method: 'POST',
     url: '/:dbContainerId/attach',
     schema: postContainerAttachSchema,
+    onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const { dbContainerId } = request.params;
       const socket = request.ioSocket;
@@ -94,6 +97,7 @@ export async function containerController(fastify: FastifyInstance) {
     method: 'GET',
     url: '/:dbContainerId/logs',
     schema: getContainerLogsSchema,
+    onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const { dbContainerId } = request.params;
       const { tail } = request.query;

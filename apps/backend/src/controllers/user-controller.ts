@@ -6,12 +6,13 @@ export async function userController(fastify: FastifyInstance) {
     method: 'POST',
     url: '/new',
     schema: postUsersNewSchema,
+    onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const result = await fastify.prisma.user.create({
         data: {
           email: request.body.email,
           passwordHash: '12345',
-          githubToken: request.body.githubToken ?? null,
+          githubToken: request.body.githubToken,
         },
       });
 
