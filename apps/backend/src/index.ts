@@ -11,7 +11,15 @@ import { dockerodePlugin } from './plugins/dockerode-plugin';
 import { containerController } from './controllers/container-controller';
 import { server } from './server';
 import { socketPlugin } from './plugins/socket-plugin';
-import { WebSocketMessage, WebSocketRequestEvents } from 'common-src';
+import {
+  containerAllResponseSchema,
+  containerSchema,
+  dbContainerIdSchema,
+  logSchema,
+  messageSchema,
+  WebSocketMessage,
+  WebSocketRequestEvents,
+} from 'common-src';
 import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services/web-socket-event-handlers';
 import { fastifyCookie } from '@fastify/cookie';
 import { servicePlugin } from './plugins/service-plugin';
@@ -23,6 +31,11 @@ async function run() {
         title: 'Dockops-board API specification',
         description: 'Dockops-board is an open source manager for docker containers with web UI',
         version: '0.0.0',
+      },
+    },
+    refResolver: {
+      buildLocalReference(json) {
+        return json.title as string;
       },
     },
   });
@@ -55,6 +68,12 @@ async function run() {
   await server.register(dockerodePlugin);
   await server.register(userController, { prefix: '/v1/user' });
   await server.register(containerController, { prefix: '/v1/container' });
+
+  server.addSchema(containerSchema);
+  server.addSchema(messageSchema);
+  server.addSchema(logSchema);
+  server.addSchema(containerAllResponseSchema);
+  server.addSchema(dbContainerIdSchema);
 
   server.io.on('connection', (socket) => {
     socket.on('message', (message: WebSocketMessage) => {

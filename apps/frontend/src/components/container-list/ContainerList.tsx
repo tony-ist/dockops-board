@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import { containersSelectors, fetchContainersThunk } from '../../features/container/containersSlice';
 import { store } from '../../store/store';
-import { Container } from 'common-src';
 import { useTheme } from '@mui/material/styles';
 import { ScrollableBox } from '../scrollable-box/ScrollableBox';
+import { Container } from '../../generated-sources/backend-api';
 
 interface ContainerListItemOptions {
   container: Container;
@@ -76,7 +76,7 @@ export const ContainerList = () => {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchContainersThunk({}));
+      dispatch(fetchContainersThunk());
     }
   }, [dispatch, status]);
 

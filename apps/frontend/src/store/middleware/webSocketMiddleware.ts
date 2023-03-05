@@ -49,10 +49,10 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   });
 
   socket.on('message', (message: WebSocketMessage) => {
-    const action = actionsByResponseEvents[message.event as WebSocketResponseEvents];
+    const actionCreator = actionsByResponseEvents[message.event as WebSocketResponseEvents];
 
-    if (action !== undefined) {
-      store.dispatch(action(message));
+    if (actionCreator !== undefined) {
+      store.dispatch(actionCreator(message));
       return;
     }
 

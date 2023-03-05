@@ -1,33 +1,36 @@
-import { Container, CreateContainerRequest, Log } from './model-types';
-
-export enum WebSocketResponseEvents {
-  ContainerLogs = 'ContainerLogs',
-  // InteractiveShellLogs = 'InteractiveShellLogs',
-  BuildImageLogs = 'BuildImageLogs',
-  CreateContainerResponse = 'CreateContainerResponse',
-}
+import { ContainerLogsResponse, ContainerLogsSubscribeRequest, CreateContainerRequest } from './model-types';
 
 export enum WebSocketRequestEvents {
-  ContainerLogsSubscribe = 'ContainerLogsSubscribe',
+  ContainerLogsSubscribeRequest = 'ContainerLogsSubscribeRequest',
   // InteractiveShellRequest = 'InteractiveShellRequest',
   CreateContainerRequest = 'CreateContainerRequest',
 }
 
-export interface WebSocketContainerLogsSubscribe extends WebSocketMessage {
-  dbContainerId: number;
-  tail?: number;
+export enum WebSocketResponseEvents {
+  ContainerLogsResponse = 'ContainerLogsResponse',
+  // InteractiveShellResponse = 'InteractiveShellResponse',
+  BuildImageLogsResponse = 'BuildImageLogsResponse',
+  CreateContainerResponse = 'CreateContainerResponse',
 }
 
-export interface WebSocketCreateContainerRequest extends WebSocketMessage, CreateContainerRequest {}
+export interface WebSocketContainerLogsSubscribeRequest extends WebSocketMessage, ContainerLogsSubscribeRequest {
+  event: WebSocketRequestEvents.ContainerLogsSubscribeRequest;
+}
 
-export interface WebSocketLogs extends WebSocketMessage, Log {}
+export interface WebSocketContainerLogsResponse extends WebSocketMessage, ContainerLogsResponse {
+  event: WebSocketResponseEvents.ContainerLogsResponse;
+}
 
-export interface WebSocketInteractiveShellRequest extends WebSocketMessage {
-  dbContainerId: number;
+export interface WebSocketCreateContainerRequest extends WebSocketMessage, CreateContainerRequest {
+  event: WebSocketRequestEvents.CreateContainerRequest;
 }
 
 export interface WebSocketCreateContainerResponse extends WebSocketMessage {
-  container: Container;
+  event: WebSocketResponseEvents.CreateContainerResponse;
+}
+
+export interface WebSocketBuildImageLogsResponse extends WebSocketMessage {
+  event: WebSocketResponseEvents.BuildImageLogsResponse;
 }
 
 export interface WebSocketMessage {

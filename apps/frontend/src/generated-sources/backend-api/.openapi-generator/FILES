@@ -2,8 +2,11 @@
 apis/DefaultApi.ts
 apis/index.ts
 index.ts
-models/V1ContainerAllGet200ResponseInner.ts
-models/V1ContainerCreatePost200Response.ts
+models/Container.ts
+models/ContainerAllResponse.ts
+models/DbContainerId.ts
+models/Log.ts
+models/Message.ts
 models/V1ContainerCreatePostRequest.ts
 models/V1UserNewPost200Response.ts
 models/V1UserNewPostRequest.ts
