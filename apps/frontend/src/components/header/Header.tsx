@@ -37,9 +37,9 @@ const AppBar = styled(MuiAppBar, {
 export const Header = () => {
   const dispatch = useAppDispatch();
   const isSideBarOpen = useAppSelector((state) => state.sideBar.isOpen);
-  const isMobile = !useMediaQuery('(min-width:800px)');
+  const isSideBarTemporary = !useMediaQuery('(min-width:600px)');
   return (
-    <AppBar position="fixed" open={isSideBarOpen && !isMobile}>
+    <AppBar position="fixed" open={isSideBarOpen && !isSideBarTemporary}>
       <Toolbar>
         <IconButton
           color="inherit"
@@ -50,7 +50,7 @@ export const Header = () => {
           edge="start"
           sx={{
             marginRight: 5,
-            ...(isSideBarOpen && !isMobile && { display: 'none' }),
+            ...(isSideBarOpen && !isSideBarTemporary && { display: 'none' }),
           }}
         >
           <MenuIcon />

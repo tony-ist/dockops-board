@@ -28,9 +28,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export const SideBar = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const isMobile = !useMediaQuery('(min-width:800px)');
+  const isSideBarTemporary = !useMediaQuery('(min-width:600px)');
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
-  const closedWidth = isMobile ? 0 : `calc(${theme.spacing(7)} + 1px)`;
+  const closedWidth = isSideBarTemporary ? 0 : `calc(${theme.spacing(7)} + 1px)`;
   const sxProps: CSSObject = {
     width: isOpen ? SIDEBAR_WIDTH : closedWidth,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -40,17 +40,16 @@ export const SideBar = () => {
   };
 
   useEffect(() => {
-    if (isMobile) {
+    if (isSideBarTemporary) {
       dispatch(sideBarActions.close());
     }
   }, []);
 
   return (
     <Drawer
-      variant={isMobile ? 'temporary' : 'permanent'}
+      variant={isSideBarTemporary ? 'temporary' : 'permanent'}
       open={isOpen}
       onClose={() => dispatch(sideBarActions.close())}
-      // onClose={() => (console.log('close'))}
       sx={sxProps}
       PaperProps={{
         sx: sxProps,

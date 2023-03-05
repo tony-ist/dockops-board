@@ -4,6 +4,7 @@ import { Button, Container } from '@mui/material';
 import { DashboardLayout } from '../../layouts/dashboard/dashboard';
 import { containerLogsRequest, createContainerRequest } from '../../features/web-socket/webSocketActions';
 import { startContainerThunk } from '../../features/container/startContainerSlice';
+import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
