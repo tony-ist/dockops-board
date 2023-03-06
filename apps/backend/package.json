@@ -14,7 +14,8 @@
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:status": "dotenv -e .env.local -- prisma migrate status",
     "db:generate": "prisma generate",
-    "db:deploy": "dotenv -e .env.local -- prisma migrate deploy"
+    "db:deploy": "dotenv -e .env.local -- prisma migrate deploy",
+    "db:seed": "dotenv -e .env.local -- ts-node prisma/seeds/seeds.ts"
   },
   "dependencies": {
     "@fastify/auth": "^4.2.0",

@@ -23,7 +23,13 @@ export const loginThunk = createAsyncThunk<string, LoginRequest>('login/login', 
 const loginSlice = createSlice({
   name: 'login',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.status = 'idle';
+      state.error = null;
+      state.jwtToken = null;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(loginThunk.pending, (state) => {

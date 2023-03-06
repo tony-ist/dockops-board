@@ -41,10 +41,10 @@ export const App = () => {
     <ThemeProvider theme={appTheme}>
       <Router>
         <Routes>
-          <Route path="/" element={<PrivateRoute />}>
-            <Route path="/" element={<RootPage />} />
+          <Route path='/' element={<PrivateRoute />}>
+            <Route path='/' element={<RootPage />} />
           </Route>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path='/login' element={<LoginPage />} />
         </Routes>
       </Router>
     </ThemeProvider>
