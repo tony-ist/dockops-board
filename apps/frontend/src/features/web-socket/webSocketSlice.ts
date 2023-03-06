@@ -1,4 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { CreateContainerRequest } from 'common-src';
+import { createAction, createSlice } from '@reduxjs/toolkit';
+import { DbContainerId } from '../../generated-sources/backend-api';
 
 export interface WebSocketState {
   isEstablishingConnection: boolean;
@@ -24,5 +26,8 @@ const webSocketSlice = createSlice({
   },
 });
 
-export const webSocketActions = webSocketSlice.actions;
+const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
+const containerLogsRequest = createAction<DbContainerId>('containers/containerLogsRequest');
+
+export const webSocketActions = { ...webSocketSlice.actions, createContainerRequest, containerLogsRequest };
 export const webSocketReducer = webSocketSlice.reducer;

@@ -5,6 +5,7 @@ import { createContainerReducer } from '../features/container/createContainerSli
 import { sideBarReducer } from '../features/sidebar/sideBarSlice';
 import { containersReducer } from '../features/container/containersSlice';
 import { containerLogsReducer } from '../features/web-socket/containerLogsSlice';
+import { createNewContainerModalReducer } from '../features/create-new-container-modal/createNewContainerModalSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     containerLogs: containerLogsReducer,
     webSocket: webSocketReducer,
     sideBar: sideBarReducer,
+    createNewContainerModal: createNewContainerModalReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(webSocketMiddleware),
 });
