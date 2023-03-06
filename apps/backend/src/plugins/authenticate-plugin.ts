@@ -3,8 +3,7 @@ import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import { fastifyJwt } from '@fastify/jwt';
 import * as config from '../config';
 import { User } from '@prisma/client';
-
-type JwtToken = { userId: number };
+import { JwtToken } from '../types/jwt-token';
 
 declare module '@fastify/jwt' {
   interface FastifyJWT {

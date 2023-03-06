@@ -18,15 +18,13 @@ import {
   logSchema,
   messageSchema,
   userSchema,
-  WebSocketMessage,
-  WebSocketRequestEvents,
 } from 'common-src';
-import { EventHandler, isNotUndefined, webSocketEventHandlers } from './services/web-socket-event-handlers';
 import { fastifyCookie } from '@fastify/cookie';
 import { servicePlugin } from './plugins/service-plugin';
 import { authenticatePlugin } from './plugins/authenticate-plugin';
 import { loginController } from './controllers/login-controller';
 import fastifyBcrypt from 'fastify-bcrypt';
+import { webSocketConnectionHandler } from './handlers/web-socket-connection-handler';
 
 async function run() {
   await server.register(fastifySwagger, {
@@ -86,26 +84,7 @@ async function run() {
   server.addSchema(containerAllResponseSchema);
   server.addSchema(dbContainerIdSchema);
 
-  server.io.on('connection', (socket) => {
-    socket.on('message', (message: WebSocketMessage) => {
-      const handler: EventHandler | undefined = webSocketEventHandlers[message.event as WebSocketRequestEvents];
-
-      if (isNotUndefined(handler)) {
-        handler(server, socket, message).catch((error: { message: string }) => {
-          server.log.error(error);
-          socket.emit('message', error.message);
-        });
-        return;
-      }
-
-      const errorMessage = `Unrecognized websocket event "${message.event}".`;
-      server.log.error(errorMessage);
-      socket.emit('message', errorMessage);
-    });
-
-    server.log.info(`Socket connection established: ${socket.id}`);
-    server.socketManager.set(socket);
-  });
+  server.io.on('connection', (socket) => webSocketConnectionHandler(server, socket));
 
   await server.listen({ host: '0.0.0.0', port: config.port });
 }

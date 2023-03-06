@@ -7,12 +7,21 @@ import {
   WebSocketResponseEvents,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
+import { User } from '@prisma/client';
 
-export type EventHandler = (fastify: FastifyInstance, socket: Socket, message: WebSocketMessage) => Promise<void>;
+export interface EventHandlerOptions {
+  fastify: FastifyInstance;
+  socket: Socket;
+  message: WebSocketMessage;
+  user: User;
+}
+
+export type EventHandler = (options: EventHandlerOptions) => Promise<void>;
 
 // TODO: Think about returning stream from the handler instead of passing socket as an argument
 export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHandler } = {
-  [WebSocketRequestEvents.ContainerLogsSubscribeRequest]: async (fastify, socket, message) => {
+  [WebSocketRequestEvents.ContainerLogsSubscribeRequest]: async (options) => {
+    const { fastify, socket, message } = options;
     const castMessage = message as WebSocketContainerLogsSubscribeRequest;
     const logsStream = await fastify.dockerService.containerLogs({
       dbContainerId: castMessage.dbContainerId,
@@ -26,15 +35,8 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
     });
   },
 
-  // [WebSocketRequestEvents.InteractiveShellRequest]: async (fastify, socket, message) => {
-  //   const castMessage = message as WebSocketInteractiveShellRequest;
-  //   socket.emit('message', {
-  //     event: WebSocketResponseEvents.InteractiveShellLogs,
-  //     text: `requested shell for db container id ${castMessage.dbContainerId}`,
-  //   });
-  // },
-
-  [WebSocketRequestEvents.CreateContainerRequest]: async (fastify, socket, message) => {
+  [WebSocketRequestEvents.CreateContainerRequest]: async (options) => {
+    const { fastify, socket, message } = options;
     const castMessage = message as WebSocketCreateContainerRequest;
     const imageName = 'tempimage';
     const containerName = castMessage.containerName ?? 'tempcontainer';

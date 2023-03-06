@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { LoginRequest } from 'common-src';
 import { Status } from '../../types/statusType';
-import { Error } from '../../types/errorType';
+import { NullableError } from '../../types/nullableErrorType';
 import { api } from '../../api/backend-api';
 
 export interface LoginState {
   status: Status;
-  error: Error;
+  error: NullableError;
   jwtToken: string | null;
 }
 

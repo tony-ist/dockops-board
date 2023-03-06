@@ -29,6 +29,7 @@ function isStartConnectingAction(socket: Socket, action: AnyAction) {
 export const webSocketMiddleware: Middleware = (store) => (next) => (action) => {
   if (isSocketConnected(socket, store) && isWebSocketRequestAction(action)) {
     socket.emit('message', {
+      jwtToken: localStorage.getItem('jwtToken'),
       event: getWebSocketEvent(action.type),
       ...action.payload,
     });
@@ -49,6 +50,11 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   });
 
   socket.on('message', (message: WebSocketMessage) => {
+    if (message.event === WebSocketResponseEvents.ErrorResponse) {
+      // eslint-disable-next-line no-console
+      console.error('WebSocket error:', message.error);
+    }
+
     const actionCreator = actionsByResponseEvents[message.event as WebSocketResponseEvents];
 
     if (actionCreator !== undefined) {
