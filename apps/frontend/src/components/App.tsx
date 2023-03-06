@@ -18,7 +18,7 @@ const appTheme = createTheme({
     },
     background: {
       paper: '#ffffff',
-      default: '#eeeeee',
+      default: '#dddddd',
     },
   },
 });

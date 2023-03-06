@@ -1,171 +1,141 @@
-import { Button, FormControl, Grid, Modal, TextField } from '@mui/material';
+import { Button, FormControl, Grid, Modal } from '@mui/material';
 import Box from '@mui/material/Box';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import styles from './CreateNewContainerModal.module.css';
 import { useTheme } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
-import { createNewContainerModalActions } from '../../features/create-new-container-modal/createNewContainerModalSlice';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { ChangeEvent, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
+import { webSocketActions } from '../../features/web-socket/webSocketSlice';
+import { ScrollableBox } from '../scrollable-box/ScrollableBox';
+import { containerLogsActions } from '../../features/container/containerLogsSlice';
+import { Link } from 'react-router-dom';
 
-interface FormState {
+interface FormProps {
   githubURL: string;
   containerName: string;
-  dockerfileName: string;
-  hostPort: string;
-  containerPort: string;
+  dockerfileName?: string;
+  hostPort?: string;
+  containerPort?: string;
 }
 
 const Form = () => {
-  const [formData, setFormData] = useState<FormState>({
-    githubURL: '',
-    containerName: '',
-    dockerfileName: '',
-    hostPort: '',
-    containerPort: '',
-  });
-  const inputOnChangeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
-    setFormData((previousState) => ({ ...previousState, [key]: event.target.value }));
-  };
+  const dispatch = useAppDispatch();
 
   return (
-    <FormControl
-      fullWidth={true}
-      sx={{
-        '& .MuiTextField-root': { mb: 2, mr: 2, display: 'flex' },
-      }}
-    >
-      <Grid container>
-        <Grid item xs={12}>
-          <TextField
-            id='githubURL'
-            label='githubURL'
-            variant='filled'
-            required={true}
-            value={formData.githubURL}
-            onChange={(event) => inputOnChangeHandler(event as ChangeEvent<HTMLInputElement>, 'githubURL')}
-          />
+    <FormContainer onSuccess={(data: FormProps) => dispatch(webSocketActions.createContainerRequest({ ...data }))}>
+      {/*<FormContainer onSuccess={(data: FormProps) => console.log(data)}>*/}
+      <FormControl
+        fullWidth={true}
+        sx={{
+          '& .MuiTextField-root': { mb: 2, mr: 2, display: 'flex' },
+        }}
+      >
+        <Grid container>
+          <Grid item xs={12}>
+            <TextFieldElement name='githubURL' label='githubURL' variant='filled' required={true} />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextFieldElement name='containerName' label='containerName' variant='filled' required={true} />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextFieldElement
+              name='dockerfileName'
+              label='dockerfileName'
+              variant='filled'
+              placeholder={'Dockerfile'}
+            />
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <TextFieldElement name='hostPort' label='hostPort' variant='filled' />
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <TextFieldElement name='containerPort' label='containerPort' variant='filled' />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            id='containerName'
-            label='containerName'
-            variant='filled'
-            required={true}
-            value={formData.containerName}
-            onChange={(event) => inputOnChangeHandler(event as ChangeEvent<HTMLInputElement>, 'containerName')}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            id='dockerfileName'
-            label='dockerfileName'
-            variant='filled'
-            placeholder={'Dockerfile'}
-            value={formData.dockerfileName}
-            onChange={(event) => inputOnChangeHandler(event as ChangeEvent<HTMLInputElement>, 'dockerfileName')}
-          />
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <TextField
-            id='hostPort'
-            label='hostPort'
-            variant='filled'
-            value={formData.hostPort}
-            onChange={(event) => inputOnChangeHandler(event as ChangeEvent<HTMLInputElement>, 'hostPort')}
-          />
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <TextField
-            id='containerPort'
-            label='containerPort'
-            variant='filled'
-            value={formData.containerPort}
-            onChange={(event) => inputOnChangeHandler(event as ChangeEvent<HTMLInputElement>, 'containerPort')}
-          />
-        </Grid>
-      </Grid>
-      <Button sx={{ mb: 2 }} variant={'contained'}>
-        create
-      </Button>
-    </FormControl>
+        <Button type={'submit'} variant={'contained'} sx={{ mb: 2 }}>
+          create
+        </Button>
+      </FormControl>
+    </FormContainer>
   );
 };
 
-export const CreateNewContainerModal = () => {
-  const dispatch = useDispatch();
-  const theme = useTheme();
-  const isOpen = useAppSelector((state) => state.createNewContainerModal.isOpen);
-  // const dbCreatedContainerId = useAppSelector((state) => state.createContainer.dbContainerId);
+interface CreateNewContainerModalProps {
+  open: boolean;
+  setopen: Dispatch<SetStateAction<boolean>>;
+}
 
-  // function createContainer(containerName: string, hostPort: string) {
-  //   dispatch(
-  //     createContainerRequest({
-  //       containerName,
-  //       githubURL: 'https://github.com/mendhak/docker-http-https-echo/archive/refs/heads/master.zip',
-  //       dockerfileName: 'Dockerfile',
-  //       containerPort: '8080',
-  //       hostPort,
-  //     })
-  //   );
-  // }
-  //
-  // function startContainer(dbContainerId: number) {
-  //   dispatch(
-  //     startContainerThunk({
-  //       dbContainerId,
-  //     })
-  //   );
-  // }
-  //
-  // function subscribeToLogs(dbContainerId: number) {
-  //   dispatch(
-  //     containerLogsRequest({
-  //       dbContainerId,
-  //     })
-  //   );
-  // }
+export const CreateNewContainerModal = (props: CreateNewContainerModalProps) => {
+  const dispatch = useAppDispatch();
+  const logs = useAppSelector((state) => state.containerLogs.messages);
+  const createdDbContainerId = useAppSelector((state) => state.createContainer.dbContainerId);
+  const theme = useTheme();
+  const scrollRef = useRef<null | HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
+    }
+  }, [logs]);
 
   return (
-    <Modal open={isOpen}>
+    <Modal open={props.open}>
       <Box
         className={styles.createNewContainerModal}
-        sx={{
-          border: `2px solid ${theme.palette.primary.light}`,
-          bgcolor: theme.palette.background.paper,
-          boxShadow: 10,
-          maxWidth: theme.breakpoints.values.md,
-          height: '80vh',
-        }}
+        // sx={{
+        // //   border: `2px solid ${theme.palette.primary.light}`,
+        // //   bgcolor: theme.palette.background.paper,
+        // //   maxWidth: theme.breakpoints.values.md,
+        //   boxShadow: 5,
+        // }}
       >
-        <Box>
-          <Typography variant={'h4'}>Create new container form</Typography>
-        </Box>
-        <Divider sx={{ mb: 2 }} />
-        <Box sx={{ height: 100 }}>
-          <Form />
-        </Box>
         <Box
+          className={styles.content}
           sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignContent: 'flex-end',
-            justifyContent: 'right',
-            // height: '50%',
-            '& > button': {
-              marginLeft: 2,
-            },
+            maxWidth: theme.breakpoints.values.md,
+            border: `2px solid ${theme.palette.primary.light}`,
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: 15,
           }}
         >
-          <Divider sx={{ mb: 2, width: '100%' }} />
-          <Button
-            variant={'contained'}
-            color={'error'}
-            onClick={() => dispatch(createNewContainerModalActions.close())}
-          >
-            close
-          </Button>
+          <Box>
+            <Typography variant={'h4'}>Create new container form</Typography>
+          </Box>
+          <Divider sx={{ mb: 2 }} />
+          <Box sx={{ height: 'calc(100% - 120px)', mb: 2 }}>
+            {logs.length === 0 ? (
+              <Form />
+            ) : (
+              <ScrollableBox className={styles.logs} ref={scrollRef}>
+                {logs.map((row) => (
+                  <p className={styles.logsLine}>{row.text}</p>
+                ))}
+              </ScrollableBox>
+            )}
+          </Box>
+          <Box className={styles.closeButtonSection}>
+            <Divider sx={{ mb: 2, width: '100%' }} />
+
+            {createdDbContainerId && (
+              <Link to={`/container/${createdDbContainerId}/`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Button variant={'contained'}>go to container</Button>
+              </Link>
+            )}
+            <Button
+              variant={'contained'}
+              color={'error'}
+              onClick={() => {
+                if (logs.length > 0) {
+                  dispatch(containerLogsActions.wipeLogs());
+                }
+                props.setopen(false);
+              }}
+            >
+              close
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Modal>

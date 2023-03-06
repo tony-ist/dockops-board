@@ -7,7 +7,6 @@ import { containersReducer } from '../features/container/containersSlice';
 import { containerLogsReducer } from '../features/container/containerLogsSlice';
 import { jwtTokenMiddleware } from './middleware/jwtTokenMiddleware';
 import { loginReducer } from '../features/login/loginSlice';
-import { createNewContainerModalReducer } from '../features/create-new-container-modal/createNewContainerModalSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,7 +16,6 @@ export const store = configureStore({
     webSocket: webSocketReducer,
     sideBar: sideBarReducer,
     login: loginReducer,
-    createNewContainerModal: createNewContainerModalReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(webSocketMiddleware).concat(jwtTokenMiddleware),
 });
