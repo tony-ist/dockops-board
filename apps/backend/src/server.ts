@@ -1,6 +1,5 @@
 import Fastify from 'fastify';
 import * as config from './config';
-import { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts';
 
 function getLoggerOptions(environment: string) {
   if (environment === 'PRODUCTION') {
@@ -20,4 +19,4 @@ function getLoggerOptions(environment: string) {
   }
 }
 
-export const server = Fastify({ logger: getLoggerOptions(config.nodeEnv) }).withTypeProvider<JsonSchemaToTsProvider>();
+export const server = Fastify({ logger: getLoggerOptions(config.nodeEnv) });

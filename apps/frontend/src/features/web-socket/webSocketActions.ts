@@ -1,8 +1,9 @@
 import { ActionCreatorWithOptionalPayload, createAction } from '@reduxjs/toolkit';
 import { CreateContainerRequest, WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
 import { containersActions } from '../container/containersSlice';
-import { containerLogsActions } from './containerLogsSlice';
+import { containerLogsActions } from '../container/containerLogsSlice';
 import { DbContainerId } from '../../generated-sources/backend-api';
+import { webSocketActions } from './webSocketSlice';
 
 export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
 export const containerLogsRequest = createAction<DbContainerId>('containers/containerLogsRequest');
@@ -21,4 +22,5 @@ export const actionsByResponseEvents: ActionsByResponseEvents = {
   [WebSocketResponseEvents.CreateContainerResponse]: containersActions.createContainerFulfilled,
   [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.receiveBuildLogs,
   [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.receiveContainerLogs,
+  [WebSocketResponseEvents.ErrorResponse]: webSocketActions.error,
 } as const;

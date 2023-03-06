@@ -1,16 +1,17 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
-import { Error } from '../../types/errorType';
+import { NullableError } from '../../types/nullableErrorType';
 import { api } from '../../api/backend-api';
 import { RootState } from '../../types/storeTypes';
 import { Container, ContainerAllResponse } from '../../generated-sources/backend-api';
 import { WebSocketCreateContainerResponse } from 'common-src';
+import { ThunkAPI } from '../../types/thunkAPIType';
 
 const containersAdapter = createEntityAdapter<Container>();
 
 interface ContainersState {
   status: Status;
-  error: Error;
+  error: NullableError;
 }
 
 const initialState = containersAdapter.getInitialState<ContainersState>({
@@ -18,8 +19,9 @@ const initialState = containersAdapter.getInitialState<ContainersState>({
   error: null,
 });
 
-export const fetchContainersThunk = createAsyncThunk<ContainerAllResponse>('containers/fetchContainers', () =>
-  api.v1ContainerAllGet()
+export const fetchContainersThunk = createAsyncThunk<ContainerAllResponse, void, ThunkAPI>(
+  'containers/fetchContainers',
+  (_: void, thunkAPI) => api(thunkAPI.getState().login.jwtToken).v1ContainerAllGet()
 );
 
 const containersSlice = createSlice({

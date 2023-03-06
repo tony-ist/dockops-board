@@ -21,5 +21,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'error',
     'semi': 'error',
     'object-curly-spacing': ['error', 'always'],
+    'jsx-quotes': ['error', 'prefer-single'],
   },
 };

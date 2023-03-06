@@ -7,8 +7,9 @@ models/ContainerAllResponse.ts
 models/DbContainerId.ts
 models/Log.ts
 models/Message.ts
+models/User.ts
 models/V1ContainerCreatePostRequest.ts
-models/V1UserNewPost200Response.ts
+models/V1LoginPostRequest.ts
 models/V1UserNewPostRequest.ts
 models/index.ts
 runtime.ts
