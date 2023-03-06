@@ -1,7 +1,7 @@
 import { ActionCreatorWithOptionalPayload, createAction } from '@reduxjs/toolkit';
 import { CreateContainerRequest, WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
 import { containersActions } from '../container/containersSlice';
-import { containerLogsActions } from './containerLogsSlice';
+import { containerLogsActions } from '../container/containerLogsSlice';
 import { DbContainerId } from '../../generated-sources/backend-api';
 
 export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');

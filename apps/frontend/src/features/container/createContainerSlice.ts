@@ -4,6 +4,7 @@ import { Error } from '../../types/errorType';
 import { api } from '../../api/backend-api';
 import { containersActions } from './containersSlice';
 import { Message, V1ContainerCreatePostRequest } from '../../generated-sources/backend-api';
+import { ThunkAPI } from '../../types/thunkAPI';
 
 interface ContainerListState {
   dbContainerId: number | null;
@@ -17,9 +18,9 @@ const initialState: ContainerListState = {
   error: null,
 };
 
-export const createContainerThunk = createAsyncThunk<Message, V1ContainerCreatePostRequest>(
+export const createContainerThunk = createAsyncThunk<Message, V1ContainerCreatePostRequest, ThunkAPI>(
   'containers/createContainer',
-  (container) => api.v1ContainerCreatePost({ body: container })
+  (container, thunkAPI) => api(thunkAPI.getState().login.jwtToken).v1ContainerCreatePost({ body: container })
 );
 
 const createContainerSlice = createSlice({

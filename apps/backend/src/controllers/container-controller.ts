@@ -21,7 +21,6 @@ export async function containerController(fastify: FastifyInstance) {
     schema: getContainerAllSchema,
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
-      console.log(`getAllContainers:`, request.user);
       const prisma = fastify.prisma;
       const containers = await prisma.container.findMany();
       reply.send(containers);

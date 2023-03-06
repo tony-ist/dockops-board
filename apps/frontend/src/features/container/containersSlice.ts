@@ -5,6 +5,7 @@ import { api } from '../../api/backend-api';
 import { RootState } from '../../types/storeTypes';
 import { Container, ContainerAllResponse } from '../../generated-sources/backend-api';
 import { WebSocketCreateContainerResponse } from 'common-src';
+import { ThunkAPI } from '../../types/thunkAPI';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -18,8 +19,9 @@ const initialState = containersAdapter.getInitialState<ContainersState>({
   error: null,
 });
 
-export const fetchContainersThunk = createAsyncThunk<ContainerAllResponse>('containers/fetchContainers', () =>
-  api.v1ContainerAllGet()
+export const fetchContainersThunk = createAsyncThunk<ContainerAllResponse, void, ThunkAPI>(
+  'containers/fetchContainers',
+  (_: void, thunkAPI) => api(thunkAPI.getState().login.jwtToken).v1ContainerAllGet()
 );
 
 const containersSlice = createSlice({
