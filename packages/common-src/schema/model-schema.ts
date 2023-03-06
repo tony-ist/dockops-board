@@ -1,3 +1,18 @@
+export const userSchema = {
+  $id: 'dockops-board/user',
+  title: 'User',
+  type: 'object',
+  properties: {
+    id: { type: 'number' },
+    email: { type: 'string' },
+    githubToken: { type: ['string', 'null'] },
+    createdAt: { type: 'string' },
+    updatedAt: { type: 'string' },
+  },
+  required: ['id', 'email'],
+  additionalProperties: false,
+} as const;
+
 export const containerSchema = {
   $id: 'dockops-board/container',
   title: 'Container',

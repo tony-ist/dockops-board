@@ -23,8 +23,13 @@ export const RootPage = () => {
           },
         }}
       >
-        <Button variant="contained" endIcon={<AddBox/>}
-                onClick={() => (dispatch(createNewContainerModalActions.open()))}>new</Button>
+        <Button
+          variant='contained'
+          endIcon={<AddBox />}
+          onClick={() => dispatch(createNewContainerModalActions.open())}
+        >
+          new
+        </Button>
       </Container>
       <Container maxWidth={'xl'}>
         <ContainerList></ContainerList>

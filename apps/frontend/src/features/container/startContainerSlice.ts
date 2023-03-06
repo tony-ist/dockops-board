@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
-import { Error } from '../../types/errorType';
+import { NullableError } from '../../types/nullableErrorType';
 import { api } from '../../api/backend-api';
 import { Message, V1ContainerDbContainerIdStartPostRequest } from '../../generated-sources/backend-api';
+import { ThunkAPI } from '../../types/thunkAPIType';
 
 interface StartContainerState {
   status: Status;
-  error: Error;
+  error: NullableError;
 }
 
 const initialState: StartContainerState = {
@@ -14,9 +15,10 @@ const initialState: StartContainerState = {
   error: null,
 };
 
-export const startContainerThunk = createAsyncThunk<Message, V1ContainerDbContainerIdStartPostRequest>(
+export const startContainerThunk = createAsyncThunk<Message, V1ContainerDbContainerIdStartPostRequest, ThunkAPI>(
   'containers/startContainer',
-  (startContainerRequest) => api.v1ContainerDbContainerIdStartPost(startContainerRequest)
+  (startContainerRequest, thunkAPI) =>
+    api(thunkAPI.getState().login.jwtToken).v1ContainerDbContainerIdStartPost(startContainerRequest)
 );
 
 const startContainerSlice = createSlice({

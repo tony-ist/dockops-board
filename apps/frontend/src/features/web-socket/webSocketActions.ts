@@ -1,7 +1,7 @@
 import { ActionCreatorWithOptionalPayload } from '@reduxjs/toolkit';
 import { WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
 import { containersActions } from '../container/containersSlice';
-import { containerLogsActions } from './containerLogsSlice';
+import { containerLogsActions } from '../container/containerLogsSlice';
 import { webSocketActions } from './webSocketSlice';
 
 // TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
@@ -19,4 +19,5 @@ export const actionsByResponseEvents: ActionsByResponseEvents = {
   [WebSocketResponseEvents.CreateContainerResponse]: containersActions.createContainerFulfilled,
   [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.receiveBuildLogs,
   [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.receiveContainerLogs,
+  [WebSocketResponseEvents.ErrorResponse]: webSocketActions.error,
 } as const;

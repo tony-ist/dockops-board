@@ -17,6 +17,7 @@ export enum WebSocketResponseEvents {
   // InteractiveShellResponse = 'InteractiveShellResponse',
   BuildImageLogsResponse = 'BuildImageLogsResponse',
   CreateContainerResponse = 'CreateContainerResponse',
+  ErrorResponse = 'ErrorResponse',
 }
 
 export interface WebSocketContainerLogsSubscribeRequest extends WebSocketMessage, ContainerLogsSubscribeRequest {
@@ -41,4 +42,6 @@ export interface WebSocketBuildImageLogsResponse extends WebSocketMessage, Build
 
 export interface WebSocketMessage {
   event: WebSocketRequestEvents | WebSocketResponseEvents;
+  jwtToken?: string;
+  error?: string;
 }

@@ -16,15 +16,17 @@ import * as runtime from '../runtime';
 import type {
   Container,
   Message,
+  User,
   V1ContainerCreatePostRequest,
-  V1UserNewPost200Response,
+  V1LoginPostRequest,
   V1UserNewPostRequest,
 } from '../models';
 import {
   ContainerFromJSON,
   MessageFromJSON,
+  UserFromJSON,
   V1ContainerCreatePostRequestToJSON,
-  V1UserNewPost200ResponseFromJSON,
+  V1LoginPostRequestToJSON,
   V1UserNewPostRequestToJSON,
 } from '../models';
 
@@ -43,6 +45,10 @@ export interface V1ContainerDbContainerIdLogsGetRequest {
 
 export interface V1ContainerDbContainerIdStartPostRequest {
   dbContainerId: number;
+}
+
+export interface V1LoginPostOperationRequest {
+  body?: V1LoginPostRequest;
 }
 
 export interface V1UserNewPostOperationRequest {
@@ -253,10 +259,46 @@ export class DefaultApi extends runtime.BaseAPI {
 
   /**
    */
+  async v1LoginPostRaw(
+    requestParameters: V1LoginPostOperationRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<string>> {
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/v1/login/`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: V1LoginPostRequestToJSON(requestParameters.body),
+      },
+      initOverrides
+    );
+
+    return new runtime.TextApiResponse(response) as any;
+  }
+
+  /**
+   */
+  async v1LoginPost(
+    requestParameters: V1LoginPostOperationRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<string> {
+    const response = await this.v1LoginPostRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
+   */
   async v1UserNewPostRaw(
     requestParameters: V1UserNewPostOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<runtime.ApiResponse<V1UserNewPost200Response>> {
+  ): Promise<runtime.ApiResponse<User>> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -274,7 +316,7 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) => V1UserNewPost200ResponseFromJSON(jsonValue));
+    return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
   }
 
   /**
@@ -282,7 +324,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async v1UserNewPost(
     requestParameters: V1UserNewPostOperationRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction
-  ): Promise<V1UserNewPost200Response> {
+  ): Promise<User> {
     const response = await this.v1UserNewPostRaw(requestParameters, initOverrides);
     return await response.value();
   }

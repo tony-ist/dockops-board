@@ -9,7 +9,8 @@ import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar/AppBar';
-import { useMediaQuery } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
+import { loginActions } from '../../features/login/loginSlice';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -39,15 +40,15 @@ export const Header = () => {
   const isSideBarOpen = useAppSelector((state) => state.sideBar.isOpen);
   const isSideBarTemporary = !useMediaQuery('(min-width:600px)');
   return (
-    <AppBar position="fixed" open={isSideBarOpen && !isSideBarTemporary}>
+    <AppBar position='fixed' open={isSideBarOpen && !isSideBarTemporary}>
       <Toolbar>
         <IconButton
-          color="inherit"
-          aria-label="open drawer"
+          color='inherit'
+          aria-label='open drawer'
           onClick={() => {
             dispatch(sideBarActions.toggle());
           }}
-          edge="start"
+          edge='start'
           sx={{
             marginRight: 5,
             ...(isSideBarOpen && !isSideBarTemporary && { display: 'none' }),
@@ -55,9 +56,12 @@ export const Header = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div">
+        <Typography variant='h6' noWrap component='div'>
           Dockops dashboard
         </Typography>
+        <Button color='error' variant='contained' onClick={() => dispatch(loginActions.logout())}>
+          Logout
+        </Button>
       </Toolbar>
     </AppBar>
   );
