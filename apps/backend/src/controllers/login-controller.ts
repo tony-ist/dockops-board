@@ -1,5 +1,6 @@
 import { LoginRequest, postLoginSchema } from 'common-src';
 import { FastifyInstance } from 'fastify';
+import * as config from '../config';
 
 export async function loginController(fastify: FastifyInstance) {
   fastify.route<{ Body: LoginRequest; Reply: string }>({
@@ -22,7 +23,7 @@ export async function loginController(fastify: FastifyInstance) {
         return reply.send();
       }
 
-      const jwtToken = fastify.jwt.sign({ userId: user.id });
+      const jwtToken = await reply.jwtSign({ userId: user.id }, {expiresIn: config.jwtExpiration});
       return reply.send(jwtToken);
     },
   });
