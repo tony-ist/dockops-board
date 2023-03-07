@@ -11,9 +11,9 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
+    "prisma:generate": "prisma generate",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:status": "dotenv -e .env.local -- prisma migrate status",
-    "db:generate": "prisma generate",
     "db:deploy": "dotenv -e .env.local -- prisma migrate deploy",
     "db:seed": "dotenv -e .env.local -- ts-node prisma/seeds/seeds.ts"
   },

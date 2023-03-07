@@ -182,7 +182,7 @@ export class DockerService {
     const dbContainer = await prisma.container.findFirstOrThrow({ where: { id: dbContainerId } });
 
     if (!dbContainer.dockerId) {
-      throw new Error(`dbContainer.dockerId is "${dbContainer.dockerId}" for db container with id "${dbContainerId}".`)
+      throw new Error(`dbContainer.dockerId is "${dbContainer.dockerId}" for db container with id "${dbContainerId}".`);
     }
 
     const dockerContainer = docker.getContainer(dbContainer.dockerId);
