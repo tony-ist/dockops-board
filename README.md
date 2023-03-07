@@ -2,42 +2,53 @@
 
 ## What is this?
 
-This is an open source docker dashboard with web UI.
-It allows you to create and configure new services from GitHub repo or from Docker image.
-It also allows you to monitor these services, manipulate them, see logs and so on.
+This is an open source docker dashboard with web UI.  
+It allows you to create and configure new services from GitHub repo or from Docker image.  
+It also allows you to monitor these services, manipulate them, see logs, execute interactive shell and so on.
 
 ## Requirements
 
-- SQLite 3
 - Java 11.0.17
-- Preferably Ubuntu Linux or macOS, WSL2 works too but worse
+- Preferably Ubuntu Linux 22.04 or macOS Ventura, WSL2 works too but worse
 
 ## Development
 
 Install dependencies
 
 ```bash
-sudo apt install sqlite3
 sudo apt install default-jre
 ```
 
-Create DB
-
-```bash
-sqlite3 apps/backend/prisma/local.db
-.databases
-.exit
-```
-
-Edit configs, install dependenceies, generate prisma typings, seed DB and start the app
+Edit configs
 
 ```bash
 cp apps/frontend/.env.template apps/frontend/.env.local # And edit the .env file
 cp apps/backend/.env.template apps/backend/.env.local # And edit the .env file
+```
+
+Install dependencies
+
+```bash
 npm install
 npm run hooks:install
+```
+
+Generate prisma typings
+
+```bash
 npm run prisma:generate -w=apps/backend
+```
+
+Create and seed DB
+
+```bash
+npm run db:push -w=apps/backend
 npm run db:seed -w=apps/backend
+```
+
+Start the app
+
+```bash
 npm run dev
 ```
 

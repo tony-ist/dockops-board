@@ -58,7 +58,7 @@ export const dbContainerIdSchema = {
   title: 'DbContainerId',
   type: 'object',
   properties: {
-    dbContainerId: { type: 'number' },
+    dbContainerId: { type: 'string' },
   },
   required: ['dbContainerId'],
   additionalProperties: false,

@@ -24,7 +24,7 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
     const { fastify, socket, message } = options;
     const castMessage = message as WebSocketContainerLogsSubscribeRequest;
     const logsStream = await fastify.dockerService.containerLogs({
-      dbContainerId: castMessage.dbContainerId,
+      dbContainerId: parseInt(castMessage.dbContainerId),
       tail: castMessage.tail,
     });
     logsStream.on('data', (data) => {

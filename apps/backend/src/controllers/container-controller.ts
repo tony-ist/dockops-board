@@ -11,8 +11,25 @@ import {
   postContainerStartSchema,
   PostCreateContainerResponse,
   WebSocketResponseEvents,
+  Container,
+  getContainerSchema,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
+import { Container as PrismaContainer } from '@prisma/client';
+import { BuildManager } from '../services/build-manager';
+
+function serializePrismaContainer(buildManager: BuildManager, prismaContainer: PrismaContainer): Container {
+  return {
+    id: prismaContainer.id,
+    image: prismaContainer.image ?? undefined,
+    dockerId: prismaContainer.dockerId ?? undefined,
+    dockerState: prismaContainer.dockerState ?? undefined,
+    dockerName: prismaContainer.dockerName,
+    buildStatus: buildManager.get(prismaContainer.id),
+    createdAt: prismaContainer.createdAt.toString(),
+    updatedAt: prismaContainer.updatedAt.toString(),
+  };
+}
 
 // Error "Target allows only 0 element(s) but source may have more." means you forgot "references" for type in common-src/types/model-types.ts
 // https://github.com/ThomasAribart/json-schema-to-ts#references
@@ -23,19 +40,26 @@ export async function containerController(fastify: FastifyInstance) {
     schema: getContainerAllSchema,
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
-      const prisma = fastify.prisma;
+      const { prisma, buildManager } = fastify;
       const containers = await prisma.container.findMany();
-      const result: GetContainerAllResponse = containers.map((container) => ({
-        id: container.id,
-        image: container.image ?? undefined,
-        dockerId: container.dockerId ?? undefined,
-        dockerState: container.dockerState ?? undefined,
-        dockerName: container.dockerName,
-        buildStatus: fastify.buildManager.get(container.id),
-        createdAt: container.createdAt.toString(),
-        updatedAt: container.updatedAt.toString(),
-      }));
+      const result: GetContainerAllResponse = containers.map((container) =>
+        serializePrismaContainer(buildManager, container)
+      );
       reply.send(result);
+    },
+  });
+
+  fastify.route<{ Params: DbContainerId; Reply: Container }>({
+    method: 'GET',
+    url: '/:dbContainerId',
+    schema: getContainerSchema,
+    onRequest: [fastify.authenticate],
+    handler: async (request, reply) => {
+      const { dbContainerId } = request.params;
+      const { prisma, buildManager } = fastify;
+      const container = await prisma.container.findFirstOrThrow({ where: { id: parseInt(dbContainerId) } });
+      const serializedContainer = serializePrismaContainer(buildManager, container);
+      reply.send(serializedContainer);
     },
   });
 
@@ -98,7 +122,7 @@ export async function containerController(fastify: FastifyInstance) {
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const { dbContainerId } = request.params;
-      const result = await fastify.dockerService.runContainer({ dbContainerId });
+      const result = await fastify.dockerService.runContainer({ dbContainerId: parseInt(dbContainerId) });
       reply.send({ message: `Container with id "${dbContainerId}" started: "${JSON.stringify(result, null, 2)}".` });
     },
   });
@@ -111,7 +135,7 @@ export async function containerController(fastify: FastifyInstance) {
     handler: async (request, reply) => {
       const { dbContainerId } = request.params;
       const socket = request.ioSocket;
-      const runStream = await fastify.dockerService.attachContainer({ dbContainerId });
+      const runStream = await fastify.dockerService.attachContainer({ dbContainerId: parseInt(dbContainerId) });
       runStream.on('data', (data) => {
         const message = data.toString();
         socket?.emit('message', message);
@@ -131,7 +155,7 @@ export async function containerController(fastify: FastifyInstance) {
       const { tail } = request.query;
       const socket = request.ioSocket;
       const logsStream = await fastify.dockerService.containerLogs({
-        dbContainerId,
+        dbContainerId: parseInt(dbContainerId),
         tail,
       });
       logsStream.on('data', (data) => {

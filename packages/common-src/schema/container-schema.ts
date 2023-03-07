@@ -54,6 +54,12 @@ export const getContainerAllSchema = {
   },
 } as const;
 
+export const getContainerSchema = {
+  response: {
+    200: { $ref: 'dockops-board/container' },
+  },
+} as const;
+
 export const postContainerCreateResponseSchema = {
   type: 'object',
   properties: {
