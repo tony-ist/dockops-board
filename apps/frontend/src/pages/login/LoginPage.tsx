@@ -18,7 +18,7 @@ export const LoginPage = () => {
   }, [loginStatus]);
 
   if (loginStatus === 'succeeded') {
-    return <Navigate to={'/'} replace={true} />;
+    return <Navigate to='/' replace={true} />;
   }
 
   function login() {

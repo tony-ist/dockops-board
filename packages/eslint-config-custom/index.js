@@ -1,9 +1,14 @@
 // eslint-disable-next-line no-undef
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:react/recommended'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   ignorePatterns: ['apps/backend/tmp/'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
     'no-var': 'error',
     'no-redeclare': 'error',
@@ -22,5 +27,10 @@ module.exports = {
     'semi': 'error',
     'object-curly-spacing': ['error', 'always'],
     'jsx-quotes': ['error', 'prefer-single'],
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-curly-brace-presence': ['error', {
+      props: 'never',
+      children: 'never',
+    }],
   },
 };
