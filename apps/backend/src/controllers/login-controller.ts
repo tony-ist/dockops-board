@@ -23,7 +23,7 @@ export async function loginController(fastify: FastifyInstance) {
         return reply.send();
       }
 
-      const jwtToken = await reply.jwtSign({ userId: user.id }, {expiresIn: config.jwtExpiration});
+      const jwtToken = await reply.jwtSign({ userId: user.id }, { expiresIn: config.jwtExpiration });
       return reply.send(jwtToken);
     },
   });

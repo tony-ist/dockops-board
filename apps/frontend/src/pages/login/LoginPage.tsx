@@ -22,7 +22,7 @@ export const LoginPage = () => {
   }
 
   function login() {
-    dispatch(loginThunk({ email, password }));
+    dispatch(loginThunk({ body: { email, password } }));
   }
 
   return (

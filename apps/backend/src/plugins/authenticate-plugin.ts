@@ -27,8 +27,8 @@ export const authenticatePlugin: FastifyPluginAsync = fastifyPlugin(async (fasti
       const { userId } = verificationResult;
       request.user = await fastify.prisma.user.findFirstOrThrow({ where: { id: userId } });
     } catch (error) {
-      reply.status(401)
-      reply.send({description: 'Unauthorized', error});
+      reply.status(401);
+      reply.send({ description: 'Unauthorized', error });
     }
   });
 });
