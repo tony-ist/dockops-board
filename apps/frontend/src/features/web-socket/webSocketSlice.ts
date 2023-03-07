@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WebSocketMessage } from 'common-src';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PostCreateContainerRequest, WebSocketMessage } from 'common-src';
 import { NullableError } from '../../types/nullableErrorType';
+import { DbContainerId } from '../../generated-sources/backend-api';
 
 export interface WebSocketState {
   isEstablishingConnection: boolean;
@@ -31,5 +32,8 @@ const webSocketSlice = createSlice({
   },
 });
 
-export const webSocketActions = webSocketSlice.actions;
+const createContainerRequest = createAction<PostCreateContainerRequest>('containers/createContainerRequest');
+const containerLogsRequest = createAction<DbContainerId>('containers/containerLogsRequest');
+
+export const webSocketActions = { ...webSocketSlice.actions, createContainerRequest, containerLogsRequest };
 export const webSocketReducer = webSocketSlice.reducer;

@@ -1,0 +1,17 @@
+.content {
+  width: 100%;
+  min-height: 50vh;
+  max-height: calc(100vh - 110px);
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.closeButtonSection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+}
+
+.closeButtonSection button {
+  margin-left: 15px;
+}

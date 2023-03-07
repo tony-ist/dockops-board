@@ -19,6 +19,9 @@ const containerLogsSlice = createSlice({
     receiveBuildLogs: (state, action: PayloadAction<Log>) => {
       state.messages.push(action.payload);
     },
+    wipeLogs: (state) => {
+      state.messages = [];
+    },
   },
 });
 
