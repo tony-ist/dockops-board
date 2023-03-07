@@ -40,12 +40,26 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
     const castMessage = message as WebSocketCreateContainerRequest;
     const imageName = 'tempimage';
     const containerName = castMessage.containerName ?? 'tempcontainer';
-    await fastify.containerService.fetchSourceBuildImageAndCreateContainer({
-      ...castMessage,
-      imageName,
-      containerName,
-      socket,
+    const container = await fastify.prisma.container.create({
+      data: {
+        dockerName: containerName,
+        doesExist: false,
+      },
     });
+    fastify.buildManager.set(container.id, 'building');
+    try {
+      await fastify.containerService.fetchSourceBuildImageAndCreateContainer({
+        ...castMessage,
+        dbContainerId: container.id,
+        imageName,
+        containerName,
+        socket,
+      });
+    } catch (error) {
+      fastify.buildManager.set(container.id, 'error');
+      throw error;
+    }
+    fastify.buildManager.set(container.id, 'success');
   },
 };
 

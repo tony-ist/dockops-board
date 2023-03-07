@@ -1,6 +1,6 @@
 import { dbContainerIdSchema } from './model-schema';
 
-export const containerCreateRequestSchema = {
+export const postContainerCreateRequestSchema = {
   type: 'object',
   properties: {
     containerName: { type: 'string' },
@@ -32,7 +32,7 @@ export const containerAllResponseSchema = {
   additionalProperties: false,
 } as const;
 
-export const containerLogsRequestSchema = {
+export const getContainerLogsRequestSchema = {
   type: 'object',
   properties: {
     tail: { type: 'number' },
@@ -50,14 +50,23 @@ export const getContainerAllSchema = {
         description: { type: 'string' },
       },
       additionalProperties: false,
-    }
+    },
   },
 } as const;
 
+export const postContainerCreateResponseSchema = {
+  type: 'object',
+  properties: {
+    dbContainerId: { type: 'number' },
+    message: { type: 'string' },
+  },
+  additionalProperties: false,
+} as const;
+
 export const postContainerCreateSchema = {
-  body: containerCreateRequestSchema,
+  body: postContainerCreateRequestSchema,
   response: {
-    200: { $ref: 'dockops-board/message' },
+    200: postContainerCreateResponseSchema,
   },
 } as const;
 
@@ -77,7 +86,7 @@ export const postContainerAttachSchema = {
 
 export const getContainerLogsSchema = {
   params: dbContainerIdSchema,
-  querystring: containerLogsRequestSchema,
+  querystring: getContainerLogsRequestSchema,
   response: {
     200: { $ref: 'dockops-board/message' },
   },

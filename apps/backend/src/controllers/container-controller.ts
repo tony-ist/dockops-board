@@ -1,20 +1,22 @@
 import {
-  ContainerLogsRequest,
-  CreateContainerRequest,
+  GetContainerAllResponse,
+  GetContainerLogsRequest,
+  PostCreateContainerRequest,
   DbContainerId,
   getContainerAllSchema,
   getContainerLogsSchema,
   Message,
   postContainerAttachSchema,
   postContainerCreateSchema,
-  postContainerStartSchema,
+  postContainerStartSchema, PostCreateContainerResponse,
   WebSocketResponseEvents,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
-import { ContainerAllResponse } from 'frontend/src/generated-sources/backend-api';
 
+// Error "Target allows only 0 element(s) but source may have more." means you forgot "references" for type in common-src/types/model-types.ts
+// https://github.com/ThomasAribart/json-schema-to-ts#references
 export async function containerController(fastify: FastifyInstance) {
-  fastify.route<{ Reply: ContainerAllResponse }>({
+  fastify.route<{ Reply: GetContainerAllResponse }>({
     method: 'GET',
     url: '/all',
     schema: getContainerAllSchema,
@@ -22,11 +24,21 @@ export async function containerController(fastify: FastifyInstance) {
     handler: async (request, reply) => {
       const prisma = fastify.prisma;
       const containers = await prisma.container.findMany();
-      reply.send(containers);
+      const result: GetContainerAllResponse = containers.map((container) => ({
+        id: container.id,
+        image: container.image ?? undefined,
+        dockerId: container.dockerId ?? undefined,
+        dockerState: container.dockerState ?? undefined,
+        dockerName: container.dockerName,
+        buildStatus: fastify.buildManager.get(container.id),
+        createdAt: container.createdAt.toString(),
+        updatedAt: container.updatedAt.toString(),
+      }));
+      reply.send(result);
     },
   });
 
-  fastify.route<{ Body: CreateContainerRequest; Reply: Message }>({
+  fastify.route<{ Body: PostCreateContainerRequest; Reply: PostCreateContainerResponse }>({
     method: 'POST',
     url: '/create',
     schema: postContainerCreateSchema,
@@ -39,8 +51,18 @@ export async function containerController(fastify: FastifyInstance) {
       const { containerPort, hostPort } = request.body;
       const socket = request.ioSocket;
 
+      const container = await fastify.prisma.container.create({
+        data: {
+          dockerName: containerName,
+          doesExist: false,
+        },
+      });
+
+      fastify.buildManager.set(container.id, 'building');
+
       fastify.containerService
         .fetchSourceBuildImageAndCreateContainer({
+          dbContainerId: container.id,
           githubURL,
           imageName,
           containerName,
@@ -49,7 +71,11 @@ export async function containerController(fastify: FastifyInstance) {
           hostPort,
           socket,
         })
+        .then(() => {
+          fastify.buildManager.set(container.id, 'success');
+        })
         .catch((error) => {
+          fastify.buildManager.set(container.id, 'error');
           socket?.emit('message', {
             event: WebSocketResponseEvents.BuildImageLogsResponse,
             text: error,
@@ -57,9 +83,10 @@ export async function containerController(fastify: FastifyInstance) {
           fastify.log.error(error);
         });
 
-
-
-      reply.send({ message: 'Fetching sources, building and creating a container. Sending results via websocket...' });
+      reply.send({
+        message: 'Fetching sources, building and creating a container. Sending results via websocket...',
+        dbContainerId: container.id,
+      });
     },
   });
 
@@ -93,7 +120,7 @@ export async function containerController(fastify: FastifyInstance) {
     },
   });
 
-  fastify.route<{ Params: DbContainerId; Querystring: ContainerLogsRequest; Reply: Message }>({
+  fastify.route<{ Params: DbContainerId; Querystring: GetContainerLogsRequest; Reply: Message }>({
     method: 'GET',
     url: '/:dbContainerId/logs',
     schema: getContainerLogsSchema,

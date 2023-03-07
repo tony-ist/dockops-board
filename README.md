@@ -37,8 +37,14 @@ cp apps/backend/.env.template apps/backend/.env.local # And edit the .env file
 npm install
 npm run hooks:install
 npm run db:generate -w=apps/backend
-npm run db:seed
+npm run db:seed -w=apps/backend
 npm run dev
+```
+
+## Creating migration or applying migrations
+
+```bash
+npm run db:migrate
 ```
 
 ## Build

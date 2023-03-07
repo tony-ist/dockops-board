@@ -1,4 +1,4 @@
-export const userNewRequestSchema = {
+export const postUserNewRequestSchema = {
   type: 'object',
   properties: {
     email: { type: 'string' },
@@ -9,7 +9,7 @@ export const userNewRequestSchema = {
 } as const;
 
 export const postUsersNewSchema = {
-  body: userNewRequestSchema,
+  body: postUserNewRequestSchema,
   response: {
     200: { $ref: 'dockops-board/user' },
   },

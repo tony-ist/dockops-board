@@ -19,10 +19,15 @@ export const containerSchema = {
   type: 'object',
   properties: {
     id: { type: 'number' },
-    dockerId: { type: 'string' },
     image: { type: 'string' },
+    dockerId: { type: 'string' },
+    dockerName: { type: 'string' },
+    dockerState: { type: 'string' },
+    createdAt: { type: 'string' },
+    updatedAt: { type: 'string' },
+    buildStatus: { type: 'string' },
   },
-  required: ['id', 'dockerId', 'image'],
+  required: ['id', 'dockerName'],
   additionalProperties: false,
 } as const;
 

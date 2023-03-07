@@ -20,11 +20,11 @@ model Container {
   id           Int           @id @default(autoincrement())
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  dockerId     String
-  image        String
+  dockerId     String?
+  image        String?
   dockerName   String
-  dockerState  String        @default("created")
-  doesExist    Boolean       @default(true)
+  dockerState  String?
+  doesExist    Boolean       @default(false)
   portForwards PortForward[]
 }
 

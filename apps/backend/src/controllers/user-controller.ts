@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify';
-import { postUsersNewSchema, User, UserNewRequest } from 'common-src';
+import { postUsersNewSchema, User, PostUserNewRequest } from 'common-src';
 
 export async function userController(fastify: FastifyInstance) {
-  fastify.route<{ Body: UserNewRequest; Reply: User }>({
+  fastify.route<{ Body: PostUserNewRequest; Reply: User }>({
     method: 'POST',
     url: '/new',
     schema: postUsersNewSchema,

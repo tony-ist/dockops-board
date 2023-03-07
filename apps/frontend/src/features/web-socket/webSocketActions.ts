@@ -1,11 +1,11 @@
 import { ActionCreatorWithOptionalPayload, createAction } from '@reduxjs/toolkit';
-import { CreateContainerRequest, WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
+import { PostCreateContainerRequest, WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
 import { containersActions } from '../container/containersSlice';
 import { containerLogsActions } from '../container/containerLogsSlice';
 import { DbContainerId } from '../../generated-sources/backend-api';
 import { webSocketActions } from './webSocketSlice';
 
-export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
+export const createContainerRequest = createAction<PostCreateContainerRequest>('containers/createContainerRequest');
 export const containerLogsRequest = createAction<DbContainerId>('containers/containerLogsRequest');
 // TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
 export const webSocketRequestActions = [createContainerRequest, containerLogsRequest];

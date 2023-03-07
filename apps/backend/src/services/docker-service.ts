@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import recursiveReadDir from 'recursive-readdir';
 import { FastifyInstance } from 'fastify';
 import * as config from '../config';
+import { DockerState } from '../types/docker-state';
 
 export interface BuildImageOptions {
   imageName: string;
@@ -11,6 +12,7 @@ export interface BuildImageOptions {
 }
 
 export interface CreateContainerOptions {
+  dbContainerId: number;
   containerName: string;
   imageName: string;
   containerPort?: string;
@@ -86,7 +88,7 @@ export class DockerService {
    * @returns dockerId of the created docker container (not id from the database)
    */
   async createContainer(options: CreateContainerOptions) {
-    const { containerName, containerPort, hostPort, imageName } = options;
+    const { containerName, containerPort, hostPort, imageName, dbContainerId } = options;
     const { fastify } = this;
     const { prisma, docker } = fastify;
 
@@ -114,11 +116,16 @@ export class DockerService {
     const containerCreateResult = await docker.createContainer(createContainerOptions);
     const containerInspectResult = await containerCreateResult.inspect();
 
-    await prisma.container.create({
+    await prisma.container.update({
+      where: {
+        id: dbContainerId,
+      },
       data: {
         dockerId: containerInspectResult.Id,
         image: containerInspectResult.Config.Image,
         dockerName: containerInspectResult.Name,
+        dockerState: DockerState.Created,
+        doesExist: true,
       },
     });
 
@@ -173,6 +180,11 @@ export class DockerService {
     const { fastify } = this;
     const { prisma, docker } = fastify;
     const dbContainer = await prisma.container.findFirstOrThrow({ where: { id: dbContainerId } });
+
+    if (!dbContainer.dockerId) {
+      throw new Error(`dbContainer.dockerId is "${dbContainer.dockerId}" for db container with id "${dbContainerId}".`)
+    }
+
     const dockerContainer = docker.getContainer(dbContainer.dockerId);
     return dockerContainer;
   }

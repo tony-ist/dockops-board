@@ -1,10 +1,5 @@
-import {
-  BuildImageLogsResponse,
-  ContainerLogsResponse,
-  ContainerLogsSubscribeRequest,
-  CreateContainerRequest,
-  CreateContainerResponse
-} from './model-types';
+import { Container, DbContainerId, Log } from './model-types';
+import { GetContainerLogsRequest, PostCreateContainerRequest } from './rest-types';
 
 export enum WebSocketRequestEvents {
   ContainerLogsSubscribeRequest = 'ContainerLogsSubscribeRequest',
@@ -20,23 +15,28 @@ export enum WebSocketResponseEvents {
   ErrorResponse = 'ErrorResponse',
 }
 
-export interface WebSocketContainerLogsSubscribeRequest extends WebSocketMessage, ContainerLogsSubscribeRequest {
+export type WSCreateContainerResponse = { container: Container };
+export type WSContainerLogsSubscribeRequest = GetContainerLogsRequest & DbContainerId;
+export type WSContainerLogsResponse = Log & DbContainerId;
+export type WSBuildImageLogsResponse = Log & DbContainerId;
+
+export interface WebSocketContainerLogsSubscribeRequest extends WebSocketMessage, WSContainerLogsSubscribeRequest {
   event: WebSocketRequestEvents.ContainerLogsSubscribeRequest;
 }
 
-export interface WebSocketContainerLogsResponse extends WebSocketMessage, ContainerLogsResponse {
+export interface WebSocketContainerLogsResponse extends WebSocketMessage, WSContainerLogsResponse {
   event: WebSocketResponseEvents.ContainerLogsResponse;
 }
 
-export interface WebSocketCreateContainerRequest extends WebSocketMessage, CreateContainerRequest {
+export interface WebSocketCreateContainerRequest extends WebSocketMessage, PostCreateContainerRequest {
   event: WebSocketRequestEvents.CreateContainerRequest;
 }
 
-export interface WebSocketCreateContainerResponse extends WebSocketMessage, CreateContainerResponse {
+export interface WebSocketCreateContainerResponse extends WebSocketMessage, WSCreateContainerResponse {
   event: WebSocketResponseEvents.CreateContainerResponse;
 }
 
-export interface WebSocketBuildImageLogsResponse extends WebSocketMessage, BuildImageLogsResponse {
+export interface WebSocketBuildImageLogsResponse extends WebSocketMessage, WSBuildImageLogsResponse {
   event: WebSocketResponseEvents.BuildImageLogsResponse;
 }
 

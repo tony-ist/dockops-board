@@ -1,4 +1,4 @@
-export const loginRequestSchema = {
+export const postLoginRequestSchema = {
   type: 'object',
   properties: {
     email: { type: 'string' },
@@ -8,7 +8,7 @@ export const loginRequestSchema = {
 } as const;
 
 export const postLoginSchema = {
-  body: loginRequestSchema,
+  body: postLoginRequestSchema,
   response: {
     200: { type: 'string' },
   },
