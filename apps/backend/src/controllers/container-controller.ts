@@ -1,18 +1,19 @@
 import {
-  GetContainerAllResponse,
-  GetContainerLogsRequest,
-  PostCreateContainerRequest,
+  Container,
   DbContainerId,
+  GetContainerAllResponse,
   getContainerAllSchema,
+  GetContainerLogsRequest,
   getContainerLogsSchema,
+  getContainerSchema,
   Message,
   postContainerAttachSchema,
   postContainerCreateSchema,
   postContainerStartSchema,
+  postContainerStopSchema,
+  PostCreateContainerRequest,
   PostCreateContainerResponse,
   WebSocketResponseEvents,
-  Container,
-  getContainerSchema,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
 import { Container as PrismaContainer } from '@prisma/client';
@@ -122,8 +123,24 @@ export async function containerController(fastify: FastifyInstance) {
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
       const { dbContainerId } = request.params;
-      const result = await fastify.dockerService.runContainer({ dbContainerId: parseInt(dbContainerId) });
-      reply.send({ message: `Container with id "${dbContainerId}" started: "${JSON.stringify(result, null, 2)}".` });
+      const result = await fastify.dockerService.startContainer({ dbContainerId: parseInt(dbContainerId) });
+      reply.send({
+        message: `Container with id "${dbContainerId}" started. Additional info: "${JSON.stringify(result, null, 2)}".`,
+      });
+    },
+  });
+
+  fastify.route<{ Params: DbContainerId; Reply: Message }>({
+    method: 'POST',
+    url: '/:dbContainerId/stop',
+    schema: postContainerStopSchema,
+    onRequest: [fastify.authenticate],
+    handler: async (request, reply) => {
+      const { dbContainerId } = request.params;
+      const result = await fastify.dockerService.stopContainer({ dbContainerId: parseInt(dbContainerId) });
+      reply.send({
+        message: `Container with id "${dbContainerId}" stopped. Additional info: "${JSON.stringify(result, null, 2)}".`,
+      });
     },
   });
 

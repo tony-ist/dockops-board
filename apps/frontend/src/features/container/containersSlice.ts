@@ -6,6 +6,7 @@ import { RootState } from '../../types/storeTypes';
 import { Container } from '../../generated-sources/backend-api';
 import { WebSocketCreateContainerResponse } from 'common-src';
 import { loginThunk } from '../login/loginSlice';
+import { fetchContainerByIdThunk } from './getContainerSlice';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -43,6 +44,11 @@ const containersSlice = createSlice({
       .addCase(fetchContainersThunk.rejected, (state, action) => {
         state.error = action.error.message ?? 'Unknown error';
         state.status = 'failed';
+      })
+      .addCase(fetchContainerByIdThunk.fulfilled, (state, action) => {
+        state.error = null;
+        state.status = 'succeeded';
+        containersAdapter.upsertOne(state, action.payload);
       })
       .addCase(loginThunk.fulfilled, () => initialState);
   },

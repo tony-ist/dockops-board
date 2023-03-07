@@ -5,10 +5,13 @@ import { containerLogsActions } from '../container/containerLogsSlice';
 import { webSocketActions } from './webSocketSlice';
 
 // TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
-export const webSocketRequestActions = [webSocketActions.createContainerRequest, webSocketActions.containerLogsRequest];
+export const webSocketRequestActions = [
+  webSocketActions.createContainerRequest,
+  webSocketActions.containerLogsSubscribeRequest,
+];
 export const webSocketEventsByAction = {
   [webSocketActions.createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
-  [webSocketActions.containerLogsRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribeRequest,
+  [webSocketActions.containerLogsSubscribeRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribeRequest,
 };
 
 type ActionsByResponseEvents = {

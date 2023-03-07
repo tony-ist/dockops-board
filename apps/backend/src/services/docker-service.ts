@@ -132,7 +132,7 @@ export class DockerService {
     return containerCreateResult.id;
   }
 
-  async runContainer(options: RunContainerOptions) {
+  async startContainer(options: RunContainerOptions) {
     const { dbContainerId } = options;
     const { fastify } = this;
     const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
@@ -141,6 +141,17 @@ export class DockerService {
     fastify.log.info(`Started container with id "${dbContainerId}". Additional info: "${startResult.toString()}"`);
 
     return startResult;
+  }
+
+  async stopContainer(options: RunContainerOptions) {
+    const { dbContainerId } = options;
+    const { fastify } = this;
+    const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
+    const stopResult = await dockerContainer.stop();
+
+    fastify.log.info(`Stopped container with id "${dbContainerId}". Additional info: "${stopResult.toString()}"`);
+
+    return stopResult;
   }
 
   async attachContainer(options: AttachContainerOptions) {

@@ -7,6 +7,8 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';
 import { CreateContainerPage } from '../pages/create-contaner/CreateContainer';
+import { ContainerPage } from '../pages/container/ContainerPage';
+import { DashboardLayout } from '../layouts/dashboard/dashboard';
 
 const appTheme = createTheme({
   palette: {
@@ -55,9 +57,12 @@ export const App = () => {
     <ThemeProvider theme={appTheme}>
       <Router>
         <Routes>
-          <Route path='/' element={<PrivateRoute />}>
-            <Route path='/' element={<RootPage />} />
-            <Route path='/container/create' element={<CreateContainerPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route element={<DashboardLayout />}>
+              <Route path='/' element={<RootPage />} />
+              <Route path='/container/create' element={<CreateContainerPage />} />
+              <Route path='/container/:id' element={<ContainerPage />} />
+            </Route>
           </Route>
           <Route path='/login' element={<LoginPage />} />
         </Routes>

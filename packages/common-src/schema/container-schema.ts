@@ -55,6 +55,7 @@ export const getContainerAllSchema = {
 } as const;
 
 export const getContainerSchema = {
+  params: dbContainerIdSchema,
   response: {
     200: { $ref: 'dockops-board/container' },
   },
@@ -77,6 +78,13 @@ export const postContainerCreateSchema = {
 } as const;
 
 export const postContainerStartSchema = {
+  params: dbContainerIdSchema,
+  response: {
+    200: { $ref: 'dockops-board/message' },
+  },
+} as const;
+
+export const postContainerStopSchema = {
   params: dbContainerIdSchema,
   response: {
     200: { $ref: 'dockops-board/message' },
