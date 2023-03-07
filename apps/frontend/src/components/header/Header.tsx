@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { styled } from '@mui/material/styles';
 import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
+import { SIDEBAR_WIDTH } from '../../constants/SideBarConstants';
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar/AppBar';
 import { Button, useMediaQuery } from '@mui/material';
 import { loginActions } from '../../features/login/loginSlice';

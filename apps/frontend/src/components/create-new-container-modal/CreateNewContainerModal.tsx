@@ -1,7 +1,7 @@
 import { Button, FormControl, Grid, Modal } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import styles from './CreateNewContainerModal.module.css';
+import styles from '../../pages/create-contaner/CreateContainer.module.css';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -10,7 +10,7 @@ import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
 import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 import { ScrollableBox } from '../scrollable-box/ScrollableBox';
 import { containerLogsActions } from '../../features/container/containerLogsSlice';
-import { Link } from 'react-router-dom';
+import { LinkStyled } from '../link-styled/LinkStyled';
 
 interface FormProps {
   githubURL: string;
@@ -119,9 +119,9 @@ export const CreateNewContainerModal = (props: CreateNewContainerModalProps) => 
             <Divider sx={{ mb: 2, width: '100%' }} />
 
             {createdDbContainerId && (
-              <Link to={`/container/${createdDbContainerId}/`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <LinkStyled to={`/container/${createdDbContainerId}/`}>
                 <Button variant={'contained'}>go to container</Button>
-              </Link>
+              </LinkStyled>
             )}
             <Button
               variant={'contained'}
