@@ -13,7 +13,6 @@ import {
 import { FastifyInstance } from 'fastify';
 import { ContainerAllResponse } from 'frontend/src/generated-sources/backend-api';
 
-// TODO: Add subscribe boolean field to request schema, if true, then send logs via socket
 export async function containerController(fastify: FastifyInstance) {
   fastify.route<{ Reply: ContainerAllResponse }>({
     method: 'GET',
@@ -57,6 +56,8 @@ export async function containerController(fastify: FastifyInstance) {
           });
           fastify.log.error(error);
         });
+
+
 
       reply.send({ message: 'Fetching sources, building and creating a container. Sending results via websocket...' });
     },

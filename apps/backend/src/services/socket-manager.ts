@@ -1,5 +1,6 @@
 import { Socket } from 'socket.io';
 
+// TODO: Clean up sockets
 export class SocketManager {
   private socketsByIds = new Map<string, Socket>();
 
