@@ -24,7 +24,7 @@ export const LogsViewer = (props: LogsViewerProps) => {
   }, [logs]);
 
   return (
-    <Box position={'relative'}>
+    <Box position='relative'>
       <ScrollableBox className={styles.logs}>
         <Box
           onClick={() => setAutoscrollEnabled(!autoscrollEnabled)}
@@ -35,7 +35,7 @@ export const LogsViewer = (props: LogsViewerProps) => {
           }}
         >
           <Switch checked={autoscrollEnabled} />
-          <Typography variant={'body2'} component={'span'} mr={2}>
+          <Typography variant='body2' component='span' mr={2}>
             Autoscroll
           </Typography>
         </Box>

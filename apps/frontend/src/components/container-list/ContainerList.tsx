@@ -21,7 +21,7 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
   const { index, container } = props;
   return (
     <LinkStyled to={`/container/${container.id}/`} key={index}>
-      <Box display={'flex'} position={'relative'}>
+      <Box display='flex' position='relative'>
         <Grid
           container
           className={styles.containerListItem}
@@ -38,14 +38,14 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
             {index + 1}
           </Grid>
           <Grid item xs={6}>
-            <Typography variant={'h6'} sx={{ color: appTheme.palette.text.primary }}>
+            <Typography variant='h6' sx={{ color: appTheme.palette.text.primary }}>
               [ContainerName]
             </Typography>
-            <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+            <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
               {container.image}
             </Typography>
             <Typography
-              variant={'caption'}
+              variant='caption'
               sx={{
                 color: appTheme.palette.text.disabled,
                 overflowX: 'auto',
@@ -59,22 +59,22 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
           <Grid item xs={5}>
             <Grid container>
               <Grid item sm={6} md={3}>
-                <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+                <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
                   [PORTS]
                 </Typography>
               </Grid>
               <Grid item sm={6} md={3}>
-                <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+                <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
                   [MEM_USAGE]
                 </Typography>
               </Grid>
               <Grid item sm={6} md={3}>
-                <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+                <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
                   [CPU_USAGE]
                 </Typography>
               </Grid>
               <Grid item sm={6} md={3}>
-                <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+                <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
                   [HDD_USAGE]
                 </Typography>
               </Grid>

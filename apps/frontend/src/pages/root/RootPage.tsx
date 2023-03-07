@@ -13,7 +13,7 @@ export const RootPage = () => {
     <DashboardLayout>
       <CreateNewContainerModal open={isModalOpen} setopen={setIsModalOpen} />
       <Container
-        maxWidth={'xl'}
+        maxWidth='xl'
         sx={{
           display: 'flex',
           justifyContent: 'right',
@@ -26,7 +26,7 @@ export const RootPage = () => {
           new
         </Button>
       </Container>
-      <Container maxWidth={'xl'}>
+      <Container maxWidth='xl'>
         <ContainerList></ContainerList>
         <WebSocketMessages></WebSocketMessages>
       </Container>

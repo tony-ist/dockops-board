@@ -1,11 +1,11 @@
-import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
-import { api } from '../../api/backend-api';
+import { api, createAppAsyncThunk } from '../../api/backend-api';
 import { RootState } from '../../types/storeTypes';
-import { Container, ContainerAllResponse } from '../../generated-sources/backend-api';
+import { Container } from '../../generated-sources/backend-api';
 import { WebSocketCreateContainerResponse } from 'common-src';
-import { ThunkAPI } from '../../types/thunkAPIType';
+import { loginThunk } from '../login/loginSlice';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -19,10 +19,7 @@ const initialState = containersAdapter.getInitialState<ContainersState>({
   error: null,
 });
 
-export const fetchContainersThunk = createAsyncThunk<ContainerAllResponse, void, ThunkAPI>(
-  'containers/fetchContainers',
-  (_: void, thunkAPI) => api(thunkAPI.getState().login.jwtToken).v1ContainerAllGet()
-);
+export const fetchContainersThunk = createAppAsyncThunk('containers/fetchContainers', api.v1ContainerAllGet.bind(api));
 
 const containersSlice = createSlice({
   name: 'containers',
@@ -46,7 +43,8 @@ const containersSlice = createSlice({
       .addCase(fetchContainersThunk.rejected, (state, action) => {
         state.error = action.error.message ?? 'Unknown error';
         state.status = 'failed';
-      });
+      })
+      .addCase(loginThunk.fulfilled, () => initialState);
   },
 });
 

@@ -39,12 +39,7 @@ const Form = () => {
             <TextFieldElement name='containerName' label='containerName' variant='filled' required={true} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextFieldElement
-              name='dockerfileName'
-              label='dockerfileName'
-              variant='filled'
-              placeholder={'Dockerfile'}
-            />
+            <TextFieldElement name='dockerfileName' label='dockerfileName' variant='filled' placeholder='Dockerfile' />
           </Grid>
           <Grid item xs={6} md={3}>
             <TextFieldElement name='hostPort' label='hostPort' variant='filled' />
@@ -53,7 +48,7 @@ const Form = () => {
             <TextFieldElement name='containerPort' label='containerPort' variant='filled' />
           </Grid>
         </Grid>
-        <Button type={'submit'} variant={'contained'} sx={{ mb: 2 }}>
+        <Button type='submit' variant='contained' sx={{ mb: 2 }}>
           create
         </Button>
       </FormControl>
@@ -70,13 +65,13 @@ export const CreateContainerPage = () => {
     <DashboardLayout>
       <Container
         className={styles.content}
-        maxWidth={'xl'}
+        maxWidth='xl'
         sx={{
           backgroundColor: theme.palette.background.paper,
         }}
       >
         <Box>
-          <Typography variant={'h4'}>Create new container form</Typography>
+          <Typography variant='h4'>Create new container form</Typography>
         </Box>
         <Divider sx={{ mb: 2 }} />
         <Box sx={{ mb: 2 }}>
@@ -87,11 +82,11 @@ export const CreateContainerPage = () => {
           <Divider sx={{ mb: 2, width: '100%' }} />
           {createdDbContainerId && (
             <>
-              <Typography variant={'body1'} color={theme.palette.primary.main}>
+              <Typography variant='body1' color={theme.palette.primary.main}>
                 Conttainer [ContainerName] buliled and created
               </Typography>
               <LinkStyled to={`/container/${createdDbContainerId}/`}>
-                <Button variant={'contained'}>go to container</Button>
+                <Button variant='contained'>go to container</Button>
               </LinkStyled>
             </>
           )}
