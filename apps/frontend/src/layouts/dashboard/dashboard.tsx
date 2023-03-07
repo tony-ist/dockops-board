@@ -11,7 +11,7 @@ export const DashboardLayout = (props: { children: React.ReactNode }) => {
       <Header></Header>
       <SideBar></SideBar>
 
-      <Box sx={{ flexGrow: 1, p: 3, mt: 8 }}>{props.children}</Box>
+      <Box sx={{ flexGrow: 1, p: { md: 3, sm: 1, xs: 1 }, mt: 8 }}>{props.children}</Box>
     </Box>
   );
 };

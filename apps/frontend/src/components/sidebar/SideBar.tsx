@@ -34,7 +34,7 @@ const pages: Array<PageType> = [
     icon: <Ballot />,
   },
   {
-    href: '/create-container',
+    href: '/container/create',
     name: 'Create container',
     icon: <PlaylistAdd />,
   },
@@ -77,7 +77,7 @@ const DrawerItem = (props: DrawerItemProps) => {
 export const SideBar = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const isSideBarTemporary = !useMediaQuery('(min-width:600px)');
+  const isSideBarTemporary = !useMediaQuery('(min-width: 800px)');
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
   const closedWidth = isSideBarTemporary ? 0 : `calc(${theme.spacing(7)} + 1px)`;
   const sxProps: CSSObject = {

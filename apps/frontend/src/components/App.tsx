@@ -23,7 +23,7 @@ const appTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Consolas',
+    fontFamily: 'RobotoMono-Regular',
     subtitle2: {
       fontWeight: 500,
     },
@@ -57,7 +57,7 @@ export const App = () => {
         <Routes>
           <Route path='/' element={<PrivateRoute />}>
             <Route path='/' element={<RootPage />} />
-            <Route path='/create-container' element={<CreateContainerPage />} />
+            <Route path='/container/create' element={<CreateContainerPage />} />
           </Route>
           <Route path='/login' element={<LoginPage />} />
         </Routes>

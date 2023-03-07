@@ -21,7 +21,7 @@ export const RootPage = () => {
           new
         </Button>
       </Container>
-      <Container maxWidth='xl'>
+      <Container maxWidth='xl' sx={{ p: { md: 3, sm: 1, xs: 1 } }}>
         <ContainerList></ContainerList>
         <WebSocketMessages></WebSocketMessages>
       </Container>
