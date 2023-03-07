@@ -66,7 +66,7 @@ export const SideBar = () => {
       </DrawerHeader>
       <Divider />
       <List>
-        <ListItem key={'containers'} disablePadding sx={{ display: 'block' }}>
+        <ListItem key='containers' disablePadding sx={{ display: 'block' }}>
           <ListItemButton
             sx={{
               minHeight: 48,
@@ -83,7 +83,7 @@ export const SideBar = () => {
             >
               <ViewList></ViewList>
             </ListItemIcon>
-            <ListItemText primary={'containers'} sx={{ opacity: isOpen ? 1 : 0 }} />
+            <ListItemText primary='containers' sx={{ opacity: isOpen ? 1 : 0 }} />
           </ListItemButton>
         </ListItem>
       </List>

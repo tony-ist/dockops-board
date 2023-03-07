@@ -41,7 +41,7 @@ export const RootPage = () => {
   return (
     <DashboardLayout>
       <Container
-        maxWidth={'xl'}
+        maxWidth='xl'
         sx={{
           display: 'flex',
           justifyContent: 'right',
@@ -64,7 +64,7 @@ export const RootPage = () => {
           </>
         )}
       </Container>
-      <Container maxWidth={'xl'}>
+      <Container maxWidth='xl'>
         <ContainerList></ContainerList>
         <WebSocketMessages></WebSocketMessages>
       </Container>

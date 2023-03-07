@@ -1,8 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { LoginRequest } from 'common-src';
+import { createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
-import { api } from '../../api/backend-api';
+import { api, createAppAsyncThunk } from '../../api/backend-api';
 
 export interface LoginState {
   status: Status;
@@ -16,9 +15,7 @@ const initialState: LoginState = {
   jwtToken: localStorage.getItem('jwtToken'),
 };
 
-export const loginThunk = createAsyncThunk<string, LoginRequest>('login/login', (credentials) =>
-  api().v1LoginPost({ body: credentials })
-);
+export const loginThunk = createAppAsyncThunk('login/login', api.v1LoginPost.bind(api));
 
 const loginSlice = createSlice({
   name: 'login',

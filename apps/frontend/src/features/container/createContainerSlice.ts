@@ -1,10 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
-import { api } from '../../api/backend-api';
+import { api, createAppAsyncThunk } from '../../api/backend-api';
 import { containersActions } from './containersSlice';
-import { Message, V1ContainerCreatePostRequest } from '../../generated-sources/backend-api';
-import { ThunkAPI } from '../../types/thunkAPIType';
 
 interface ContainerListState {
   dbContainerId: number | null;
@@ -18,9 +16,9 @@ const initialState: ContainerListState = {
   error: null,
 };
 
-export const createContainerThunk = createAsyncThunk<Message, V1ContainerCreatePostRequest, ThunkAPI>(
+export const createContainerThunk = createAppAsyncThunk(
   'containers/createContainer',
-  (container, thunkAPI) => api(thunkAPI.getState().login.jwtToken).v1ContainerCreatePost({ body: container })
+  api.v1ContainerCreatePost.bind(api)
 );
 
 const createContainerSlice = createSlice({

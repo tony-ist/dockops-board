@@ -18,11 +18,11 @@ export const LoginPage = () => {
   }, [loginStatus]);
 
   if (loginStatus === 'succeeded') {
-    return <Navigate to={'/'} replace={true} />;
+    return <Navigate to='/' replace={true} />;
   }
 
   function login() {
-    dispatch(loginThunk({ email, password }));
+    dispatch(loginThunk({ body: { email, password } }));
   }
 
   return (

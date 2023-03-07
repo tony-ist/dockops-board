@@ -43,6 +43,14 @@ export const containerLogsRequestSchema = {
 export const getContainerAllSchema = {
   response: {
     200: containerAllResponseSchema,
+    401: {
+      type: 'object',
+      properties: {
+        error: { type: 'string' },
+        description: { type: 'string' },
+      },
+      additionalProperties: false,
+    }
   },
 } as const;
 

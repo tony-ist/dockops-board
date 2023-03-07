@@ -11,3 +11,4 @@ export const temporaryDirectoryPath = process.env.TEMPORARY_DIRECTORY_PATH ?? '/
 export const frontendURL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
 export const secret = process.env.SECRET;
 export const bcryptSaltWorkFactor = parseInt(process.env.BCRYPT_SALT_WORK_FACTOR ?? '12');
+export const jwtExpiration = process.env.JWT_EXPIRATION ?? '30d';

@@ -36,28 +36,28 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
           {index + 1}
         </Grid>
         <Grid item xs={7}>
-          <Typography variant={'h6'} sx={{ color: appTheme.palette.text.primary }}>
+          <Typography variant='h6' sx={{ color: appTheme.palette.text.primary }}>
             [ContainerName]
           </Typography>
-          <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
             {container.image}
           </Typography>
-          <Typography variant={'caption'} sx={{ color: appTheme.palette.text.disabled }}>
+          <Typography variant='caption' sx={{ color: appTheme.palette.text.disabled }}>
             {container.dockerId}
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
             [MEM USAGE]
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
             [CPU USAGE]
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <Typography variant={'body2'} sx={{ color: appTheme.palette.text.secondary }}>
+          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
             [HDD USAGE]
           </Typography>
         </Grid>
