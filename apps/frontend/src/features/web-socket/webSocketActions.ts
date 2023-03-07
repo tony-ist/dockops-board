@@ -1,17 +1,14 @@
-import { ActionCreatorWithOptionalPayload, createAction } from '@reduxjs/toolkit';
-import { CreateContainerRequest, WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
+import { ActionCreatorWithOptionalPayload } from '@reduxjs/toolkit';
+import { WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
 import { containersActions } from '../container/containersSlice';
 import { containerLogsActions } from '../container/containerLogsSlice';
-import { DbContainerId } from '../../generated-sources/backend-api';
 import { webSocketActions } from './webSocketSlice';
 
-export const createContainerRequest = createAction<CreateContainerRequest>('containers/createContainerRequest');
-export const containerLogsRequest = createAction<DbContainerId>('containers/containerLogsRequest');
 // TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
-export const webSocketRequestActions = [createContainerRequest, containerLogsRequest];
+export const webSocketRequestActions = [webSocketActions.createContainerRequest, webSocketActions.containerLogsRequest];
 export const webSocketEventsByAction = {
-  [createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
-  [containerLogsRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribeRequest,
+  [webSocketActions.createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
+  [webSocketActions.containerLogsRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribeRequest,
 };
 
 type ActionsByResponseEvents = {

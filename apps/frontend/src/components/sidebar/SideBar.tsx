@@ -5,16 +5,40 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { sideBarActions } from '../../features/sidebar/sideBarSlice';
-import { ViewList } from '@mui/icons-material';
-import { SIDEBAR_WIDTH } from '../../constants/SideBarConstatns';
+import { Ballot, PlaylistAdd } from '@mui/icons-material';
+import { SIDEBAR_WIDTH } from '../../constants/SideBarConstants';
 import { CSSObject, Drawer, useMediaQuery } from '@mui/material';
+import { LinkStyled } from '../link-styled/LinkStyled';
+
+interface PageType {
+  href: string;
+  name: string;
+  icon: React.ReactElement;
+}
+
+interface DrawerItemProps {
+  isOpen: boolean;
+  page: PageType;
+}
+
+const pages: Array<PageType> = [
+  {
+    href: '/',
+    name: 'Containers',
+    icon: <Ballot />,
+  },
+  {
+    href: '/container/create',
+    name: 'Create container',
+    icon: <PlaylistAdd />,
+  },
+];
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -25,10 +49,35 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
+const DrawerItem = (props: DrawerItemProps) => {
+  return (
+    <ListItem disablePadding sx={{ display: 'block' }}>
+      <LinkStyled to={props.page.href}>
+        <ListItemButton
+          sx={{
+            minHeight: 48,
+            justifyContent: props.isOpen ? 'initial' : 'center',
+            px: 2.5,
+          }}
+        >
+          {React.cloneElement(props.page.icon, {
+            sx: {
+              minWidth: 0,
+              mr: props.isOpen ? 3 : 'auto',
+              justifyContent: 'center',
+            },
+          })}
+          <ListItemText primary={props.page.name} sx={{ opacity: props.isOpen ? 1 : 0, fontWeight: 1000 }} />
+        </ListItemButton>
+      </LinkStyled>
+    </ListItem>
+  );
+};
+
 export const SideBar = () => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const isSideBarTemporary = !useMediaQuery('(min-width:600px)');
+  const isSideBarTemporary = !useMediaQuery('(min-width: 800px)');
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
   const closedWidth = isSideBarTemporary ? 0 : `calc(${theme.spacing(7)} + 1px)`;
   const sxProps: CSSObject = {
@@ -66,26 +115,9 @@ export const SideBar = () => {
       </DrawerHeader>
       <Divider />
       <List>
-        <ListItem key='containers' disablePadding sx={{ display: 'block' }}>
-          <ListItemButton
-            sx={{
-              minHeight: 48,
-              justifyContent: isOpen ? 'initial' : 'center',
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: isOpen ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <ViewList></ViewList>
-            </ListItemIcon>
-            <ListItemText primary='containers' sx={{ opacity: isOpen ? 1 : 0 }} />
-          </ListItemButton>
-        </ListItem>
+        {pages.map((page, index) => (
+          <DrawerItem key={index.toString()} isOpen={isOpen} page={page} />
+        ))}
       </List>
       <Divider />
     </Drawer>

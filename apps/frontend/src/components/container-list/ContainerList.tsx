@@ -3,12 +3,13 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import styles from './ContainerList.module.css';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
 import { containersSelectors, fetchContainersThunk } from '../../features/container/containersSlice';
 import { store } from '../../store/store';
 import { useTheme } from '@mui/material/styles';
 import { ScrollableBox } from '../scrollable-box/ScrollableBox';
 import { Container } from '../../generated-sources/backend-api';
+import { LinkStyled } from '../link-styled/LinkStyled';
+import Box from '@mui/material/Box';
 
 interface ContainerListItemOptions {
   container: Container;
@@ -19,53 +20,81 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
   const appTheme = useTheme();
   const { index, container } = props;
   return (
-    <Link to={`/container/${container.id}/`} key={index} style={{ textDecoration: 'none', color: 'inherit' }}>
-      <Grid
-        container
-        className={styles.containerListItem}
-        sx={{
-          color: appTheme.palette.primary.contrastText,
-          background: appTheme.palette.background.paper,
-          '&:hover': {
-            border: `2px solid ${appTheme.palette.primary.main}`,
-          },
-          boxShadow: 2,
-        }}
-      >
-        <Grid item xs={1} sx={{ color: appTheme.palette.text.primary }}>
-          {index + 1}
+    <LinkStyled to={`/container/${container.id}/`} key={index}>
+      <Box position='relative'>
+        <Grid
+          container
+          className={styles.containerListItem}
+          sx={{
+            color: appTheme.palette.primary.contrastText,
+            background: appTheme.palette.background.paper,
+            '&:hover': {
+              border: `2px solid ${appTheme.palette.primary.main}`,
+            },
+            boxShadow: 2,
+          }}
+        >
+          <Grid item xs={1} sm={1} md={1} sx={{ color: appTheme.palette.text.primary }}>
+            {index + 1}
+          </Grid>
+          <Grid item sm={8} md={6}>
+            <Typography variant='h6' sx={{ color: appTheme.palette.text.primary }}>
+              [ContainerName]
+            </Typography>
+            <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
+              {container.image}
+            </Typography>
+            <Typography
+              variant='caption'
+              sx={{
+                color: appTheme.palette.text.disabled,
+                overflowX: 'auto',
+                wordWrap: 'break-word',
+                wordBreak: 'break-word',
+              }}
+            >
+              {container.dockerId}
+            </Typography>
+          </Grid>
+          <Grid item sm={3} md={5}>
+            <Grid container>
+              <Grid item sm={12} md={6} lg={3}>
+                <Typography component='div' variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
+                  [PORTS]
+                </Typography>
+              </Grid>
+              <Grid item sm={12} md={6} lg={3}>
+                <Typography component='div' variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
+                  [MEM_USAGE]
+                </Typography>
+              </Grid>
+              <Grid item sm={12} md={6} lg={3}>
+                <Typography component='div' variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
+                  [CPU_USAGE]
+                </Typography>
+              </Grid>
+              <Grid item sm={12} md={6} lg={3}>
+                <Typography component='div' variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
+                  [HDD_USAGE]
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={7}>
-          <Typography variant='h6' sx={{ color: appTheme.palette.text.primary }}>
-            [ContainerName]
-          </Typography>
-          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
-            {container.image}
-          </Typography>
-          <Typography variant='caption' sx={{ color: appTheme.palette.text.disabled }}>
-            {container.dockerId}
-          </Typography>
-        </Grid>
-        <Grid item xs={1}>
-          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
-            [MEM USAGE]
-          </Typography>
-        </Grid>
-        <Grid item xs={1}>
-          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
-            [CPU USAGE]
-          </Typography>
-        </Grid>
-        <Grid item xs={1}>
-          <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
-            [HDD USAGE]
-          </Typography>
-        </Grid>
-        <Grid item xs={1} sx={{ color: appTheme.palette.text.primary }}>
-          [Status]
-        </Grid>
-      </Grid>
-    </Link>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '8px',
+            height: '8px',
+            borderRadius: '20px',
+            backgroundColor: index % 2 == 0 ? 'lightgreen' : 'red',
+            boxShadow: `0 0 4px ${index % 2 == 0 ? 'lightgreen' : 'red'}`,
+          }}
+        ></Box>
+      </Box>
+    </LinkStyled>
   );
 };
 

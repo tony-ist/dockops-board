@@ -6,6 +6,7 @@ import { webSocketActions } from '../features/web-socket/webSocketSlice';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';
+import { CreateContainerPage } from '../pages/create-contaner/CreateContainer';
 
 const appTheme = createTheme({
   palette: {
@@ -18,7 +19,20 @@ const appTheme = createTheme({
     },
     background: {
       paper: '#ffffff',
-      default: '#eeeeee',
+      default: '#dddddd',
+    },
+  },
+  typography: {
+    fontFamily: 'RobotoMono-Regular',
+    subtitle2: {
+      fontWeight: 500,
+    },
+    body1: {
+      fontWeight: 500,
+    },
+    button: {
+      fontFamily: '"Segoe UI"',
+      fontWeight: 600,
     },
   },
 });
@@ -43,6 +57,7 @@ export const App = () => {
         <Routes>
           <Route path='/' element={<PrivateRoute />}>
             <Route path='/' element={<RootPage />} />
+            <Route path='/container/create' element={<CreateContainerPage />} />
           </Route>
           <Route path='/login' element={<LoginPage />} />
         </Routes>
