@@ -3,15 +3,10 @@ import { Button, Container } from '@mui/material';
 import { DashboardLayout } from '../../layouts/dashboard/dashboard';
 import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { AddBox } from '@mui/icons-material';
-import { CreateNewContainerModal } from '../../components/create-new-container-modal/CreateNewContainerModal';
-import { useState } from 'react';
 
 export const RootPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <DashboardLayout>
-      <CreateNewContainerModal open={isModalOpen} setopen={setIsModalOpen} />
       <Container
         maxWidth='xl'
         sx={{
@@ -22,7 +17,7 @@ export const RootPage = () => {
           },
         }}
       >
-        <Button variant='contained' endIcon={<AddBox />} onClick={() => setIsModalOpen(true)}>
+        <Button variant='contained' endIcon={<AddBox />}>
           new
         </Button>
       </Container>
