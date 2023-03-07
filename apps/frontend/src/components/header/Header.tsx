@@ -57,7 +57,7 @@ export const Header = () => {
           <MenuIcon />
         </IconButton>
         <Typography variant='h6' noWrap component='div'>
-          Dockops dashboard
+          Dockops Board
         </Typography>
         <Button color='error' variant='contained' onClick={() => dispatch(loginActions.logout())}>
           Logout
