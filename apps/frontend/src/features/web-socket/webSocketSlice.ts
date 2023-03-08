@@ -1,5 +1,5 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PostCreateContainerRequest, WebSocketMessage, WSContainerLogsSubscribeRequest } from 'common-src';
+import { WebSocketMessage } from 'common-src';
 import { NullableError } from '../../types/nullableErrorType';
 
 export interface WebSocketState {
@@ -32,16 +32,9 @@ const webSocketSlice = createSlice({
 });
 
 const unsupported = createAction('websocket/unsupported');
-// TODO: Remove this action, because we use create container via REST
-const createContainerRequest = createAction<PostCreateContainerRequest>('containers/createContainerRequest');
-const containerLogsSubscribeRequest = createAction<WSContainerLogsSubscribeRequest>(
-  'containers/containerLogsSubscribeRequest'
-);
 
 export const webSocketActions = {
-  ...webSocketSlice.actions,
-  createContainerRequest,
-  containerLogsSubscribeRequest,
   unsupported,
+  ...webSocketSlice.actions,
 };
 export const webSocketReducer = webSocketSlice.reducer;

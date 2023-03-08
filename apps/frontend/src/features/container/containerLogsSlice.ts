@@ -1,5 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Log, WSBuildImageLogsResponseMessage, WSContainerLogsResponseMessage } from 'common-src';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  Log,
+  WSBuildImageLogsResponseMessage,
+  WSContainerLogsResponseMessage,
+  WSContainerLogsSubscribeRequestPayload,
+} from 'common-src';
 import { createContainerActions } from './createContainerSlice';
 
 export interface ContainerLogsState {
@@ -10,24 +15,31 @@ const initialState: ContainerLogsState = {
   messages: [],
 };
 
+const wsContainerLogsSubscribeRequest = createAction<WSContainerLogsSubscribeRequestPayload>(
+  'containerLogs/wsContainerLogsSubscribeRequest'
+);
+
 const containerLogsSlice = createSlice({
   name: 'containerLogs',
   initialState,
   reducers: {
-    receiveContainerLogs: (state, action: PayloadAction<WSContainerLogsResponseMessage>) => {
+    wsReceiveContainerLogs: (state, action: PayloadAction<WSContainerLogsResponseMessage>) => {
       state.messages.push(action.payload);
     },
-    receiveBuildLogs: (state, action: PayloadAction<WSBuildImageLogsResponseMessage>) => {
+    wsReceiveBuildLogs: (state, action: PayloadAction<WSBuildImageLogsResponseMessage>) => {
       state.messages.push(action.payload);
     },
     clear: () => initialState,
   },
   extraReducers(builder) {
-    builder.addCase(createContainerActions.createContainerError, (state, action) => {
+    builder.addCase(createContainerActions.wsError, (state, action) => {
       state.messages.push({ text: action.payload.error as string });
     });
   },
 });
 
-export const containerLogsActions = containerLogsSlice.actions;
+export const containerLogsActions = {
+  wsContainerLogsSubscribeRequest,
+  ...containerLogsSlice.actions,
+};
 export const containerLogsReducer = containerLogsSlice.reducer;

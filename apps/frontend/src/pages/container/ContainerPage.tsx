@@ -6,9 +6,9 @@ import React, { useEffect } from 'react';
 import { fetchContainerByIdThunk } from '../../features/container/getContainerSlice';
 import { Box, Button } from '@mui/material';
 import { LogsViewer } from '../../components/logs-viewer/LogsViewer';
-import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 import { startContainerThunk } from '../../features/container/startContainerSlice';
 import { stopContainerThunk } from '../../features/container/stopContainerSlice';
+import { containerLogsActions } from '../../features/container/containerLogsSlice';
 
 export const ContainerPage = () => {
   const params = useParams<{ id: string }>();
@@ -37,7 +37,7 @@ export const ContainerPage = () => {
   }
 
   function subscribeToLogs() {
-    dispatch(webSocketActions.containerLogsSubscribeRequest({ dbContainerId, tail: 100 }));
+    dispatch(containerLogsActions.wsContainerLogsSubscribeRequest({ dbContainerId, tail: 100 }));
   }
 
   return (

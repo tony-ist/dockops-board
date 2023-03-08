@@ -2,7 +2,7 @@ import { createAction, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
 import { api, createAppAsyncThunk } from '../../api/backend-api';
-import { WSCreateContainerResponseMessage } from 'common-src';
+import { PostCreateContainerRequest } from 'common-src';
 
 interface ContainerListState {
   dbContainerId: number | null;
@@ -21,13 +21,22 @@ export const createContainerThunk = createAppAsyncThunk(
   api.v1ContainerCreatePost.bind(api)
 );
 
-const createContainerSuccess = createAction<WSCreateContainerResponseMessage>('createContainer/success');
-const createContainerError = createAction<WSCreateContainerResponseMessage>('createContainer/error');
+const wsCreateContainerRequest = createAction<PostCreateContainerRequest>('createContainer/wsCreateContainerRequest');
 
 const createContainerSlice = createSlice({
   name: 'createContainer',
   initialState,
-  reducers: {},
+  reducers: {
+    wsSuccess: (state, action) => {
+      state.error = null;
+      state.status = 'succeeded';
+      state.dbContainerId = action.payload.container.id;
+    },
+    wsError: (state, action) => {
+      state.error = action.payload.error ?? null;
+      state.status = 'failed';
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(createContainerThunk.pending, (state) => {
@@ -37,23 +46,13 @@ const createContainerSlice = createSlice({
       .addCase(createContainerThunk.rejected, (state, action) => {
         state.error = action.error.message ?? null;
         state.status = 'failed';
-      })
-      // No handler for createContainerThunk.fulfilled becasuse we wait for success via websocket
-      .addCase(createContainerSuccess, (state, action) => {
-        state.error = null;
-        state.status = 'succeeded';
-        state.dbContainerId = action.payload.container.id;
-      })
-      .addCase(createContainerError, (state, action) => {
-        state.error = action.payload.error ?? null;
-        state.status = 'failed';
       });
+    // No handler for createContainerThunk.fulfilled becasuse we wait for success via websocket
   },
 });
 
 export const createContainerActions = {
-  createContainerSuccess,
-  createContainerError,
+  wsCreateContainerRequest,
   ...createContainerSlice.actions,
 };
 export const createContainerReducer = createContainerSlice.reducer;

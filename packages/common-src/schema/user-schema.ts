@@ -1,4 +1,4 @@
-export const postUserNewRequestSchema = {
+export const userNewRequestSchema = {
   type: 'object',
   properties: {
     email: { type: 'string' },
@@ -6,11 +6,4 @@ export const postUserNewRequestSchema = {
     githubToken: { type: 'string' },
   },
   required: ['email', 'password'],
-} as const;
-
-export const postUsersNewSchema = {
-  body: postUserNewRequestSchema,
-  response: {
-    200: { $ref: 'dockops-board/user' },
-  },
 } as const;
