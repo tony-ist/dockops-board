@@ -76,6 +76,7 @@ export async function containerController(fastify: FastifyInstance) {
       const dockerfileName = request.body.dockerfileName ?? 'Dockerfile';
       const { containerPort, hostPort } = request.body;
       const socket = request.ioSocket;
+      const { buildManager } = fastify;
 
       if (!socket) {
         fastify.log.info(`Socket is "${socket}" for request "${request.id}".`);
@@ -88,7 +89,7 @@ export async function containerController(fastify: FastifyInstance) {
         },
       });
 
-      fastify.buildManager.set(container.id, 'building');
+      buildManager.set(container.id, 'building');
 
       fastify.containerService
         .fetchSourceBuildImageAndCreateContainer({
@@ -102,10 +103,10 @@ export async function containerController(fastify: FastifyInstance) {
           socket,
         })
         .then(() => {
-          fastify.buildManager.set(container.id, 'success');
+          buildManager.set(container.id, 'success');
         })
         .catch((error) => {
-          fastify.buildManager.set(container.id, 'error');
+          buildManager.set(container.id, 'error');
           socket?.emit('message', {
             event: WebSocketResponseEvents.CreateContainerResponse,
             error: error.message,
@@ -115,7 +116,7 @@ export async function containerController(fastify: FastifyInstance) {
 
       reply.send({
         message: 'Fetching sources, building and creating a container. Sending results via websocket...',
-        dbContainerId: container.id,
+        container: serializePrismaContainer(buildManager, container),
       });
     },
   });

@@ -4,7 +4,6 @@ import fs from 'node:fs';
 import recursiveReadDir from 'recursive-readdir';
 import { FastifyInstance } from 'fastify';
 import * as config from '../config';
-import { DockerState } from '../types/docker-state';
 
 export interface BuildImageOptions {
   imageName: string;
@@ -12,7 +11,6 @@ export interface BuildImageOptions {
 }
 
 export interface CreateContainerOptions {
-  dbContainerId: number;
   containerName: string;
   imageName: string;
   containerPort?: string;
@@ -35,7 +33,6 @@ interface ContainerLogsOptions {
   tail?: number;
 }
 
-// TODO: Refactor services using classes and maybe decorate fastify instance with services instances (via plugins)
 export class DockerService {
   fastify: FastifyInstance;
 
@@ -88,9 +85,9 @@ export class DockerService {
    * @returns dockerId of the created docker container (not id from the database)
    */
   async createContainer(options: CreateContainerOptions) {
-    const { containerName, containerPort, hostPort, imageName, dbContainerId } = options;
+    const { containerName, containerPort, hostPort, imageName } = options;
     const { fastify } = this;
-    const { prisma, docker } = fastify;
+    const { docker } = fastify;
 
     const portForwardOptions: Partial<ContainerCreateOptions> = {};
     const shouldPortForward = containerPort !== undefined && hostPort !== undefined;
@@ -113,27 +110,10 @@ export class DockerService {
       Tty: true,
       ...portForwardOptions,
     };
-    const containerCreateResult = await docker.createContainer(createContainerOptions);
-    const containerInspectResult = await containerCreateResult.inspect();
 
-    const dockerName = containerInspectResult.Name.startsWith('/')
-      ? containerInspectResult.Name.slice(1)
-      : containerInspectResult.Name;
+    const createContainerResult = await docker.createContainer(createContainerOptions);
 
-    await prisma.container.update({
-      where: {
-        id: dbContainerId,
-      },
-      data: {
-        dockerId: containerInspectResult.Id,
-        image: containerInspectResult.Config.Image,
-        dockerName,
-        dockerState: DockerState.Created,
-        doesExist: true,
-      },
-    });
-
-    return containerCreateResult.id;
+    return createContainerResult;
   }
 
   async startContainer(options: RunContainerOptions) {

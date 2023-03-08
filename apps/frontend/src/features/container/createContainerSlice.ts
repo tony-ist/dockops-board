@@ -34,6 +34,11 @@ const createContainerSlice = createSlice({
         state.error = null;
         state.status = 'loading';
       })
+      .addCase(createContainerThunk.rejected, (state, action) => {
+        state.error = action.error.message ?? null;
+        state.status = 'failed';
+      })
+      // No handler for createContainerThunk.fulfilled becasuse we wait for success via websocket
       .addCase(createContainerSuccess, (state, action) => {
         state.error = null;
         state.status = 'succeeded';

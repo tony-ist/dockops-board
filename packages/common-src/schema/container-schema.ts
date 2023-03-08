@@ -64,7 +64,7 @@ export const getContainerSchema = {
 export const postContainerCreateResponseSchema = {
   type: 'object',
   properties: {
-    dbContainerId: { type: 'number' },
+    container: { $ref: 'dockops-board/container' },
     message: { type: 'string' },
   },
   additionalProperties: false,
