@@ -116,6 +116,10 @@ export class DockerService {
     const containerCreateResult = await docker.createContainer(createContainerOptions);
     const containerInspectResult = await containerCreateResult.inspect();
 
+    const dockerName = containerInspectResult.Name.startsWith('/')
+      ? containerInspectResult.Name.slice(1)
+      : containerInspectResult.Name;
+
     await prisma.container.update({
       where: {
         id: dbContainerId,
@@ -123,7 +127,7 @@ export class DockerService {
       data: {
         dockerId: containerInspectResult.Id,
         image: containerInspectResult.Config.Image,
-        dockerName: containerInspectResult.Name,
+        dockerName,
         dockerState: DockerState.Created,
         doesExist: true,
       },
