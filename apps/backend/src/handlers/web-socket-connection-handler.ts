@@ -20,13 +20,13 @@ export const webSocketConnectionHandler = (fastify: FastifyInstance, socket: Soc
       } else {
         throw new Error(`Unrecognized websocket event "${message.event}".`);
       }
-
-      fastify.log.info(`Socket connection established: ${socket.id}`);
-      fastify.socketManager.set(socket);
     } catch (error) {
       const errorMessage = (error as Error).message;
       fastify.log.error(errorMessage);
       socket.emit('message', { event: WebSocketResponseEvents.ErrorResponse, error: errorMessage });
     }
   });
+
+  fastify.log.info(`Socket connection established: ${socket.id}`);
+  fastify.socketManager.set(socket);
 };

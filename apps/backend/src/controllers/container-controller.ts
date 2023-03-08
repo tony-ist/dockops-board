@@ -77,6 +77,10 @@ export async function containerController(fastify: FastifyInstance) {
       const { containerPort, hostPort } = request.body;
       const socket = request.ioSocket;
 
+      if (!socket) {
+        fastify.log.info(`Socket is "${socket}" for request "${request.id}".`);
+      }
+
       const container = await fastify.prisma.container.create({
         data: {
           dockerName: containerName,
@@ -103,8 +107,8 @@ export async function containerController(fastify: FastifyInstance) {
         .catch((error) => {
           fastify.buildManager.set(container.id, 'error');
           socket?.emit('message', {
-            event: WebSocketResponseEvents.BuildImageLogsResponse,
-            text: error,
+            event: WebSocketResponseEvents.CreateContainerResponse,
+            error: error.message,
           });
           fastify.log.error(error);
         });

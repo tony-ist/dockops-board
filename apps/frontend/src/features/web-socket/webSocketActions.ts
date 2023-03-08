@@ -1,15 +1,15 @@
 import { ActionCreatorWithOptionalPayload } from '@reduxjs/toolkit';
 import { WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
-import { containersActions } from '../container/containersSlice';
 import { containerLogsActions } from '../container/containerLogsSlice';
 import { webSocketActions } from './webSocketSlice';
+import { createContainerActions } from '../container/createContainerSlice';
 
 // TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
 export const webSocketRequestActions = [
   webSocketActions.createContainerRequest,
   webSocketActions.containerLogsSubscribeRequest,
 ];
-export const webSocketEventsByAction = {
+export const webSocketRequestEventsByActionType = {
   [webSocketActions.createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
   [webSocketActions.containerLogsSubscribeRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribeRequest,
 };
@@ -19,8 +19,14 @@ type ActionsByResponseEvents = {
   [key in WebSocketResponseEvents]: ActionCreatorWithOptionalPayload<any>;
 };
 export const actionsByResponseEvents: ActionsByResponseEvents = {
-  [WebSocketResponseEvents.CreateContainerResponse]: containersActions.createContainerFulfilled,
+  [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.createContainerSuccess,
   [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.receiveBuildLogs,
   [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.receiveContainerLogs,
+  [WebSocketResponseEvents.ErrorResponse]: webSocketActions.unsupported,
+} as const;
+export const errorActionsByResponseEvents: ActionsByResponseEvents = {
+  [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.createContainerError,
+  [WebSocketResponseEvents.BuildImageLogsResponse]: webSocketActions.unsupported,
+  [WebSocketResponseEvents.ContainerLogsResponse]: webSocketActions.unsupported,
   [WebSocketResponseEvents.ErrorResponse]: webSocketActions.error,
 } as const;

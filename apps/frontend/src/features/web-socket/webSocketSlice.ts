@@ -31,10 +31,17 @@ const webSocketSlice = createSlice({
   },
 });
 
+const unsupported = createAction('websocket/unsupported');
+// TODO: Remove this action, because we use create container via REST
 const createContainerRequest = createAction<PostCreateContainerRequest>('containers/createContainerRequest');
 const containerLogsSubscribeRequest = createAction<WSContainerLogsSubscribeRequest>(
   'containers/containerLogsSubscribeRequest'
 );
 
-export const webSocketActions = { ...webSocketSlice.actions, createContainerRequest, containerLogsSubscribeRequest };
+export const webSocketActions = {
+  ...webSocketSlice.actions,
+  createContainerRequest,
+  containerLogsSubscribeRequest,
+  unsupported,
+};
 export const webSocketReducer = webSocketSlice.reducer;

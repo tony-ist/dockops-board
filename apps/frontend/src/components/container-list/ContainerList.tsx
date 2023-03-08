@@ -95,7 +95,7 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
             backgroundColor: index % 2 == 0 ? 'lightgreen' : 'red',
             boxShadow: `0 0 4px ${index % 2 == 0 ? 'lightgreen' : 'red'}`,
           }}
-        ></Box>
+        />
       </Box>
     </LinkStyled>
   );

@@ -30,7 +30,10 @@ export function createAppAsyncThunk<Request, Response>(
 ) {
   return createAsyncThunk<Response, Request, ThunkAPI>(typePrefix, async (request, thunkAPI) => {
     try {
-      const options = { headers: { Authorization: `Bearer ${thunkAPI.getState().login.jwtToken}` } };
+      const options = {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${thunkAPI.getState().login.jwtToken}` },
+      };
       const response = isApiMethodWithPayload(apiMethod, request)
         ? await apiMethod(request, options)
         : await apiMethod(options);

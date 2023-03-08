@@ -15,28 +15,33 @@ export enum WebSocketResponseEvents {
   ErrorResponse = 'ErrorResponse',
 }
 
+// Use WS Request types on frontend only
+// TODO: Remove dependency from rest types
+export type WSCreateContainerRequest = PostCreateContainerRequest;
 export type WSCreateContainerResponse = { container: Container };
 export type WSContainerLogsSubscribeRequest = GetContainerLogsRequest & DbContainerId;
 export type WSContainerLogsResponse = Log & DbContainerId;
 export type WSBuildImageLogsResponse = Log & DbContainerId;
 
-export interface WebSocketContainerLogsSubscribeRequest extends WebSocketMessage, WSContainerLogsSubscribeRequest {
+// Use WS Request Messages on backend only
+// USE WS Response Messages on frontend only
+export interface WSContainerLogsSubscribeRequestMessage extends WebSocketMessage, WSContainerLogsSubscribeRequest {
   event: WebSocketRequestEvents.ContainerLogsSubscribeRequest;
 }
 
-export interface WebSocketContainerLogsResponse extends WebSocketMessage, WSContainerLogsResponse {
+export interface WSContainerLogsResponseMessage extends WebSocketMessage, WSContainerLogsResponse {
   event: WebSocketResponseEvents.ContainerLogsResponse;
 }
 
-export interface WebSocketCreateContainerRequest extends WebSocketMessage, PostCreateContainerRequest {
+export interface WSCreateContainerRequestMessage extends WebSocketMessage, WSCreateContainerRequest {
   event: WebSocketRequestEvents.CreateContainerRequest;
 }
 
-export interface WebSocketCreateContainerResponse extends WebSocketMessage, WSCreateContainerResponse {
+export interface WSCreateContainerResponseMessage extends WebSocketMessage, WSCreateContainerResponse {
   event: WebSocketResponseEvents.CreateContainerResponse;
 }
 
-export interface WebSocketBuildImageLogsResponse extends WebSocketMessage, WSBuildImageLogsResponse {
+export interface WSBuildImageLogsResponseMessage extends WebSocketMessage, WSBuildImageLogsResponse {
   event: WebSocketResponseEvents.BuildImageLogsResponse;
 }
 

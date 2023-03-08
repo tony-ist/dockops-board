@@ -1,3 +1,4 @@
+// TODO: Rename file CreateContainerPage
 import { Button, Container, FormControl, Grid } from '@mui/material';
 import styles from './CreateContainer.module.css';
 import Box from '@mui/material/Box';
@@ -6,9 +7,9 @@ import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
-import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 import { LinkStyled } from '../../components/link-styled/LinkStyled';
 import { LogsViewer } from '../../components/logs-viewer/LogsViewer';
+import { createContainerThunk } from '../../features/container/createContainerSlice';
 
 interface FormProps {
   githubURL: string;
@@ -22,7 +23,7 @@ const Form = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <FormContainer onSuccess={(data: FormProps) => dispatch(webSocketActions.createContainerRequest({ ...data }))}>
+    <FormContainer onSuccess={(data: FormProps) => dispatch(createContainerThunk({ body: data }))}>
       {/*<FormContainer onSuccess={(data: FormProps) => console.log(data)}>*/}
       <FormControl
         fullWidth={true}

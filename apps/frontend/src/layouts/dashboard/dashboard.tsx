@@ -9,8 +9,8 @@ export const DashboardLayout = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Header></Header>
-      <SideBar></SideBar>
+      <Header />
+      <SideBar />
 
       <Box sx={{ flexGrow: 1, p: { md: 3, sm: 1, xs: 1 }, mt: 8 }}>
         <Outlet />

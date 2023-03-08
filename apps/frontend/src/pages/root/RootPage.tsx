@@ -1,6 +1,5 @@
 import { ContainerList } from '../../components/container-list/ContainerList';
 import { Button, Container } from '@mui/material';
-import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { AddBox } from '@mui/icons-material';
 
 export const RootPage = () => {
@@ -21,8 +20,7 @@ export const RootPage = () => {
         </Button>
       </Container>
       <Container maxWidth='xl' sx={{ p: { md: 3, sm: 1, xs: 1 } }}>
-        <ContainerList></ContainerList>
-        <WebSocketMessages></WebSocketMessages>
+        <ContainerList />
       </Container>
     </>
   );

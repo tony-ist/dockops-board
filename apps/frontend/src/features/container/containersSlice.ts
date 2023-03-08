@@ -1,12 +1,12 @@
-import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
 import { api, createAppAsyncThunk } from '../../api/backend-api';
 import { RootState } from '../../types/storeTypes';
 import { Container } from '../../generated-sources/backend-api';
-import { WebSocketCreateContainerResponse } from 'common-src';
 import { loginThunk } from '../login/loginSlice';
 import { fetchContainerByIdThunk } from './getContainerSlice';
+import { createContainerActions } from './createContainerSlice';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -25,11 +25,7 @@ export const fetchContainersThunk = createAppAsyncThunk('containers/fetchContain
 const containersSlice = createSlice({
   name: 'containers',
   initialState,
-  reducers: {
-    createContainerFulfilled: (state, action: PayloadAction<WebSocketCreateContainerResponse>) => {
-      containersAdapter.upsertOne(state, action.payload.container);
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchContainersThunk.pending, (state) => {
@@ -49,6 +45,9 @@ const containersSlice = createSlice({
         state.error = null;
         state.status = 'succeeded';
         containersAdapter.upsertOne(state, action.payload);
+      })
+      .addCase(createContainerActions.createContainerSuccess, (state, action) => {
+        containersAdapter.upsertOne(state, action.payload.container);
       })
       .addCase(loginThunk.fulfilled, () => initialState);
   },
