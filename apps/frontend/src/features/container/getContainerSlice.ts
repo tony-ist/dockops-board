@@ -5,13 +5,11 @@ import { api, createAppAsyncThunk } from '../../api/backend-api';
 import { loginThunk } from '../login/loginSlice';
 
 interface GetContainerState {
-  dbContainerId: number | null;
   status: Status;
   error: NullableError;
 }
 
 const initialState: GetContainerState = {
-  dbContainerId: null,
   status: 'idle',
   error: null,
 };
@@ -31,10 +29,9 @@ const getContainerSlice = createSlice({
         state.error = null;
         state.status = 'loading';
       })
-      .addCase(fetchContainerByIdThunk.fulfilled, (state, action) => {
+      .addCase(fetchContainerByIdThunk.fulfilled, (state) => {
         state.error = null;
         state.status = 'succeeded';
-        state.dbContainerId = action.payload.id;
       })
       .addCase(fetchContainerByIdThunk.rejected, (state, action) => {
         state.error = action.error.message ?? 'Unknown error';

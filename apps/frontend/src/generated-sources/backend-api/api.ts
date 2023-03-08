@@ -191,10 +191,10 @@ export interface V1ContainerAllGet401Response {
 export interface V1ContainerCreatePost200Response {
   /**
    *
-   * @type {number}
+   * @type {Container}
    * @memberof V1ContainerCreatePost200Response
    */
-  dbContainerId?: number;
+  container?: Container;
   /**
    *
    * @type {string}

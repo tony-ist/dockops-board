@@ -1,3 +1,7 @@
+/**
+ * This file contains openapi models registered in backend/src/index.ts with server.addSchema method
+ */
+
 export const userSchema = {
   $id: 'dockops-board/user',
   title: 'User',

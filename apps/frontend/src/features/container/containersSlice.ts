@@ -46,7 +46,7 @@ const containersSlice = createSlice({
         state.status = 'succeeded';
         containersAdapter.upsertOne(state, action.payload);
       })
-      .addCase(createContainerActions.createContainerSuccess, (state, action) => {
+      .addCase(createContainerActions.wsSuccess, (state, action) => {
         containersAdapter.upsertOne(state, action.payload.container);
       })
       .addCase(loginThunk.fulfilled, () => initialState);

@@ -1,5 +1,5 @@
 import { Container, DbContainerId, Log } from './model-types';
-import { GetContainerLogsRequest, PostCreateContainerRequest } from './rest-types';
+import { GetContainerLogsRequest, PostCreateContainerRequest } from './container-types';
 
 export enum WebSocketRequestEvents {
   ContainerLogsSubscribeRequest = 'ContainerLogsSubscribeRequest',
@@ -16,32 +16,31 @@ export enum WebSocketResponseEvents {
 }
 
 // Use WS Request types on frontend only
-// TODO: Remove dependency from rest types
-export type WSCreateContainerRequest = PostCreateContainerRequest;
-export type WSCreateContainerResponse = { container: Container };
-export type WSContainerLogsSubscribeRequest = GetContainerLogsRequest & DbContainerId;
-export type WSContainerLogsResponse = Log & DbContainerId;
-export type WSBuildImageLogsResponse = Log & DbContainerId;
+export type WSCreateContainerRequestPayload = PostCreateContainerRequest;
+export type WSCreateContainerResponsePayload = { container: Container };
+export type WSContainerLogsSubscribeRequestPayload = GetContainerLogsRequest & DbContainerId;
+export type WSContainerLogsResponsePayload = Log & DbContainerId;
+export type WSBuildImageLogsResponsePayload = Log & DbContainerId;
 
 // Use WS Request Messages on backend only
-// USE WS Response Messages on frontend only
-export interface WSContainerLogsSubscribeRequestMessage extends WebSocketMessage, WSContainerLogsSubscribeRequest {
+// Use WS Response Messages on frontend only
+export interface WSContainerLogsSubscribeRequestMessage extends WebSocketMessage, WSContainerLogsSubscribeRequestPayload {
   event: WebSocketRequestEvents.ContainerLogsSubscribeRequest;
 }
 
-export interface WSContainerLogsResponseMessage extends WebSocketMessage, WSContainerLogsResponse {
+export interface WSContainerLogsResponseMessage extends WebSocketMessage, WSContainerLogsResponsePayload {
   event: WebSocketResponseEvents.ContainerLogsResponse;
 }
 
-export interface WSCreateContainerRequestMessage extends WebSocketMessage, WSCreateContainerRequest {
+export interface WSCreateContainerRequestMessage extends WebSocketMessage, WSCreateContainerRequestPayload {
   event: WebSocketRequestEvents.CreateContainerRequest;
 }
 
-export interface WSCreateContainerResponseMessage extends WebSocketMessage, WSCreateContainerResponse {
+export interface WSCreateContainerResponseMessage extends WebSocketMessage, WSCreateContainerResponsePayload {
   event: WebSocketResponseEvents.CreateContainerResponse;
 }
 
-export interface WSBuildImageLogsResponseMessage extends WebSocketMessage, WSBuildImageLogsResponse {
+export interface WSBuildImageLogsResponseMessage extends WebSocketMessage, WSBuildImageLogsResponsePayload {
   event: WebSocketResponseEvents.BuildImageLogsResponse;
 }
 

@@ -1,6 +1,8 @@
-import { dbContainerIdSchema } from './model-schema';
+/**
+ * This files contains intermediary schemas used to generate types in common-src/types
+ */
 
-export const postContainerCreateRequestSchema = {
+export const containerCreateRequestSchema = {
   type: 'object',
   properties: {
     containerName: { type: 'string' },
@@ -32,7 +34,7 @@ export const containerAllResponseSchema = {
   additionalProperties: false,
 } as const;
 
-export const getContainerLogsRequestSchema = {
+export const containerLogsQuerySchema = {
   type: 'object',
   properties: {
     tail: { type: 'number' },
@@ -40,68 +42,11 @@ export const getContainerLogsRequestSchema = {
   additionalProperties: false,
 } as const;
 
-export const getContainerAllSchema = {
-  response: {
-    200: containerAllResponseSchema,
-    401: {
-      type: 'object',
-      properties: {
-        error: { type: 'string' },
-        description: { type: 'string' },
-      },
-      additionalProperties: false,
-    },
-  },
-} as const;
-
-export const getContainerSchema = {
-  params: dbContainerIdSchema,
-  response: {
-    200: { $ref: 'dockops-board/container' },
-  },
-} as const;
-
-export const postContainerCreateResponseSchema = {
+export const containerCreateResponseSchema = {
   type: 'object',
   properties: {
-    dbContainerId: { type: 'number' },
+    container: { $ref: 'dockops-board/container' },
     message: { type: 'string' },
   },
   additionalProperties: false,
-} as const;
-
-export const postContainerCreateSchema = {
-  body: postContainerCreateRequestSchema,
-  response: {
-    200: postContainerCreateResponseSchema,
-  },
-} as const;
-
-export const postContainerStartSchema = {
-  params: dbContainerIdSchema,
-  response: {
-    200: { $ref: 'dockops-board/message' },
-  },
-} as const;
-
-export const postContainerStopSchema = {
-  params: dbContainerIdSchema,
-  response: {
-    200: { $ref: 'dockops-board/message' },
-  },
-} as const;
-
-export const postContainerAttachSchema = {
-  params: dbContainerIdSchema,
-  response: {
-    200: { $ref: 'dockops-board/message' },
-  },
-} as const;
-
-export const getContainerLogsSchema = {
-  params: dbContainerIdSchema,
-  querystring: getContainerLogsRequestSchema,
-  response: {
-    200: { $ref: 'dockops-board/message' },
-  },
 } as const;

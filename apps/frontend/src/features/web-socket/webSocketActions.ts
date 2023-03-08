@@ -6,12 +6,12 @@ import { createContainerActions } from '../container/createContainerSlice';
 
 // TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
 export const webSocketRequestActions = [
-  webSocketActions.createContainerRequest,
-  webSocketActions.containerLogsSubscribeRequest,
+  createContainerActions.wsCreateContainerRequest,
+  containerLogsActions.wsContainerLogsSubscribeRequest,
 ];
 export const webSocketRequestEventsByActionType = {
-  [webSocketActions.createContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
-  [webSocketActions.containerLogsSubscribeRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribeRequest,
+  [createContainerActions.wsCreateContainerRequest.type]: WebSocketRequestEvents.CreateContainerRequest,
+  [containerLogsActions.wsContainerLogsSubscribeRequest.type]: WebSocketRequestEvents.ContainerLogsSubscribeRequest,
 };
 
 type ActionsByResponseEvents = {
@@ -19,13 +19,13 @@ type ActionsByResponseEvents = {
   [key in WebSocketResponseEvents]: ActionCreatorWithOptionalPayload<any>;
 };
 export const actionsByResponseEvents: ActionsByResponseEvents = {
-  [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.createContainerSuccess,
-  [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.receiveBuildLogs,
-  [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.receiveContainerLogs,
+  [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.wsSuccess,
+  [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.wsReceiveBuildLogs,
+  [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.wsReceiveContainerLogs,
   [WebSocketResponseEvents.ErrorResponse]: webSocketActions.unsupported,
 } as const;
 export const errorActionsByResponseEvents: ActionsByResponseEvents = {
-  [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.createContainerError,
+  [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.wsError,
   [WebSocketResponseEvents.BuildImageLogsResponse]: webSocketActions.unsupported,
   [WebSocketResponseEvents.ContainerLogsResponse]: webSocketActions.unsupported,
   [WebSocketResponseEvents.ErrorResponse]: webSocketActions.error,
