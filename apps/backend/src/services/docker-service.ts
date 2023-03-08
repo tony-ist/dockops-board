@@ -50,7 +50,7 @@ export class DockerService {
     const { fastify } = this;
     const temporaryDirectoryPath = config.temporaryDirectoryPath;
     const docker = fastify.docker;
-    const dockerfile = dockerfileName ?? 'Dockerfile';
+    const dockerfile = dockerfileName || 'Dockerfile';
 
     const tempFiles = fs.readdirSync(temporaryDirectoryPath);
     const repoDirName = tempFiles[0];
@@ -90,7 +90,7 @@ export class DockerService {
     const { docker } = fastify;
 
     const portForwardOptions: Partial<ContainerCreateOptions> = {};
-    const shouldPortForward = containerPort !== undefined && hostPort !== undefined;
+    const shouldPortForward = containerPort && hostPort;
 
     if (shouldPortForward) {
       portForwardOptions.HostConfig = {
