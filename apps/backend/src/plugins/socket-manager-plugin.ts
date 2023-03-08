@@ -13,7 +13,7 @@ declare module 'fastify' {
   }
 }
 
-export const socketPlugin: FastifyPluginAsync = fastifyPlugin(async (server) => {
+export const socketManagerPlugin: FastifyPluginAsync = fastifyPlugin(async (server) => {
   const socketManager = new SocketManager();
 
   server.decorate('socketManager', socketManager);
