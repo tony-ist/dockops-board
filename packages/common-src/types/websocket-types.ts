@@ -12,40 +12,21 @@ export enum WebSocketResponseEvents {
   // InteractiveShellResponse = 'InteractiveShellResponse',
   BuildImageLogsResponse = 'BuildImageLogsResponse',
   CreateContainerResponse = 'CreateContainerResponse',
-  ErrorResponse = 'ErrorResponse',
 }
 
-// Use WS Request types on frontend only
 export type WSCreateContainerRequestPayload = PostCreateContainerRequest;
 export type WSCreateContainerResponsePayload = { container: Container };
 export type WSContainerLogsSubscribeRequestPayload = GetContainerLogsRequest & DbContainerId;
 export type WSContainerLogsResponsePayload = Log & DbContainerId;
 export type WSBuildImageLogsResponsePayload = Log & DbContainerId;
 
-// Use WS Request Messages on backend only
-// Use WS Response Messages on frontend only
-export interface WSContainerLogsSubscribeRequestMessage extends WebSocketMessage, WSContainerLogsSubscribeRequestPayload {
-  event: WebSocketRequestEvents.ContainerLogsSubscribeRequest;
-}
+export type WSContainerLogsSubscribeRequestMessage = WSRequestMessage<WSContainerLogsSubscribeRequestPayload>
+export type WSContainerLogsResponseMessage = WSResponseMessage<WSContainerLogsResponsePayload>
+export type WSCreateContainerRequestMessage = WSRequestMessage<WSCreateContainerRequestPayload>
+export type WSCreateContainerResponseMessage = WSResponseMessage<WSCreateContainerResponsePayload>
+export type WSBuildImageLogsResponseMessage = WSResponseMessage<WSBuildImageLogsResponsePayload>
 
-export interface WSContainerLogsResponseMessage extends WebSocketMessage, WSContainerLogsResponsePayload {
-  event: WebSocketResponseEvents.ContainerLogsResponse;
-}
+export type WSRequestMessage<Payload> = { jwtToken: string } & Payload;
 
-export interface WSCreateContainerRequestMessage extends WebSocketMessage, WSCreateContainerRequestPayload {
-  event: WebSocketRequestEvents.CreateContainerRequest;
-}
-
-export interface WSCreateContainerResponseMessage extends WebSocketMessage, WSCreateContainerResponsePayload {
-  event: WebSocketResponseEvents.CreateContainerResponse;
-}
-
-export interface WSBuildImageLogsResponseMessage extends WebSocketMessage, WSBuildImageLogsResponsePayload {
-  event: WebSocketResponseEvents.BuildImageLogsResponse;
-}
-
-export interface WebSocketMessage {
-  event: WebSocketRequestEvents | WebSocketResponseEvents;
-  jwtToken?: string;
-  error?: string;
-}
+export type WSErrorResponseMessage = { error: string };
+export type WSResponseMessage<Payload> = Payload | WSErrorResponseMessage;

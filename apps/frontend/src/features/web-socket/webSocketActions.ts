@@ -22,11 +22,9 @@ export const actionsByResponseEvents: ActionsByResponseEvents = {
   [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.wsSuccess,
   [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.wsReceiveBuildLogs,
   [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.wsReceiveContainerLogs,
-  [WebSocketResponseEvents.ErrorResponse]: webSocketActions.unsupported,
 } as const;
 export const errorActionsByResponseEvents: ActionsByResponseEvents = {
   [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.wsError,
   [WebSocketResponseEvents.BuildImageLogsResponse]: webSocketActions.unsupported,
   [WebSocketResponseEvents.ContainerLogsResponse]: webSocketActions.unsupported,
-  [WebSocketResponseEvents.ErrorResponse]: webSocketActions.error,
 } as const;

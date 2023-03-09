@@ -1,35 +1,37 @@
-import { Socket } from 'socket.io';
 import {
-  WebSocketMessage,
   WebSocketRequestEvents,
   WebSocketResponseEvents,
-  WSContainerLogsSubscribeRequestMessage,
-  WSCreateContainerRequestMessage,
+  WSContainerLogsSubscribeRequestPayload,
+  WSCreateContainerRequestPayload,
+  WSRequestMessage,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
 import { User } from '@prisma/client';
+import type { AppSocket } from '../types/app-socket-io-types';
 
 export interface EventHandlerOptions {
   fastify: FastifyInstance;
-  socket: Socket;
-  message: WebSocketMessage;
+  socket: AppSocket;
+  message: WSRequestMessage<unknown>;
   user: User;
 }
 
+// TODO: Generic type of payload for event handler
 export type EventHandler = (options: EventHandlerOptions) => Promise<void>;
 
 // TODO: Think about returning stream from the handler instead of passing socket as an argument
 export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHandler } = {
   [WebSocketRequestEvents.ContainerLogsSubscribeRequest]: async (options) => {
     const { fastify, socket, message } = options;
-    const castMessage = message as WSContainerLogsSubscribeRequestMessage;
-    const logsStream = await fastify.dockerService.containerLogs({
-      dbContainerId: parseInt(castMessage.dbContainerId),
-      tail: castMessage.tail,
+    const castMessage = message as WSRequestMessage<WSContainerLogsSubscribeRequestPayload>;
+    const { dbContainerId, tail } = castMessage;
+    const logsStream = await fastify.dockerService.listenContainerLogs({
+      dbContainerId,
+      tail,
     });
     logsStream.on('data', (data) => {
-      socket.emit('message', {
-        event: WebSocketResponseEvents.ContainerLogsResponse,
+      socket.emit(WebSocketResponseEvents.ContainerLogsResponse, {
+        dbContainerId,
         text: data.toString(),
       });
     });
@@ -37,7 +39,7 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
 
   [WebSocketRequestEvents.CreateContainerRequest]: async (options) => {
     const { fastify, socket, message } = options;
-    const castMessage = message as WSCreateContainerRequestMessage;
+    const castMessage = message as WSRequestMessage<WSCreateContainerRequestPayload>;
     const imageName = 'tempimage';
     const containerName = castMessage.containerName ?? 'tempcontainer';
     const container = await fastify.prisma.container.create({
@@ -57,8 +59,7 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
       });
     } catch (error) {
       if (error instanceof Error) {
-        socket.emit('message', {
-          event: WebSocketResponseEvents.CreateContainerResponse,
+        socket.emit(WebSocketResponseEvents.CreateContainerResponse, {
           error: error.message,
         });
       }
