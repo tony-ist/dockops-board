@@ -11,7 +11,6 @@ const errorResponseEventsByRequestEvents: { [key in WebSocketRequestEvents]: Web
 
 export const webSocketConnectionHandler = (fastify: FastifyInstance, socket: AppSocket) => {
   (Object.keys(WebSocketRequestEvents) as Array<keyof typeof WebSocketRequestEvents>).forEach((requestEvent) => {
-    // TODO: Proper type for WSResponseMessage instead of unknown
     socket.on(WebSocketRequestEvents[requestEvent], async (message: WSRequestMessage<unknown>) => {
       try {
         if (!message.jwtToken) {
