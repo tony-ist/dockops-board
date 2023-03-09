@@ -4,10 +4,11 @@ import stream from 'node:stream/promises';
 import { Socket } from 'socket.io';
 import { WebSocketResponseEvents } from 'common-src';
 import { FastifyInstance } from 'fastify';
+import { DockerState } from '../types/docker-state';
 
 export type FetchSourceBuildImageAndCreateContainerOptions = ExtractZipFromGithubOptions &
   BuildImageOptions &
-  CreateContainerOptions & { socket?: Socket };
+  CreateContainerOptions & { dbContainerId: number; socket?: Socket };
 
 export class ContainerService {
   fastify: FastifyInstance;
@@ -17,7 +18,7 @@ export class ContainerService {
   }
 
   async fetchSourceBuildImageAndCreateContainer(options: FetchSourceBuildImageAndCreateContainerOptions) {
-    const { socket } = options;
+    const { socket, dbContainerId } = options;
     const { fastify } = this;
 
     const startExtractingMessage = 'Start downloading and extracting sources.';
@@ -48,7 +49,26 @@ export class ContainerService {
 
     await stream.finished(buildStream);
 
-    const containerDockerId = await fastify.dockerService.createContainer(options);
+    const containerCreateResult = await fastify.dockerService.createContainer(options);
+    const containerInspectResult = await containerCreateResult.inspect();
+    const containerDockerId = containerInspectResult.Id;
+
+    const dockerName = containerInspectResult.Name.startsWith('/')
+      ? containerInspectResult.Name.slice(1)
+      : containerInspectResult.Name;
+
+    await fastify.prisma.container.update({
+      where: {
+        id: dbContainerId,
+      },
+      data: {
+        dockerId: containerDockerId,
+        image: containerInspectResult.Config.Image,
+        dockerName,
+        dockerState: DockerState.Created,
+        doesExist: true,
+      },
+    });
 
     const createdContainerMessage = `Created container with docker id "${containerDockerId}".`;
     fastify.log.info(createdContainerMessage);

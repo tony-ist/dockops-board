@@ -10,7 +10,7 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-RUN cd apps/backend && npm run db:generate
+RUN cd apps/backend && npm run prisma:generate
 
 FROM node:18.14.0-alpine as runner
 

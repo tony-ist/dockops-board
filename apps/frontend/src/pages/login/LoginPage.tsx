@@ -27,8 +27,8 @@ export const LoginPage = () => {
 
   return (
     <div>
-      <Input onChange={(event) => setEmail(event.target.value)} placeholder='Email'></Input>
-      <Input onChange={(event) => setPassword(event.target.value)} type='password' placeholder='Password'></Input>
+      <Input onChange={(event) => setEmail(event.target.value)} placeholder='Email' />
+      <Input onChange={(event) => setPassword(event.target.value)} type='password' placeholder='Password' />
       <Button onClick={login}>Login</Button>
     </div>
   );

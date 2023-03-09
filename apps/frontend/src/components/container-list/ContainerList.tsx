@@ -39,7 +39,10 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
           </Grid>
           <Grid item sm={8} md={6}>
             <Typography variant='h6' sx={{ color: appTheme.palette.text.primary }}>
-              [ContainerName]
+              {container.dockerName}
+            </Typography>
+            <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
+              {container.buildStatus}
             </Typography>
             <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
               {container.image}
@@ -92,7 +95,7 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
             backgroundColor: index % 2 == 0 ? 'lightgreen' : 'red',
             boxShadow: `0 0 4px ${index % 2 == 0 ? 'lightgreen' : 'red'}`,
           }}
-        ></Box>
+        />
       </Box>
     </LinkStyled>
   );

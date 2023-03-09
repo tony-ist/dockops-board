@@ -33,7 +33,6 @@ interface ContainerLogsOptions {
   tail?: number;
 }
 
-// TODO: Refactor services using classes and maybe decorate fastify instance with services instances (via plugins)
 export class DockerService {
   fastify: FastifyInstance;
 
@@ -51,7 +50,7 @@ export class DockerService {
     const { fastify } = this;
     const temporaryDirectoryPath = config.temporaryDirectoryPath;
     const docker = fastify.docker;
-    const dockerfile = dockerfileName ?? 'Dockerfile';
+    const dockerfile = dockerfileName || 'Dockerfile';
 
     const tempFiles = fs.readdirSync(temporaryDirectoryPath);
     const repoDirName = tempFiles[0];
@@ -88,10 +87,10 @@ export class DockerService {
   async createContainer(options: CreateContainerOptions) {
     const { containerName, containerPort, hostPort, imageName } = options;
     const { fastify } = this;
-    const { prisma, docker } = fastify;
+    const { docker } = fastify;
 
     const portForwardOptions: Partial<ContainerCreateOptions> = {};
-    const shouldPortForward = containerPort !== undefined && hostPort !== undefined;
+    const shouldPortForward = containerPort && hostPort;
 
     if (shouldPortForward) {
       portForwardOptions.HostConfig = {
@@ -111,21 +110,13 @@ export class DockerService {
       Tty: true,
       ...portForwardOptions,
     };
-    const containerCreateResult = await docker.createContainer(createContainerOptions);
-    const containerInspectResult = await containerCreateResult.inspect();
 
-    await prisma.container.create({
-      data: {
-        dockerId: containerInspectResult.Id,
-        image: containerInspectResult.Config.Image,
-        dockerName: containerInspectResult.Name,
-      },
-    });
+    const createContainerResult = await docker.createContainer(createContainerOptions);
 
-    return containerCreateResult.id;
+    return createContainerResult;
   }
 
-  async runContainer(options: RunContainerOptions) {
+  async startContainer(options: RunContainerOptions) {
     const { dbContainerId } = options;
     const { fastify } = this;
     const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
@@ -134,6 +125,17 @@ export class DockerService {
     fastify.log.info(`Started container with id "${dbContainerId}". Additional info: "${startResult.toString()}"`);
 
     return startResult;
+  }
+
+  async stopContainer(options: RunContainerOptions) {
+    const { dbContainerId } = options;
+    const { fastify } = this;
+    const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
+    const stopResult = await dockerContainer.stop();
+
+    fastify.log.info(`Stopped container with id "${dbContainerId}". Additional info: "${stopResult.toString()}"`);
+
+    return stopResult;
   }
 
   async attachContainer(options: AttachContainerOptions) {
@@ -173,6 +175,11 @@ export class DockerService {
     const { fastify } = this;
     const { prisma, docker } = fastify;
     const dbContainer = await prisma.container.findFirstOrThrow({ where: { id: dbContainerId } });
+
+    if (!dbContainer.dockerId) {
+      throw new Error(`dbContainer.dockerId is "${dbContainer.dockerId}" for db container with id "${dbContainerId}".`);
+    }
+
     const dockerContainer = docker.getContainer(dbContainer.dockerId);
     return dockerContainer;
   }

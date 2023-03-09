@@ -7,10 +7,3 @@ export const userNewRequestSchema = {
   },
   required: ['email', 'password'],
 } as const;
-
-export const postUsersNewSchema = {
-  body: userNewRequestSchema,
-  response: {
-    200: { $ref: 'dockops-board/user' },
-  },
-} as const;

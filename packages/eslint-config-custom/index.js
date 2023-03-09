@@ -32,5 +32,9 @@ module.exports = {
       props: 'never',
       children: 'never',
     }],
+    'react/self-closing-comp': ['error', {
+      'component': true,
+      'html': true
+    }]
   },
 };

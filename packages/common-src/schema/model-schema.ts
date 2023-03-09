@@ -1,3 +1,7 @@
+/**
+ * This file contains openapi models registered in backend/src/index.ts with server.addSchema method
+ */
+
 export const userSchema = {
   $id: 'dockops-board/user',
   title: 'User',
@@ -19,10 +23,15 @@ export const containerSchema = {
   type: 'object',
   properties: {
     id: { type: 'number' },
-    dockerId: { type: 'string' },
     image: { type: 'string' },
+    dockerId: { type: 'string' },
+    dockerName: { type: 'string' },
+    dockerState: { type: 'string' },
+    createdAt: { type: 'string' },
+    updatedAt: { type: 'string' },
+    buildStatus: { type: 'string' },
   },
-  required: ['id', 'dockerId', 'image'],
+  required: ['id', 'dockerName'],
   additionalProperties: false,
 } as const;
 
@@ -53,7 +62,7 @@ export const dbContainerIdSchema = {
   title: 'DbContainerId',
   type: 'object',
   properties: {
-    dbContainerId: { type: 'number' },
+    dbContainerId: { type: 'string' },
   },
   required: ['dbContainerId'],
   additionalProperties: false,

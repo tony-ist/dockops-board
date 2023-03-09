@@ -1,12 +1,10 @@
 import { ContainerList } from '../../components/container-list/ContainerList';
 import { Button, Container } from '@mui/material';
-import { DashboardLayout } from '../../layouts/dashboard/dashboard';
-import { WebSocketMessages } from '../../components/web-socket-messages/WebSocketMessages';
 import { AddBox } from '@mui/icons-material';
 
 export const RootPage = () => {
   return (
-    <DashboardLayout>
+    <>
       <Container
         maxWidth='xl'
         sx={{
@@ -22,9 +20,8 @@ export const RootPage = () => {
         </Button>
       </Container>
       <Container maxWidth='xl' sx={{ p: { md: 3, sm: 1, xs: 1 } }}>
-        <ContainerList></ContainerList>
-        <WebSocketMessages></WebSocketMessages>
+        <ContainerList />
       </Container>
-    </DashboardLayout>
+    </>
   );
 };

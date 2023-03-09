@@ -4,14 +4,16 @@ import { io, Socket } from 'socket.io-client';
 import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 import {
   actionsByResponseEvents,
-  webSocketEventsByAction,
+  errorActionsByResponseEvents,
   webSocketRequestActions,
+  webSocketRequestEventsByActionType,
 } from '../../features/web-socket/webSocketActions';
+import { ActionCreatorWithOptionalPayload } from '@reduxjs/toolkit';
 
 let socket: Socket;
 
 function getWebSocketEvent(actionType: string) {
-  return webSocketEventsByAction[actionType];
+  return webSocketRequestEventsByActionType[actionType];
 }
 
 function isSocketConnected(socket: Socket, store: MiddlewareAPI<Dispatch>) {
@@ -26,7 +28,17 @@ function isStartConnectingAction(socket: Socket, action: AnyAction) {
   return socket !== undefined || !webSocketActions.startConnecting.match(action);
 }
 
+function isWSUnsupportedAction(action: AnyAction) {
+  return webSocketActions.unsupported.match(action);
+}
+
 export const webSocketMiddleware: Middleware = (store) => (next) => (action) => {
+  if (isWSUnsupportedAction(action)) {
+    // eslint-disable-next-line no-console
+    console.error(`Unsupported WebSocket action: "${action}".`);
+    return next(action);
+  }
+
   if (isSocketConnected(socket, store) && isWebSocketRequestAction(action)) {
     socket.emit('message', {
       jwtToken: localStorage.getItem('jwtToken'),
@@ -44,8 +56,8 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
 
   socket.on('connect', () => {
     // eslint-disable-next-line no-console
-    console.log('Socket.io connected');
-    document.cookie = `socketId=${socket.id};SameSite=None;Secure`;
+    console.log(`Socket.io connected with id "${socket.id}".`);
+    document.cookie = `socketId=${socket.id};Path=/;SameSite=None;Secure`;
     store.dispatch(webSocketActions.connectionEstablished());
   });
 
@@ -55,7 +67,14 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
       console.error('WebSocket error:', message.error);
     }
 
-    const actionCreator = actionsByResponseEvents[message.event as WebSocketResponseEvents];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let actionCreator: ActionCreatorWithOptionalPayload<any>;
+
+    if (message.error) {
+      actionCreator = errorActionsByResponseEvents[message.event as WebSocketResponseEvents];
+    } else {
+      actionCreator = actionsByResponseEvents[message.event as WebSocketResponseEvents];
+    }
 
     if (actionCreator !== undefined) {
       store.dispatch(actionCreator(message));

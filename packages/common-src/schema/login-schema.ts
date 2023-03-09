@@ -7,9 +7,3 @@ export const loginRequestSchema = {
   required: ['email', 'password'],
 } as const;
 
-export const postLoginSchema = {
-  body: loginRequestSchema,
-  response: {
-    200: { type: 'string' },
-  },
-} as const;

@@ -1,10 +1,10 @@
 import { Socket } from 'socket.io';
 import {
-  WebSocketContainerLogsSubscribeRequest,
-  WebSocketCreateContainerRequest,
   WebSocketMessage,
   WebSocketRequestEvents,
   WebSocketResponseEvents,
+  WSContainerLogsSubscribeRequestMessage,
+  WSCreateContainerRequestMessage,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
 import { User } from '@prisma/client';
@@ -22,9 +22,9 @@ export type EventHandler = (options: EventHandlerOptions) => Promise<void>;
 export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHandler } = {
   [WebSocketRequestEvents.ContainerLogsSubscribeRequest]: async (options) => {
     const { fastify, socket, message } = options;
-    const castMessage = message as WebSocketContainerLogsSubscribeRequest;
+    const castMessage = message as WSContainerLogsSubscribeRequestMessage;
     const logsStream = await fastify.dockerService.containerLogs({
-      dbContainerId: castMessage.dbContainerId,
+      dbContainerId: parseInt(castMessage.dbContainerId),
       tail: castMessage.tail,
     });
     logsStream.on('data', (data) => {
@@ -37,15 +37,35 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
 
   [WebSocketRequestEvents.CreateContainerRequest]: async (options) => {
     const { fastify, socket, message } = options;
-    const castMessage = message as WebSocketCreateContainerRequest;
+    const castMessage = message as WSCreateContainerRequestMessage;
     const imageName = 'tempimage';
     const containerName = castMessage.containerName ?? 'tempcontainer';
-    await fastify.containerService.fetchSourceBuildImageAndCreateContainer({
-      ...castMessage,
-      imageName,
-      containerName,
-      socket,
+    const container = await fastify.prisma.container.create({
+      data: {
+        dockerName: containerName,
+        doesExist: false,
+      },
     });
+    fastify.buildManager.set(container.id, 'building');
+    try {
+      await fastify.containerService.fetchSourceBuildImageAndCreateContainer({
+        ...castMessage,
+        dbContainerId: container.id,
+        imageName,
+        containerName,
+        socket,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        socket.emit('message', {
+          event: WebSocketResponseEvents.CreateContainerResponse,
+          error: error.message,
+        });
+      }
+      fastify.buildManager.set(container.id, 'error');
+      throw error;
+    }
+    fastify.buildManager.set(container.id, 'success');
   },
 };
 
