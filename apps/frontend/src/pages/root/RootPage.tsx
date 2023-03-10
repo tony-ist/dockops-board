@@ -1,8 +1,12 @@
 import { ContainerList } from '../../components/container-list/ContainerList';
 import { Button, Container } from '@mui/material';
-import { AddBox } from '@mui/icons-material';
+import { AddBox, Refresh } from '@mui/icons-material';
+import { fetchContainersThunk } from '../../features/container/containersSlice';
+import { useAppDispatch } from '../../store/hooks';
 
 export const RootPage = () => {
+  const dispatch = useAppDispatch();
+
   return (
     <>
       <Container
@@ -11,10 +15,13 @@ export const RootPage = () => {
           display: 'flex',
           justifyContent: 'right',
           '& > button': {
-            marginRight: 2,
+            marginLeft: 2,
           },
         }}
       >
+        <Button variant='contained' endIcon={<Refresh />} onClick={() => dispatch(fetchContainersThunk())}>
+          refresh
+        </Button>
         <Button variant='contained' endIcon={<AddBox />}>
           new
         </Button>

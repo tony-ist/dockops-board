@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import styles from './ContainerList.module.css';
 import { Grid } from '@mui/material';
@@ -10,6 +10,7 @@ import { ScrollableBox } from '../scrollable-box/ScrollableBox';
 import { Container } from '../../generated-sources/backend-api';
 import { LinkStyled } from '../link-styled/LinkStyled';
 import Box from '@mui/material/Box';
+import { ContainerStatusIndicator } from '../status-indicator/ContainerStatusIndicator';
 
 interface ContainerListItemOptions {
   container: Container;
@@ -89,13 +90,10 @@ const ContainerListItem = (props: ContainerListItemOptions) => {
             position: 'absolute',
             top: '10px',
             right: '10px',
-            width: '8px',
-            height: '8px',
-            borderRadius: '20px',
-            backgroundColor: index % 2 == 0 ? 'lightgreen' : 'red',
-            boxShadow: `0 0 4px ${index % 2 == 0 ? 'lightgreen' : 'red'}`,
           }}
-        />
+        >
+          <ContainerStatusIndicator container={container} />
+        </Box>
       </Box>
     </LinkStyled>
   );
@@ -122,7 +120,6 @@ export const ContainerList = () => {
       sx={{
         height: 'calc(100vh - 165px)',
         paddingRight: 2,
-        marginTop: 2,
       }}
     >
       {containerList.map((container, index) => (

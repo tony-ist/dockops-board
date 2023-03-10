@@ -9,6 +9,7 @@ import { LogsViewer } from '../../components/logs-viewer/LogsViewer';
 import { startContainerThunk } from '../../features/container/startContainerSlice';
 import { stopContainerThunk } from '../../features/container/stopContainerSlice';
 import { containerLogsActions } from '../../features/container/containerLogsSlice';
+import { ContainerStatusIndicator } from '../../components/status-indicator/ContainerStatusIndicator';
 
 export const ContainerPage = () => {
   const params = useParams<{ id: string }>();
@@ -58,6 +59,7 @@ export const ContainerPage = () => {
       <Box>{container.dockerId}</Box>
       <Box>{container.dockerState}</Box>
       <Box>{container.createdAt}</Box>
+      <ContainerStatusIndicator container={container} />
       {logs.length > 0 && <LogsViewer logs={logs} />}
     </>
   );

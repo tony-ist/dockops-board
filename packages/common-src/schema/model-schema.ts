@@ -26,7 +26,7 @@ export const containerSchema = {
     image: { type: 'string' },
     dockerId: { type: 'string' },
     dockerName: { type: 'string' },
-    dockerState: { type: 'string' },
+    dockerState: { enum: ['created', 'restarting', 'running', 'removing', 'paused', 'exited', 'dead'] },
     createdAt: { type: 'string' },
     updatedAt: { type: 'string' },
     buildStatus: { type: 'string' },

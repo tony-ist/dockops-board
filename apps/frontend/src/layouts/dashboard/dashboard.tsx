@@ -12,7 +12,7 @@ export const DashboardLayout = () => {
       <Header />
       <SideBar />
 
-      <Box sx={{ flexGrow: 1, p: { md: 3, sm: 1, xs: 1 }, mt: 8 }}>
+      <Box sx={{ flexGrow: 1, p: { md: 3, sm: 1, xs: 1 }, marginTop: 8 }}>
         <Outlet />
       </Box>
     </Box>
