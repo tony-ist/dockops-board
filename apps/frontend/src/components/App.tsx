@@ -1,8 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { RootPage } from '../pages/root/RootPage';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { useEffect } from 'react';
-import { webSocketActions } from '../features/web-socket/webSocketSlice';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';

@@ -3,6 +3,7 @@ import { WebSocketRequestEvents, WebSocketResponseEvents } from 'common-src';
 import { containerLogsActions } from '../container/containerLogsSlice';
 import { webSocketActions } from './webSocketSlice';
 import { createContainerActions } from '../container/createContainerSlice';
+import { containersActions } from '../container/containersSlice';
 
 // TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
 export const webSocketRequestActions = [
@@ -22,9 +23,11 @@ export const actionsByResponseEvents: ActionsByResponseEvents = {
   [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.wsSuccess,
   [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.wsReceiveBuildLogs,
   [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.wsReceiveContainerLogs,
+  [WebSocketResponseEvents.ContainerUpdateResponse]: containersActions.wsContainerUpdateSuccess,
 } as const;
 export const errorActionsByResponseEvents: ActionsByResponseEvents = {
   [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.wsError,
   [WebSocketResponseEvents.BuildImageLogsResponse]: webSocketActions.unsupported,
   [WebSocketResponseEvents.ContainerLogsResponse]: webSocketActions.unsupported,
+  [WebSocketResponseEvents.ContainerUpdateResponse]: webSocketActions.unsupported,
 } as const;

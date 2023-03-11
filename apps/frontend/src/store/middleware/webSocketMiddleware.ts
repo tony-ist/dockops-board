@@ -69,13 +69,13 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
       token: localStorage.getItem('jwtToken'),
       // token: 'qwe',
     },
-    transports: ['websocket']
+    transports: ['websocket'],
   });
 
   socket.on('connect_error', (error) => {
     // eslint-disable-next-line no-console
     console.error('WebSocket connect error:', error);
-  })
+  });
 
   socket.on('connect', () => {
     // eslint-disable-next-line no-console

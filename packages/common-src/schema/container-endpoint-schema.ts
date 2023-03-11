@@ -6,8 +6,8 @@ import { dbContainerIdSchema } from './model-schema';
 import {
   containerAllResponseSchema,
   containerCreateRequestSchema,
-  containerWithMessageSchema,
-  containerLogsQuerySchema
+  containerLogsQuerySchema,
+  containerWithMessageSchema
 } from './container-schema';
 
 export const getContainerAllSchema = {
@@ -41,14 +41,14 @@ export const postContainerCreateSchema = {
 export const postContainerStartSchema = {
   params: dbContainerIdSchema,
   response: {
-    200: containerWithMessageSchema,
+    200: { $ref: 'dockops-board/message' },
   },
 } as const;
 
 export const postContainerStopSchema = {
   params: dbContainerIdSchema,
   response: {
-    200: containerWithMessageSchema,
+    200: { $ref: 'dockops-board/message' },
   },
 } as const;
 

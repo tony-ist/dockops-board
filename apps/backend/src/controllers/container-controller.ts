@@ -1,5 +1,6 @@
 import {
   Container,
+  ContainerWithMessageSchema,
   DbContainerIdString,
   GetContainerAllResponse,
   getContainerAllSchema,
@@ -11,13 +12,10 @@ import {
   postContainerStartSchema,
   postContainerStopSchema,
   PostCreateContainerRequest,
-  ContainerWithMessageSchema,
   WebSocketResponseEvents,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
 import { serializePrismaContainer } from '../serializers/container-serializers';
-import { Container as PrismaContainer } from '.prisma/client';
-import { DockerState } from '../types/docker-state';
 
 // Error "Target allows only 0 element(s) but source may have more." means you forgot "references" for type in common-src/types/model-types.ts
 // https://github.com/ThomasAribart/json-schema-to-ts#references
@@ -107,7 +105,7 @@ export async function containerController(fastify: FastifyInstance) {
     },
   });
 
-  fastify.route<{ Params: DbContainerIdString; Reply: ContainerWithMessageSchema }>({
+  fastify.route<{ Params: DbContainerIdString; Reply: Message }>({
     method: 'POST',
     url: '/:dbContainerId/start',
     schema: postContainerStartSchema,
@@ -116,15 +114,17 @@ export async function containerController(fastify: FastifyInstance) {
       const { dbContainerId: dbContainerIdString } = request.params;
       const dbContainerId = parseInt(dbContainerIdString);
       const result = await fastify.dockerService.startContainer({ dbContainerId });
-      const prismaContainer = await fastify.prisma.container.findFirstOrThrow({ where: {id: dbContainerId} });
       reply.send({
-        message: `Container with id "${dbContainerIdString}" started. Additional info: "${JSON.stringify(result, null, 2)}".`,
-        container: serializePrismaContainer(fastify.buildManager, prismaContainer),
+        message: `Container with id "${dbContainerIdString}" started. Additional info: "${JSON.stringify(
+          result,
+          null,
+          2
+        )}".`,
       });
     },
   });
 
-  fastify.route<{ Params: DbContainerIdString; Reply: ContainerWithMessageSchema }>({
+  fastify.route<{ Params: DbContainerIdString; Reply: Message }>({
     method: 'POST',
     url: '/:dbContainerId/stop',
     schema: postContainerStopSchema,
@@ -133,10 +133,12 @@ export async function containerController(fastify: FastifyInstance) {
       const { dbContainerId: dbContainerIdString } = request.params;
       const dbContainerId = parseInt(dbContainerIdString);
       const result = await fastify.dockerService.stopContainer({ dbContainerId });
-      const prismaContainer = await fastify.prisma.container.findFirstOrThrow({ where: {id: dbContainerId} });
       reply.send({
-        message: `Container with id "${dbContainerIdString}" stopped. Additional info: "${JSON.stringify(result, null, 2)}".`,
-        container: serializePrismaContainer(fastify.buildManager, prismaContainer),
+        message: `Container with id "${dbContainerIdString}" stopped. Additional info: "${JSON.stringify(
+          result,
+          null,
+          2
+        )}".`,
       });
     },
   });

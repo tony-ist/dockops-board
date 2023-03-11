@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
 import { api, createAppAsyncThunk } from '../../api/backend-api';
@@ -7,8 +7,7 @@ import { Container } from '../../generated-sources/backend-api';
 import { loginThunk } from '../login/loginSlice';
 import { fetchContainerByIdThunk } from './getContainerSlice';
 import { createContainerActions } from './createContainerSlice';
-import { startContainerThunk } from './startContainerSlice';
-import { stopContainerThunk } from './stopContainerSlice';
+import { WSContainerUpdateResponsePayload } from 'common-src';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -23,6 +22,7 @@ const initialState = containersAdapter.getInitialState<ContainersState>({
 });
 
 export const fetchContainersThunk = createAppAsyncThunk('containers/fetchContainers', api.v1ContainerAllGet.bind(api));
+const wsContainerUpdateSuccess = createAction<WSContainerUpdateResponsePayload>('containers/update');
 
 const containersSlice = createSlice({
   name: 'containers',
@@ -46,19 +46,19 @@ const containersSlice = createSlice({
       .addCase(fetchContainerByIdThunk.fulfilled, (state, action) => {
         containersAdapter.upsertOne(state, action.payload);
       })
-      .addCase(startContainerThunk.fulfilled, (state, action) => {
-        containersAdapter.upsertOne(state, action.payload.container);
-      })
-      .addCase(stopContainerThunk.fulfilled, (state, action) => {
-        containersAdapter.upsertOne(state, action.payload.container);
-      })
       .addCase(createContainerActions.wsSuccess, (state, action) => {
+        containersAdapter.upsertOne(state, action.payload.container);
+      })
+      .addCase(containersActions.wsContainerUpdateSuccess, (state, action) => {
         containersAdapter.upsertOne(state, action.payload.container);
       })
       .addCase(loginThunk.fulfilled, () => initialState);
   },
 });
 
-export const containersActions = containersSlice.actions;
+export const containersActions = {
+  wsContainerUpdateSuccess,
+  ...containersSlice.actions,
+};
 export const containersReducer = containersSlice.reducer;
 export const containersSelectors = containersAdapter.getSelectors<RootState>((state) => state.containers);

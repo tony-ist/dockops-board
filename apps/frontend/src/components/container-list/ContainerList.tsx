@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import styles from './ContainerList.module.css';
 import { containersSelectors, fetchContainersThunk } from '../../features/container/containersSlice';
-import { store } from '../../store/store';
 import { ScrollableBox } from '../scrollable-box/ScrollableBox';
 import { ContainerListItem } from './ContainerListItem';
 
@@ -10,7 +9,7 @@ export const ContainerList = () => {
   const dispatch = useAppDispatch();
   const status = useAppSelector((state) => state.containers.status);
   const error = useAppSelector((state) => state.containers.error);
-  const containerList = containersSelectors.selectAll(store.getState());
+  const containerList = useAppSelector(containersSelectors.selectAll);
 
   useEffect(() => {
     dispatch(fetchContainersThunk());

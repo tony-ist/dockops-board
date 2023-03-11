@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { containersSelectors } from '../../features/container/containersSlice';
-import { store } from '../../store/store';
 import React, { useEffect } from 'react';
 import { fetchContainerByIdThunk } from '../../features/container/getContainerSlice';
 import { Box, Button } from '@mui/material';
@@ -15,12 +14,8 @@ export const ContainerPage = () => {
   const params = useParams<{ id: string }>();
   const dbContainerId = parseInt(params.id as string);
   const dispatch = useAppDispatch();
-  // const container = containersSelectors.selectById(store.getState(), dbContainerId);
   const container = useAppSelector((state) => containersSelectors.selectById(state, dbContainerId));
-  const status = useAppSelector((state) => state.getContainer.status);
   const logs = useAppSelector((state) => state.containerLogs.messages);
-
-  console.log('container:', container)
 
   useEffect(() => {
     dispatch(fetchContainerByIdThunk({ dbContainerId }));

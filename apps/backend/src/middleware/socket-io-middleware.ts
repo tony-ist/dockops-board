@@ -7,17 +7,17 @@ export function registerSocketIOMiddleware(fastify: FastifyInstance) {
     const jwtToken = socket.handshake.auth.token;
 
     if (!jwtToken) {
-      return next(new Error('No jwtToken provided during websocket authentication'))
+      return next(new Error('No jwtToken provided during websocket authentication'));
     }
 
     authenticate(fastify, jwtToken)
       .then((userId: number) => {
-        socket.data.userId = userId
+        socket.data.userId = userId;
         return next();
       })
       .catch((error) => {
-        fastify.log.debug(`WebSocket auth error: "${error}". Socket id: "${socket.id}"`)
+        fastify.log.debug(`WebSocket auth error: "${error}". Socket id: "${socket.id}"`);
         return next(error);
       });
-  })
+  });
 }
