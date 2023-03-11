@@ -6,14 +6,12 @@ import {
   WSRequestMessage,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
-import { User } from '@prisma/client';
 import type { AppSocket } from '../types/app-socket-io-types';
 
 export interface EventHandlerOptions {
   fastify: FastifyInstance;
   socket: AppSocket;
   message: WSRequestMessage<unknown>;
-  user: User;
 }
 
 export type EventHandler = (options: EventHandlerOptions) => Promise<void>;

@@ -68,7 +68,7 @@ export interface Container {
    * @type {string}
    * @memberof Container
    */
-  dockerState?: string;
+  dockerState?: ContainerDockerStateEnum;
   /**
    *
    * @type {string}
@@ -88,12 +88,26 @@ export interface Container {
    */
   buildStatus?: string;
 }
+
+export const ContainerDockerStateEnum = {
+  Created: 'created',
+  Restarting: 'restarting',
+  Running: 'running',
+  Removing: 'removing',
+  Paused: 'paused',
+  Exited: 'exited',
+  Dead: 'dead',
+} as const;
+
+export type ContainerDockerStateEnum = (typeof ContainerDockerStateEnum)[keyof typeof ContainerDockerStateEnum];
+
 /**
  *
  * @export
  * @interface ContainerAllResponse
  */
 export interface ContainerAllResponse extends Array<Container> {}
+
 /**
  *
  * @export
@@ -194,13 +208,13 @@ export interface V1ContainerCreatePost200Response {
    * @type {Container}
    * @memberof V1ContainerCreatePost200Response
    */
-  container?: Container;
+  container: Container;
   /**
    *
    * @type {string}
    * @memberof V1ContainerCreatePost200Response
    */
-  message?: string;
+  message: string;
 }
 /**
  *
@@ -345,42 +359,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
       localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration);
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {number} dbContainerId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ContainerDbContainerIdAttachPost: async (
-      dbContainerId: number,
-      options: AxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'dbContainerId' is not null or undefined
-      assertParamExists('v1ContainerDbContainerIdAttachPost', 'dbContainerId', dbContainerId);
-      const localVarPath = `/v1/container/{dbContainerId}/attach`.replace(
-        `{${'dbContainerId'}}`,
-        encodeURIComponent(String(dbContainerId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
 
       return {
         url: toPathString(localVarUrlObj),
@@ -639,22 +617,6 @@ export const DefaultApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async v1ContainerDbContainerIdAttachPost(
-      dbContainerId: number,
-      options?: AxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Message>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ContainerDbContainerIdAttachPost(
-        dbContainerId,
-        options
-      );
-      return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-    },
-    /**
-     *
-     * @param {number} dbContainerId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
     async v1ContainerDbContainerIdGet(
       dbContainerId: number,
       options?: AxiosRequestConfig
@@ -773,20 +735,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
     },
     /**
      *
-     * @param {DefaultApiV1ContainerDbContainerIdAttachPostRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ContainerDbContainerIdAttachPost(
-      requestParameters: DefaultApiV1ContainerDbContainerIdAttachPostRequest,
-      options?: AxiosRequestConfig
-    ): AxiosPromise<Message> {
-      return localVarFp
-        .v1ContainerDbContainerIdAttachPost(requestParameters.dbContainerId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
      * @param {DefaultApiV1ContainerDbContainerIdGetRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -880,20 +828,6 @@ export interface DefaultApiV1ContainerCreatePostRequest {
    * @memberof DefaultApiV1ContainerCreatePost
    */
   readonly body?: V1ContainerCreatePostRequest;
-}
-
-/**
- * Request parameters for v1ContainerDbContainerIdAttachPost operation in DefaultApi.
- * @export
- * @interface DefaultApiV1ContainerDbContainerIdAttachPostRequest
- */
-export interface DefaultApiV1ContainerDbContainerIdAttachPostRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof DefaultApiV1ContainerDbContainerIdAttachPost
-   */
-  readonly dbContainerId: number;
 }
 
 /**
@@ -1019,22 +953,6 @@ export class DefaultApi extends BaseAPI {
   ) {
     return DefaultApiFp(this.configuration)
       .v1ContainerCreatePost(requestParameters.body, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {DefaultApiV1ContainerDbContainerIdAttachPostRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DefaultApi
-   */
-  public v1ContainerDbContainerIdAttachPost(
-    requestParameters: DefaultApiV1ContainerDbContainerIdAttachPostRequest,
-    options?: AxiosRequestConfig
-  ) {
-    return DefaultApiFp(this.configuration)
-      .v1ContainerDbContainerIdAttachPost(requestParameters.dbContainerId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

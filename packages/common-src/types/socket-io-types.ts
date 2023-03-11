@@ -4,14 +4,16 @@ import {
   WSBuildImageLogsResponseMessage,
   WSContainerLogsResponseMessage,
   WSContainerLogsSubscribeRequestMessage,
+  WSContainerUpdateResponseMessage,
   WSCreateContainerRequestMessage,
-  WSCreateContainerResponseMessage
+  WSCreateContainerResponseMessage,
 } from './websocket-types';
 
 export interface ServerToClientEvents {
   [WebSocketResponseEvents.ContainerLogsResponse]: (message: WSContainerLogsResponseMessage) => void;
   [WebSocketResponseEvents.BuildImageLogsResponse]: (message: WSBuildImageLogsResponseMessage) => void;
   [WebSocketResponseEvents.CreateContainerResponse]: (message: WSCreateContainerResponseMessage) => void;
+  [WebSocketResponseEvents.ContainerUpdateResponse]: (message: WSContainerUpdateResponseMessage) => void;
 }
 
 export interface ClientToServerEvents {
@@ -19,6 +21,9 @@ export interface ClientToServerEvents {
   [WebSocketRequestEvents.CreateContainerRequest]: (message: WSCreateContainerRequestMessage) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface InterServerEvents {}
 
-export interface SocketData {}
+export interface SocketData {
+  userId: number;
+}

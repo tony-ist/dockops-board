@@ -6,12 +6,8 @@
   border-radius: 5px;
 }
 
-.closeButtonSection {
+.nextButtonSection {
   display: flex;
   flex-wrap: wrap;
   justify-content: right;
-}
-
-.closeButtonSection button {
-  margin-left: 15px;
 }

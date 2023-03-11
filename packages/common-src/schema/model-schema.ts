@@ -25,8 +25,9 @@ export const containerSchema = {
     id: { type: 'number' },
     image: { type: 'string' },
     dockerId: { type: 'string' },
+    // TODO: Rename "name"
     dockerName: { type: 'string' },
-    dockerState: { type: 'string' },
+    dockerState: { enum: ['created', 'restarting', 'running', 'removing', 'paused', 'exited', 'dead'] },
     createdAt: { type: 'string' },
     updatedAt: { type: 'string' },
     buildStatus: { type: 'string' },
@@ -79,4 +80,3 @@ export const dbContainerIdStringSchema = {
   required: ['dbContainerId'],
   additionalProperties: false,
 } as const;
-

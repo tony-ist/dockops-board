@@ -1,0 +1,8 @@
+.containerListItem {
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 10px;
+  transition: border 0.2s ease-out;
+  text-decoration: none;
+}

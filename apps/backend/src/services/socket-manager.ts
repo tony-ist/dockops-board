@@ -1,4 +1,5 @@
 // TODO: Clean up sockets
+// TODO: Rename SocketInMemoryStore
 import type { AppSocket } from '../types/app-socket-io-types';
 
 export class SocketManager {

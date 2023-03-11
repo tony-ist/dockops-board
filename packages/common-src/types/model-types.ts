@@ -5,7 +5,7 @@ import {
   dbContainerIdStringSchema,
   logSchema,
   messageSchema,
-  userSchema
+  userSchema,
 } from '../schema/model-schema';
 
 export type User = FromSchema<typeof userSchema>;

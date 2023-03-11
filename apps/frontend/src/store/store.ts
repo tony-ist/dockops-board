@@ -10,6 +10,7 @@ import { loginReducer } from '../features/login/loginSlice';
 import { getContainerReducer } from '../features/container/getContainerSlice';
 import { startContainerReducer } from '../features/container/startContainerSlice';
 import { stopContainerReducer } from '../features/container/stopContainerSlice';
+import { buildImageLogsReducer } from '../features/container/buildImageLogsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     startContainer: startContainerReducer,
     stopContainer: stopContainerReducer,
     containerLogs: containerLogsReducer,
+    buildLogs: buildImageLogsReducer,
     webSocket: webSocketReducer,
     sideBar: sideBarReducer,
     login: loginReducer,

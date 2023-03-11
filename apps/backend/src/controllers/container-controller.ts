@@ -1,5 +1,6 @@
 import {
   Container,
+  ContainerWithMessageSchema,
   DbContainerIdString,
   GetContainerAllResponse,
   getContainerAllSchema,
@@ -11,7 +12,6 @@ import {
   postContainerStartSchema,
   postContainerStopSchema,
   PostCreateContainerRequest,
-  PostCreateContainerResponse,
   WebSocketResponseEvents,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
@@ -49,7 +49,7 @@ export async function containerController(fastify: FastifyInstance) {
     },
   });
 
-  fastify.route<{ Body: PostCreateContainerRequest; Reply: PostCreateContainerResponse }>({
+  fastify.route<{ Body: PostCreateContainerRequest; Reply: ContainerWithMessageSchema }>({
     method: 'POST',
     url: '/create',
     schema: postContainerCreateSchema,
@@ -111,10 +111,15 @@ export async function containerController(fastify: FastifyInstance) {
     schema: postContainerStartSchema,
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
-      const { dbContainerId } = request.params;
-      const result = await fastify.dockerService.startContainer({ dbContainerId: parseInt(dbContainerId) });
+      const { dbContainerId: dbContainerIdString } = request.params;
+      const dbContainerId = parseInt(dbContainerIdString);
+      const result = await fastify.dockerService.startContainer({ dbContainerId });
       reply.send({
-        message: `Container with id "${dbContainerId}" started. Additional info: "${JSON.stringify(result, null, 2)}".`,
+        message: `Container with id "${dbContainerIdString}" started. Additional info: "${JSON.stringify(
+          result,
+          null,
+          2
+        )}".`,
       });
     },
   });
@@ -125,10 +130,15 @@ export async function containerController(fastify: FastifyInstance) {
     schema: postContainerStopSchema,
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
-      const { dbContainerId } = request.params;
-      const result = await fastify.dockerService.stopContainer({ dbContainerId: parseInt(dbContainerId) });
+      const { dbContainerId: dbContainerIdString } = request.params;
+      const dbContainerId = parseInt(dbContainerIdString);
+      const result = await fastify.dockerService.stopContainer({ dbContainerId });
       reply.send({
-        message: `Container with id "${dbContainerId}" stopped. Additional info: "${JSON.stringify(result, null, 2)}".`,
+        message: `Container with id "${dbContainerIdString}" stopped. Additional info: "${JSON.stringify(
+          result,
+          null,
+          2
+        )}".`,
       });
     },
   });

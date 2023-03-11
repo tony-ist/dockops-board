@@ -36,7 +36,7 @@ function isWSUnsupportedAction(action: AnyAction) {
 export const webSocketMiddleware: Middleware = (store) => (next) => (action) => {
   if (isWSUnsupportedAction(action)) {
     // eslint-disable-next-line no-console
-    console.error(`Unsupported WebSocket action: "${action}".`);
+    console.error(`Unsupported WebSocket action: "${JSON.stringify(action, null, 2)}".`);
     return next(action);
   }
 
@@ -64,12 +64,22 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   // eslint-disable-next-line no-console
   console.log('Connecting to websocket...');
 
-  socket = io(import.meta.env.VITE_BACKEND_URL, { transports: ['websocket'] });
+  socket = io(import.meta.env.VITE_BACKEND_URL, {
+    auth: {
+      token: localStorage.getItem('jwtToken'),
+    },
+    transports: ['websocket'],
+  });
+
+  socket.on('connect_error', (error) => {
+    // eslint-disable-next-line no-console
+    console.error('WebSocket connect error:', error);
+  });
 
   socket.on('connect', () => {
     // eslint-disable-next-line no-console
     console.log(`Socket.io connected with id "${socket.id}".`);
-    document.cookie = `socketId=${socket.id};Path=/;SameSite=None;Secure`;
+    document.cookie = `socketId=${socket.id}; Path=/; SameSite=Lax`;
     store.dispatch(webSocketActions.connectionEstablished());
   });
 

@@ -21,7 +21,7 @@ export const LogsViewer = (props: LogsViewerProps) => {
     if (autoscrollEnabled) {
       scrollRef.current?.scrollIntoView();
     }
-  }, [logs]);
+  }, [logs, autoscrollEnabled]);
 
   return (
     <Box position='relative'>

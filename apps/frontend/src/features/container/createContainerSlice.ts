@@ -2,7 +2,7 @@ import { createAction, createSlice } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
 import { api, createAppAsyncThunk } from '../../api/backend-api';
-import { PostCreateContainerRequest } from 'common-src';
+import { WSCreateContainerRequestPayload } from 'common-src';
 
 interface ContainerListState {
   dbContainerId: number | null;
@@ -21,7 +21,9 @@ export const createContainerThunk = createAppAsyncThunk(
   api.v1ContainerCreatePost.bind(api)
 );
 
-const wsCreateContainerRequest = createAction<PostCreateContainerRequest>('createContainer/wsCreateContainerRequest');
+const wsCreateContainerRequest = createAction<WSCreateContainerRequestPayload>(
+  'createContainer/wsCreateContainerRequest'
+);
 
 const createContainerSlice = createSlice({
   name: 'createContainer',
@@ -36,6 +38,7 @@ const createContainerSlice = createSlice({
       state.error = action.payload.error ?? null;
       state.status = 'failed';
     },
+    clear: () => initialState,
   },
   extraReducers(builder) {
     builder
