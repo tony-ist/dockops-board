@@ -4,8 +4,24 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { SideBar } from '../../components/sidebar/SideBar';
 import { Header } from '../../components/header/Header';
 import { Outlet } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useEffect } from 'react';
+import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 
-export const DashboardLayout = () => {
+export const MainLayout = () => {
+  const dispatch = useAppDispatch();
+  const isWebSocketConnected = useAppSelector((state) => state.webSocket.isConnected);
+
+  useEffect(() => {
+    if (!isWebSocketConnected) {
+      dispatch(webSocketActions.startConnecting());
+    }
+  }, [isWebSocketConnected]);
+
+  if (!isWebSocketConnected) {
+    return <div>Connecting to websocket...</div>;
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

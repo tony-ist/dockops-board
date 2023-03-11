@@ -16,7 +16,6 @@ export async function listenDockerEvents(fastify: FastifyInstance) {
   eventStream.on('data', async (buffer: Buffer) => {
     try {
       const event: DockerEvent = JSON.parse(buffer.toString());
-
       const dockerState = dockerStatesByEventAction[event.Action];
 
       if (dockerState !== undefined) {

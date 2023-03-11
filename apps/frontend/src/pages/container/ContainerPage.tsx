@@ -15,15 +15,16 @@ export const ContainerPage = () => {
   const params = useParams<{ id: string }>();
   const dbContainerId = parseInt(params.id as string);
   const dispatch = useAppDispatch();
-  const container = containersSelectors.selectById(store.getState(), dbContainerId);
+  // const container = containersSelectors.selectById(store.getState(), dbContainerId);
+  const container = useAppSelector((state) => containersSelectors.selectById(state, dbContainerId));
   const status = useAppSelector((state) => state.getContainer.status);
   const logs = useAppSelector((state) => state.containerLogs.messages);
 
+  console.log('container:', container)
+
   useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchContainerByIdThunk({ dbContainerId }));
-    }
-  }, [dispatch, status]);
+    dispatch(fetchContainerByIdThunk({ dbContainerId }));
+  }, []);
 
   if (!container) {
     return <div>Loading...</div>;

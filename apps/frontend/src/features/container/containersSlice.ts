@@ -7,6 +7,8 @@ import { Container } from '../../generated-sources/backend-api';
 import { loginThunk } from '../login/loginSlice';
 import { fetchContainerByIdThunk } from './getContainerSlice';
 import { createContainerActions } from './createContainerSlice';
+import { startContainerThunk } from './startContainerSlice';
+import { stopContainerThunk } from './stopContainerSlice';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -42,9 +44,13 @@ const containersSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(fetchContainerByIdThunk.fulfilled, (state, action) => {
-        state.error = null;
-        state.status = 'succeeded';
         containersAdapter.upsertOne(state, action.payload);
+      })
+      .addCase(startContainerThunk.fulfilled, (state, action) => {
+        containersAdapter.upsertOne(state, action.payload.container);
+      })
+      .addCase(stopContainerThunk.fulfilled, (state, action) => {
+        containersAdapter.upsertOne(state, action.payload.container);
       })
       .addCase(createContainerActions.wsSuccess, (state, action) => {
         containersAdapter.upsertOne(state, action.payload.container);

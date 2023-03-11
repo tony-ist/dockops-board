@@ -13,7 +13,7 @@ export interface EventHandlerOptions {
   fastify: FastifyInstance;
   socket: AppSocket;
   message: WSRequestMessage<unknown>;
-  user: User;
+  user?: User;
 }
 
 export type EventHandler = (options: EventHandlerOptions) => Promise<void>;

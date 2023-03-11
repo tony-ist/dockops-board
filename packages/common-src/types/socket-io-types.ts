@@ -12,6 +12,7 @@ export interface ServerToClientEvents {
   [WebSocketResponseEvents.ContainerLogsResponse]: (message: WSContainerLogsResponseMessage) => void;
   [WebSocketResponseEvents.BuildImageLogsResponse]: (message: WSBuildImageLogsResponseMessage) => void;
   [WebSocketResponseEvents.CreateContainerResponse]: (message: WSCreateContainerResponseMessage) => void;
+  message: (message: any) => void;
 }
 
 export interface ClientToServerEvents {

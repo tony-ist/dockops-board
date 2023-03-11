@@ -26,6 +26,7 @@ import fastifyBcrypt from 'fastify-bcrypt';
 import { webSocketConnectionHandler } from './handlers/web-socket-connection-handler';
 import { socketIoPlugin } from './plugins/socket-io-plugin';
 import { listenDockerEvents } from './handlers/docker-events-handler';
+import { authenticate } from './utils/authenticate-utils';
 
 async function run() {
   await fastify.register(fastifySwagger, {
@@ -79,6 +80,23 @@ async function run() {
   fastify.addSchema(containerAllResponseSchema);
   fastify.addSchema(dbContainerIdSchema);
 
+  // TODO: Extract this code to function from another file
+  fastify.io.use((socket, next) => {
+    const jwtToken = socket.handshake.auth.token;
+
+    if (!jwtToken) {
+      return next(new Error('No jwtToken provided during websocket authentication'))
+    }
+
+    authenticate(fastify, jwtToken)
+      .then(() => {
+        return next();
+      })
+      .catch((error) => {
+        fastify.log.debug(`WebSocket auth error: "${error}". Socket id: "${socket.id}"`)
+        return next(error);
+      });
+  })
   fastify.io.on('connection', (socket) => webSocketConnectionHandler(fastify, socket));
 
   await listenDockerEvents(fastify);

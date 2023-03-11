@@ -42,11 +42,12 @@ export const containerLogsQuerySchema = {
   additionalProperties: false,
 } as const;
 
-export const containerCreateResponseSchema = {
+export const containerWithMessageSchema = {
   type: 'object',
   properties: {
     container: { $ref: 'dockops-board/container' },
     message: { type: 'string' },
   },
+  required: ['container', 'message'],
   additionalProperties: false,
 } as const;

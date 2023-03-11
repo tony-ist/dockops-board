@@ -8,7 +8,7 @@ import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';
 import { CreateContainerPage } from '../pages/create-contaner/CreateContainer';
 import { ContainerPage } from '../pages/container/ContainerPage';
-import { DashboardLayout } from '../layouts/dashboard/dashboard';
+import { MainLayout } from '../layouts/dashboard/dashboard';
 
 const appTheme = createTheme({
   palette: {
@@ -40,25 +40,12 @@ const appTheme = createTheme({
 });
 
 export const App = () => {
-  const dispatch = useAppDispatch();
-  const isWebSocketConnected = useAppSelector((state) => state.webSocket.isConnected);
-
-  useEffect(() => {
-    if (!isWebSocketConnected) {
-      dispatch(webSocketActions.startConnecting());
-    }
-  }, [isWebSocketConnected]);
-
-  if (!isWebSocketConnected) {
-    return <div>Connecting to websocket...</div>;
-  }
-
   return (
     <ThemeProvider theme={appTheme}>
       <Router>
         <Routes>
           <Route element={<PrivateRoute />}>
-            <Route element={<DashboardLayout />}>
+            <Route element={<MainLayout />}>
               <Route path='/' element={<RootPage />} />
               <Route path='/container/create' element={<CreateContainerPage />} />
               <Route path='/container/:id' element={<ContainerPage />} />

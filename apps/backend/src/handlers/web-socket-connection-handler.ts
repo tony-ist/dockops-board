@@ -13,13 +13,14 @@ export const webSocketConnectionHandler = (fastify: FastifyInstance, socket: App
   (Object.keys(WebSocketRequestEvents) as Array<keyof typeof WebSocketRequestEvents>).forEach((requestEvent) => {
     socket.on(WebSocketRequestEvents[requestEvent], async (message: WSRequestMessage<unknown>) => {
       try {
-        if (!message.jwtToken) {
-          throw new Error(
-            `Missing jwtToken field in web socket message body. Message: "${message}". Socket id: "${socket.id}".`
-          );
-        }
+        // if (!message.jwtToken) {
+        //   throw new Error(
+        //     `Missing jwtToken field in web socket message body. Message: "${message}". Socket id: "${socket.id}".`
+        //   );
+        // }
 
-        const user = await authenticate(fastify, message.jwtToken);
+        // const user = await authenticate(fastify, message.jwtToken);
+        const user = undefined;
         const handler: EventHandler | undefined = webSocketEventHandlers[requestEvent];
 
         if (isNotUndefined(handler)) {
