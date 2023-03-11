@@ -17,7 +17,7 @@ export const ContainerListItem = (props: ContainerListItemOptions) => {
   const appTheme = useTheme();
   const { index, container } = props;
   return (
-    <LinkStyled to={`/container/${container.id}/`} key={index}>
+    <LinkStyled className={styles.containerListItemWrapper} to={`/container/${container.id}/`} key={index}>
       <Box position='relative'>
         <Grid
           container
