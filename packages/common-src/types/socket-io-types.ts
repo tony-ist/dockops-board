@@ -22,4 +22,6 @@ export interface ClientToServerEvents {
 
 export interface InterServerEvents {}
 
-export interface SocketData {}
+export interface SocketData {
+  userId: number;
+}

@@ -29,6 +29,8 @@ export async function listenDockerEvents(fastify: FastifyInstance) {
             dockerState,
           },
         });
+
+        fastify.io.emit('message', 'hej Monika');
       }
     } catch (error) {
       fastify.log.error(error);
