@@ -4,10 +4,16 @@ import {
   containerAllResponseSchema,
   containerCreateRequestSchema,
   containerWithMessageSchema,
-  containerLogsQuerySchema
+  containerLogsQuerySchema,
 } from '../schema/container-schema';
 
-export type GetContainerAllResponse = FromSchema<typeof containerAllResponseSchema, { references: [typeof containerSchema] }>;
+export type GetContainerAllResponse = FromSchema<
+  typeof containerAllResponseSchema,
+  { references: [typeof containerSchema] }
+>;
 export type PostCreateContainerRequest = FromSchema<typeof containerCreateRequestSchema>;
-export type ContainerWithMessageSchema = FromSchema<typeof containerWithMessageSchema, { references: [typeof containerSchema] }>;
+export type ContainerWithMessageSchema = FromSchema<
+  typeof containerWithMessageSchema,
+  { references: [typeof containerSchema] }
+>;
 export type GetContainerLogsRequest = FromSchema<typeof containerLogsQuerySchema>;

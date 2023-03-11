@@ -6,7 +6,7 @@ import {
   WSContainerLogsSubscribeRequestMessage,
   WSContainerUpdateResponsePayload,
   WSCreateContainerRequestMessage,
-  WSCreateContainerResponseMessage
+  WSCreateContainerResponseMessage,
 } from './websocket-types';
 
 export interface ServerToClientEvents {
@@ -21,6 +21,7 @@ export interface ClientToServerEvents {
   [WebSocketRequestEvents.CreateContainerRequest]: (message: WSCreateContainerRequestMessage) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface InterServerEvents {}
 
 export interface SocketData {

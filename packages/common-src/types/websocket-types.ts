@@ -16,7 +16,7 @@ export enum WebSocketResponseEvents {
   ContainerUpdateResponse = 'ContainerUpdateResponse',
 }
 
-export type WSContainerPayload = { container: Container }
+export type WSContainerPayload = { container: Container };
 
 export type WSCreateContainerRequestPayload = PostCreateContainerRequest;
 export type WSCreateContainerResponsePayload = WSContainerPayload;
@@ -25,12 +25,12 @@ export type WSContainerLogsSubscribeRequestPayload = GetContainerLogsRequest & D
 export type WSContainerLogsResponsePayload = Log & DbContainerId;
 export type WSBuildImageLogsResponsePayload = Log & DbContainerId;
 
-export type WSCreateContainerRequestMessage = WSRequestMessage<WSCreateContainerRequestPayload>
-export type WSCreateContainerResponseMessage = WSResponseMessage<WSCreateContainerResponsePayload>
-export type WSContainerUpdateResponseMessage = WSResponseMessage<WSContainerUpdateResponsePayload>
-export type WSContainerLogsSubscribeRequestMessage = WSRequestMessage<WSContainerLogsSubscribeRequestPayload>
-export type WSContainerLogsResponseMessage = WSResponseMessage<WSContainerLogsResponsePayload>
-export type WSBuildImageLogsResponseMessage = WSResponseMessage<WSBuildImageLogsResponsePayload>
+export type WSCreateContainerRequestMessage = WSRequestMessage<WSCreateContainerRequestPayload>;
+export type WSCreateContainerResponseMessage = WSResponseMessage<WSCreateContainerResponsePayload>;
+export type WSContainerUpdateResponseMessage = WSResponseMessage<WSContainerUpdateResponsePayload>;
+export type WSContainerLogsSubscribeRequestMessage = WSRequestMessage<WSContainerLogsSubscribeRequestPayload>;
+export type WSContainerLogsResponseMessage = WSResponseMessage<WSContainerLogsResponsePayload>;
+export type WSBuildImageLogsResponseMessage = WSResponseMessage<WSBuildImageLogsResponsePayload>;
 
 export type WSRequestMessage<Payload> = { jwtToken: string } & Payload;
 

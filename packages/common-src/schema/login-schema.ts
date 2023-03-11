@@ -6,4 +6,3 @@ export const loginRequestSchema = {
   },
   required: ['email', 'password'],
 } as const;
-

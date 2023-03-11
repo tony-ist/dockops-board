@@ -7,7 +7,7 @@ import {
   containerAllResponseSchema,
   containerCreateRequestSchema,
   containerLogsQuerySchema,
-  containerWithMessageSchema
+  containerWithMessageSchema,
 } from './container-schema';
 
 export const getContainerAllSchema = {
