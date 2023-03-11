@@ -4,8 +4,9 @@ import { containerLogsActions } from '../container/containerLogsSlice';
 import { webSocketActions } from './webSocketSlice';
 import { createContainerActions } from '../container/createContainerSlice';
 import { containersActions } from '../container/containersSlice';
+import { buildImageLogsActions } from '../container/buildImageLogsSlice';
 
-// TODO: Generate webSocketRequestActions out of webSocketEventsByAction keys
+// TODO: Generate webSocketRequestActions out of webSocketRequestEventsByActionType keys
 export const webSocketRequestActions = [
   createContainerActions.wsCreateContainerRequest,
   containerLogsActions.wsContainerLogsSubscribeRequest,
@@ -21,8 +22,8 @@ type ActionsByResponseEvents = {
 };
 export const actionsByResponseEvents: ActionsByResponseEvents = {
   [WebSocketResponseEvents.CreateContainerResponse]: createContainerActions.wsSuccess,
-  [WebSocketResponseEvents.BuildImageLogsResponse]: containerLogsActions.wsReceiveBuildLogs,
-  [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.wsReceiveContainerLogs,
+  [WebSocketResponseEvents.BuildImageLogsResponse]: buildImageLogsActions.wsReceive,
+  [WebSocketResponseEvents.ContainerLogsResponse]: containerLogsActions.wsReceive,
   [WebSocketResponseEvents.ContainerUpdateResponse]: containersActions.wsContainerUpdateSuccess,
 } as const;
 export const errorActionsByResponseEvents: ActionsByResponseEvents = {

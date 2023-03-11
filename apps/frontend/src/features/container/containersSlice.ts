@@ -8,6 +8,7 @@ import { loginThunk } from '../login/loginSlice';
 import { fetchContainerByIdThunk } from './getContainerSlice';
 import { createContainerActions } from './createContainerSlice';
 import { WSContainerUpdateResponsePayload } from 'common-src';
+import { EntityId } from '@reduxjs/toolkit/src/entities/models';
 
 const containersAdapter = createEntityAdapter<Container>();
 
@@ -56,9 +57,16 @@ const containersSlice = createSlice({
   },
 });
 
+const containersAdapterSelectors = containersAdapter.getSelectors<RootState>((state) => state.containers);
+const selectByNullableId = (state: RootState, id: EntityId | null) =>
+  id ? containersAdapterSelectors.selectById(state, id) : null;
+
 export const containersActions = {
   wsContainerUpdateSuccess,
   ...containersSlice.actions,
 };
 export const containersReducer = containersSlice.reducer;
-export const containersSelectors = containersAdapter.getSelectors<RootState>((state) => state.containers);
+export const containersSelectors = {
+  ...containersAdapterSelectors,
+  selectByNullableId,
+};

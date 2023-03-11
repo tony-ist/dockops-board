@@ -4,7 +4,7 @@ import {
   WSBuildImageLogsResponseMessage,
   WSContainerLogsResponseMessage,
   WSContainerLogsSubscribeRequestMessage,
-  WSContainerUpdateResponsePayload,
+  WSContainerUpdateResponseMessage,
   WSCreateContainerRequestMessage,
   WSCreateContainerResponseMessage,
 } from './websocket-types';
@@ -13,7 +13,7 @@ export interface ServerToClientEvents {
   [WebSocketResponseEvents.ContainerLogsResponse]: (message: WSContainerLogsResponseMessage) => void;
   [WebSocketResponseEvents.BuildImageLogsResponse]: (message: WSBuildImageLogsResponseMessage) => void;
   [WebSocketResponseEvents.CreateContainerResponse]: (message: WSCreateContainerResponseMessage) => void;
-  [WebSocketResponseEvents.ContainerUpdateResponse]: (message: WSContainerUpdateResponsePayload) => void;
+  [WebSocketResponseEvents.ContainerUpdateResponse]: (message: WSContainerUpdateResponseMessage) => void;
 }
 
 export interface ClientToServerEvents {

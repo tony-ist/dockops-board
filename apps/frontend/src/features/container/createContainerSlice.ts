@@ -38,6 +38,7 @@ const createContainerSlice = createSlice({
       state.error = action.payload.error ?? null;
       state.status = 'failed';
     },
+    clear: () => initialState,
   },
   extraReducers(builder) {
     builder

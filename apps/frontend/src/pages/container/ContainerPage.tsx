@@ -15,9 +15,10 @@ export const ContainerPage = () => {
   const dbContainerId = parseInt(params.id as string);
   const dispatch = useAppDispatch();
   const container = useAppSelector((state) => containersSelectors.selectById(state, dbContainerId));
-  const logs = useAppSelector((state) => state.containerLogs.messages);
+  const containerLogs = useAppSelector((state) => state.containerLogs.messages);
 
   useEffect(() => {
+    dispatch(containerLogsActions.clear());
     dispatch(fetchContainerByIdThunk({ dbContainerId }));
   }, []);
 
@@ -56,7 +57,7 @@ export const ContainerPage = () => {
       <Box>{container.dockerState}</Box>
       <Box>{container.createdAt}</Box>
       <ContainerStatusIndicator container={container} />
-      {logs.length > 0 && <LogsViewer logs={logs} />}
+      {containerLogs.length > 0 && <LogsViewer logs={containerLogs} />}
     </>
   );
 };

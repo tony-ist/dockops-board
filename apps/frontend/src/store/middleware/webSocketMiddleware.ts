@@ -36,7 +36,7 @@ function isWSUnsupportedAction(action: AnyAction) {
 export const webSocketMiddleware: Middleware = (store) => (next) => (action) => {
   if (isWSUnsupportedAction(action)) {
     // eslint-disable-next-line no-console
-    console.error(`Unsupported WebSocket action: "${action}".`);
+    console.error(`Unsupported WebSocket action: "${JSON.stringify(action, null, 2)}".`);
     return next(action);
   }
 
@@ -67,7 +67,6 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   socket = io(import.meta.env.VITE_BACKEND_URL, {
     auth: {
       token: localStorage.getItem('jwtToken'),
-      // token: 'qwe',
     },
     transports: ['websocket'],
   });

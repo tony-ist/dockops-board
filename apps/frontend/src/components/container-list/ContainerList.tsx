@@ -13,7 +13,7 @@ export const ContainerList = () => {
 
   useEffect(() => {
     dispatch(fetchContainersThunk());
-  }, []);
+  }, [dispatch]);
 
   if (status === 'loading') {
     return <div>Loading...</div>;

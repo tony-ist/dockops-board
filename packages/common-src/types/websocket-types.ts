@@ -1,7 +1,6 @@
-import { Container, DbContainerId, Log } from './model-types';
+import { Container, DbContainerId, Log, Message } from './model-types';
 import { GetContainerLogsRequest, PostCreateContainerRequest } from './container-types';
 
-// TODO: Linter does not lint semicolons in this file
 export enum WebSocketRequestEvents {
   ContainerLogsSubscribeRequest = 'ContainerLogsSubscribeRequest',
   // InteractiveShellRequest = 'InteractiveShellRequest',
@@ -19,7 +18,7 @@ export enum WebSocketResponseEvents {
 export type WSContainerPayload = { container: Container };
 
 export type WSCreateContainerRequestPayload = PostCreateContainerRequest;
-export type WSCreateContainerResponsePayload = WSContainerPayload;
+export type WSCreateContainerResponsePayload = WSContainerPayload & Message;
 export type WSContainerUpdateResponsePayload = WSContainerPayload;
 export type WSContainerLogsSubscribeRequestPayload = GetContainerLogsRequest & DbContainerId;
 export type WSContainerLogsResponsePayload = Log & DbContainerId;
