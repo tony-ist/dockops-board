@@ -1,7 +1,6 @@
-import Box from '@mui/material/Box';
-import * as React from 'react';
-import { BoxProps } from '@mui/material/Box/Box';
-import { useTheme } from '@mui/material/styles';
+import { Box } from '@mui/material';
+import { BoxProps } from '@mui/material';
+import { useTheme } from '@mui/material';
 
 export const ScrollableBox = (props: BoxProps) => {
   const theme = useTheme();

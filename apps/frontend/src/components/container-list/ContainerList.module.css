@@ -2,15 +2,6 @@
   color: red;
 }
 
-.containerListItem {
-  border: 2px solid transparent;
-  border-radius: 5px;
-  padding: 5px;
-  margin-bottom: 10px;
-  transition: border 0.2s ease-out;
-  text-decoration: none;
-}
-
 .containerList {
   height: calc(100vh - 160px);
   padding-right: 10px;

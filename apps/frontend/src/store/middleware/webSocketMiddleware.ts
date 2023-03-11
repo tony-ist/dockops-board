@@ -69,7 +69,7 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   socket.on('connect', () => {
     // eslint-disable-next-line no-console
     console.log(`Socket.io connected with id "${socket.id}".`);
-    document.cookie = `socketId=${socket.id};Path=/;SameSite=None;Secure`;
+    document.cookie = `socketId=${socket.id}; Path=/; SameSite=Lax`;
     store.dispatch(webSocketActions.connectionEstablished());
   });
 
