@@ -5,7 +5,7 @@ import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';
 import { CreateContainerPage } from '../pages/create-contaner/CreateContainerPage';
 import { ContainerPage } from '../pages/container/ContainerPage';
-import { MainLayout } from '../layouts/dashboard/dashboard';
+import { MainLayout } from '../layouts/MainLayout';
 
 const appTheme = createTheme({
   palette: {

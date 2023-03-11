@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { SideBar } from '../../components/sidebar/SideBar';
-import { Header } from '../../components/header/Header';
+import { SideBar } from '../components/sidebar/SideBar';
+import { Header } from '../components/header/Header';
 import { Outlet } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { useEffect } from 'react';
-import { webSocketActions } from '../../features/web-socket/webSocketSlice';
+import { webSocketActions } from '../features/web-socket/webSocketSlice';
 
 export const MainLayout = () => {
   const dispatch = useAppDispatch();
@@ -16,7 +16,7 @@ export const MainLayout = () => {
     if (!isWebSocketConnected) {
       dispatch(webSocketActions.startConnecting());
     }
-  }, [isWebSocketConnected]);
+  }, [dispatch, isWebSocketConnected]);
 
   if (!isWebSocketConnected) {
     return <div>Connecting to websocket...</div>;

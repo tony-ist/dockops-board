@@ -20,7 +20,7 @@ export const ContainerPage = () => {
   useEffect(() => {
     dispatch(containerLogsActions.clear());
     dispatch(fetchContainerByIdThunk({ dbContainerId }));
-  }, []);
+  }, [dispatch, dbContainerId]);
 
   if (!container) {
     return <div>Loading...</div>;

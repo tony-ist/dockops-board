@@ -92,7 +92,7 @@ export const SideBar = () => {
     if (isSideBarTemporary) {
       dispatch(sideBarActions.close());
     }
-  }, []);
+  }, [dispatch, isSideBarTemporary]);
 
   return (
     <Drawer

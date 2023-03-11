@@ -19,7 +19,7 @@ export const CreateContainerPage = () => {
 
   useEffect(() => {
     dispatch(buildImageLogsActions.clear());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Container
