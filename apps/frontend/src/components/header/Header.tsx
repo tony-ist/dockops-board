@@ -9,7 +9,7 @@ import { sideBarActions } from '../../features/sidebar/sideBarSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { SIDEBAR_WIDTH } from '../../constants/SideBarConstants';
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar/AppBar';
-import { Button, useMediaQuery } from '@mui/material';
+import { Box, Button, useMediaQuery } from '@mui/material';
 import { loginActions } from '../../features/login/loginSlice';
 
 interface AppBarProps extends MuiAppBarProps {
@@ -56,12 +56,21 @@ export const Header = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant='h6' noWrap component='div'>
-          Dockops Board
-        </Typography>
-        <Button color='error' variant='contained' onClick={() => dispatch(loginActions.logout())}>
-          Logout
-        </Button>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <Typography variant='h6' noWrap component='div'>
+            Dockops Board
+          </Typography>
+          <Button color='error' variant='contained' onClick={() => dispatch(loginActions.logout())}>
+            Logout
+          </Button>
+        </Box>
       </Toolbar>
     </AppBar>
   );
