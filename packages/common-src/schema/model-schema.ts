@@ -62,8 +62,21 @@ export const dbContainerIdSchema = {
   title: 'DbContainerId',
   type: 'object',
   properties: {
+    dbContainerId: { type: 'number' },
+  },
+  required: ['dbContainerId'],
+  additionalProperties: false,
+} as const;
+
+// TODO: Make this schema intermediary instead
+export const dbContainerIdStringSchema = {
+  $id: 'dockops-board/dbContainerIdString',
+  title: 'DbContainerIdString',
+  type: 'object',
+  properties: {
     dbContainerId: { type: 'string' },
   },
   required: ['dbContainerId'],
   additionalProperties: false,
 } as const;
+

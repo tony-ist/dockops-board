@@ -3,14 +3,13 @@ import * as config from './config';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import fastifyStatic from '@fastify/static';
-import fastifySocketIO from 'fastify-socket.io';
 import path from 'path';
 import { userController } from './controllers/user-controller';
 import { prismaPlugin } from './plugins/prisma-plugin';
 import { dockerodePlugin } from './plugins/dockerode-plugin';
 import { containerController } from './controllers/container-controller';
 import { server } from './server';
-import { socketPlugin } from './plugins/socket-plugin';
+import { socketManagerPlugin } from './plugins/socket-manager-plugin';
 import {
   containerAllResponseSchema,
   containerSchema,
@@ -25,6 +24,7 @@ import { authenticatePlugin } from './plugins/authenticate-plugin';
 import { loginController } from './controllers/login-controller';
 import fastifyBcrypt from 'fastify-bcrypt';
 import { webSocketConnectionHandler } from './handlers/web-socket-connection-handler';
+import { socketIoPlugin } from './plugins/socket-io-plugin';
 
 async function run() {
   await server.register(fastifySwagger, {
@@ -48,13 +48,6 @@ async function run() {
       origin: config.frontendURL,
       credentials: true,
     });
-    await server.register(fastifySocketIO, {
-      cors: {
-        origin: config.frontendURL,
-      },
-    });
-  } else {
-    await server.register(fastifySocketIO);
   }
 
   if (config.serveStatic === 'TRUE') {
@@ -68,9 +61,10 @@ async function run() {
   });
   await server.register(fastifyCookie);
 
+  await server.register(socketIoPlugin);
   await server.register(authenticatePlugin);
   await server.register(servicePlugin);
-  await server.register(socketPlugin);
+  await server.register(socketManagerPlugin);
   await server.register(prismaPlugin);
   await server.register(dockerodePlugin);
   await server.register(loginController, { prefix: '/v1/login' });

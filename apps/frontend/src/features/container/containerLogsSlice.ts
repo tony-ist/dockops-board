@@ -1,8 +1,8 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   Log,
-  WSBuildImageLogsResponseMessage,
-  WSContainerLogsResponseMessage,
+  WSBuildImageLogsResponsePayload,
+  WSContainerLogsResponsePayload,
   WSContainerLogsSubscribeRequestPayload,
 } from 'common-src';
 import { createContainerActions } from './createContainerSlice';
@@ -23,10 +23,10 @@ const containerLogsSlice = createSlice({
   name: 'containerLogs',
   initialState,
   reducers: {
-    wsReceiveContainerLogs: (state, action: PayloadAction<WSContainerLogsResponseMessage>) => {
+    wsReceiveContainerLogs: (state, action: PayloadAction<WSContainerLogsResponsePayload>) => {
       state.messages.push(action.payload);
     },
-    wsReceiveBuildLogs: (state, action: PayloadAction<WSBuildImageLogsResponseMessage>) => {
+    wsReceiveBuildLogs: (state, action: PayloadAction<WSBuildImageLogsResponsePayload>) => {
       state.messages.push(action.payload);
     },
     clear: () => initialState,

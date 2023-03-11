@@ -153,7 +153,7 @@ export class DockerService {
    * Attach and listen for container logs
    * @return - readable stream of logs
    */
-  async containerLogs(options: ContainerLogsOptions) {
+  async listenContainerLogs(options: ContainerLogsOptions) {
     const { dbContainerId, tail } = options;
     const dockerContainer = await this.getDockerContainerByDbContainerId(dbContainerId);
 

@@ -1,18 +1,18 @@
-import { Socket } from 'socket.io';
 import {
-  WebSocketMessage,
   WebSocketRequestEvents,
   WebSocketResponseEvents,
   WSContainerLogsSubscribeRequestMessage,
   WSCreateContainerRequestMessage,
+  WSRequestMessage,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
 import { User } from '@prisma/client';
+import type { AppSocket } from '../types/app-socket-io-types';
 
 export interface EventHandlerOptions {
   fastify: FastifyInstance;
-  socket: Socket;
-  message: WebSocketMessage;
+  socket: AppSocket;
+  message: WSRequestMessage<unknown>;
   user: User;
 }
 
@@ -23,13 +23,14 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
   [WebSocketRequestEvents.ContainerLogsSubscribeRequest]: async (options) => {
     const { fastify, socket, message } = options;
     const castMessage = message as WSContainerLogsSubscribeRequestMessage;
-    const logsStream = await fastify.dockerService.containerLogs({
-      dbContainerId: parseInt(castMessage.dbContainerId),
-      tail: castMessage.tail,
+    const { dbContainerId, tail } = castMessage;
+    const logsStream = await fastify.dockerService.listenContainerLogs({
+      dbContainerId,
+      tail,
     });
     logsStream.on('data', (data) => {
-      socket.emit('message', {
-        event: WebSocketResponseEvents.ContainerLogsResponse,
+      socket.emit(WebSocketResponseEvents.ContainerLogsResponse, {
+        dbContainerId,
         text: data.toString(),
       });
     });
@@ -39,7 +40,7 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
     const { fastify, socket, message } = options;
     const castMessage = message as WSCreateContainerRequestMessage;
     const imageName = 'tempimage';
-    const containerName = castMessage.containerName ?? 'tempcontainer';
+    const containerName = castMessage.containerName || 'tempcontainer';
     const container = await fastify.prisma.container.create({
       data: {
         dockerName: containerName,
@@ -57,8 +58,7 @@ export const webSocketEventHandlers: { [key in WebSocketRequestEvents]: EventHan
       });
     } catch (error) {
       if (error instanceof Error) {
-        socket.emit('message', {
-          event: WebSocketResponseEvents.CreateContainerResponse,
+        socket.emit(WebSocketResponseEvents.CreateContainerResponse, {
           error: error.message,
         });
       }

@@ -12,7 +12,7 @@ import { containerLogsActions } from '../../features/container/containerLogsSlic
 
 export const ContainerPage = () => {
   const params = useParams<{ id: string }>();
-  const dbContainerId = params.id as string;
+  const dbContainerId = parseInt(params.id as string);
   const dispatch = useAppDispatch();
   const container = containersSelectors.selectById(store.getState(), dbContainerId);
   const status = useAppSelector((state) => state.getContainer.status);
