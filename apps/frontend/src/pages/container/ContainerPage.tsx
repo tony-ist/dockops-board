@@ -5,10 +5,10 @@ import React, { useEffect } from 'react';
 import { fetchContainerByIdThunk } from '../../features/container/getContainerSlice';
 import { Box, Button } from '@mui/material';
 import { LogsViewer } from '../../components/logs-viewer/LogsViewer';
-import { startContainerThunk } from '../../features/container/startContainerSlice';
-import { stopContainerThunk } from '../../features/container/stopContainerSlice';
 import { containerLogsActions } from '../../features/container/containerLogsSlice';
 import { ContainerStatusIndicator } from '../../components/status-indicator/ContainerStatusIndicator';
+import styles from './ContainerPage.module.css';
+import { startContainerThunk, stopContainerThunk } from '../../features/container/updateContainerSlice';
 
 export const ContainerPage = () => {
   const params = useParams<{ id: string }>();
@@ -16,6 +16,7 @@ export const ContainerPage = () => {
   const dispatch = useAppDispatch();
   const container = useAppSelector((state) => containersSelectors.selectById(state, dbContainerId));
   const containerLogs = useAppSelector((state) => state.containerLogs.messages);
+  const updateError = useAppSelector((state) => state.updateContainer.error);
 
   useEffect(() => {
     dispatch(containerLogsActions.clear());
@@ -57,6 +58,7 @@ export const ContainerPage = () => {
       <Box>{container.dockerState}</Box>
       <Box>{container.createdAt}</Box>
       <ContainerStatusIndicator container={container} />
+      {updateError && <Box className={styles.error}>Update container error {updateError}</Box>}
       {containerLogs.length > 0 && <LogsViewer logs={containerLogs} />}
     </>
   );

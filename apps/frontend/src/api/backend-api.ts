@@ -40,7 +40,10 @@ export function createAppAsyncThunk<Request, Response>(
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return thunkAPI.rejectWithValue(error.message, { status: error?.response?.status });
+        return thunkAPI.rejectWithValue(error.message, {
+          message: error.response?.data.message,
+          status: error?.response?.status,
+        });
       }
       return thunkAPI.rejectWithValue(`Unknown error: ${error}`, {});
     }
