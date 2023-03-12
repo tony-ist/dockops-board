@@ -3,9 +3,11 @@ import { Box, Button, Container } from '@mui/material';
 import { AddBox, Refresh } from '@mui/icons-material';
 import { fetchContainersThunk } from '../../features/container/containersSlice';
 import { useAppDispatch } from '../../store/hooks';
+import { useNavigate } from 'react-router-dom';
 
 export const RootPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -34,7 +36,7 @@ export const RootPage = () => {
           <Button variant='contained' endIcon={<Refresh />} onClick={() => dispatch(fetchContainersThunk())}>
             refresh
           </Button>
-          <Button variant='contained' endIcon={<AddBox />}>
+          <Button variant='contained' endIcon={<AddBox />} onClick={() => navigate('/container/create')}>
             new
           </Button>
         </Box>
