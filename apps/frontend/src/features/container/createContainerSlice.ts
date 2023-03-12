@@ -1,8 +1,8 @@
-import { createAction, createSlice } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Status } from '../../types/statusType';
 import { NullableError } from '../../types/nullableErrorType';
 import { api, createAppAsyncThunk } from '../../api/backend-api';
-import { WSCreateContainerRequestPayload } from 'common-src';
+import { WSCreateContainerRequestPayload, WSCreateContainerResponsePayload, WSErrorResponseMessage } from 'common-src';
 
 interface ContainerListState {
   dbContainerId: number | null;
@@ -29,12 +29,12 @@ const createContainerSlice = createSlice({
   name: 'createContainer',
   initialState,
   reducers: {
-    wsSuccess: (state, action) => {
+    wsSuccess: (state, action: PayloadAction<WSCreateContainerResponsePayload>) => {
       state.error = null;
       state.status = 'succeeded';
       state.dbContainerId = action.payload.container.id;
     },
-    wsError: (state, action) => {
+    wsError: (state, action: PayloadAction<WSErrorResponseMessage>) => {
       state.error = action.payload.error ?? null;
       state.status = 'failed';
     },

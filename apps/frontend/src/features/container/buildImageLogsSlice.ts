@@ -20,9 +20,13 @@ const buildImageLogsSlice = createSlice({
     clear: () => initialState,
   },
   extraReducers(builder) {
-    builder.addCase(createContainerActions.wsError, (state, action) => {
-      state.messages.push({ text: action.payload.error as string });
-    });
+    builder
+      .addCase(createContainerActions.wsSuccess, (state, action) => {
+        state.messages.push({ text: action.payload.message });
+      })
+      .addCase(createContainerActions.wsError, (state, action) => {
+        state.messages.push({ text: action.payload.error });
+      });
   },
 });
 

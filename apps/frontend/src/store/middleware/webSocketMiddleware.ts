@@ -107,6 +107,7 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
 
       if (actionCreator !== undefined) {
         store.dispatch(actionCreator(message));
+        return;
       }
 
       // eslint-disable-next-line no-console
