@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import styles from './ContainerList.module.css';
 import { containersSelectors, fetchContainersThunk } from '../../features/container/containersSlice';
-import { ScrollableBox } from '../scrollable-box/ScrollableBox';
 import { ContainerListItem } from './ContainerListItem';
 
 export const ContainerList = () => {
@@ -24,15 +23,10 @@ export const ContainerList = () => {
   }
 
   return (
-    <ScrollableBox
-      sx={{
-        height: 'calc(100vh - 240px)',
-        paddingRight: 2,
-      }}
-    >
+    <>
       {containerList.map((container, index) => (
         <ContainerListItem container={container} index={index} key={index} />
       ))}
-    </ScrollableBox>
+    </>
   );
 };
