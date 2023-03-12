@@ -38,12 +38,19 @@ export const ContainerListItem = (props: ContainerListItemOptions) => {
             <Typography variant='h6' sx={{ color: appTheme.palette.text.primary }}>
               {container.dockerName}
             </Typography>
-            <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
-              {container.buildStatus}
-            </Typography>
+            {container.buildStatus && (
+              <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
+                Build Status: {container.buildStatus}
+              </Typography>
+            )}
             <Typography variant='body2' sx={{ color: appTheme.palette.text.secondary }}>
               {container.image}
             </Typography>
+            {!container.doesExist && (
+              <Typography variant='body2' sx={{ color: appTheme.palette.error.main }}>
+                Does not exist in docker
+              </Typography>
+            )}
             <Typography
               variant='caption'
               sx={{

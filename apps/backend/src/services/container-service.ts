@@ -5,7 +5,7 @@ import { WebSocketResponseEvents } from 'common-src';
 import { FastifyInstance } from 'fastify';
 import { DockerState } from '../types/docker-state';
 import type { AppSocket } from '../types/app-socket-io-types';
-import { serializePrismaContainer } from '../serializers/container-serializers';
+import { serializeDbContainer } from '../serializers/container-serializers';
 
 export type FetchSourceBuildImageAndCreateContainerOptions = ExtractZipFromGithubOptions &
   BuildImageOptions &
@@ -77,7 +77,7 @@ export class ContainerService {
     fastify.log.info(createdContainerMessage);
     socket?.emit(WebSocketResponseEvents.CreateContainerResponse, {
       message: createdContainerMessage,
-      container: serializePrismaContainer(fastify.buildManager, container),
+      container: serializeDbContainer(fastify.buildManager, container),
     });
 
     return container;

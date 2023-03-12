@@ -87,6 +87,12 @@ export interface Container {
    * @memberof Container
    */
   buildStatus?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Container
+   */
+  doesExist: boolean;
 }
 
 export const ContainerDockerStateEnum = {
@@ -121,6 +127,7 @@ export interface DbContainerId {
    */
   dbContainerId: number;
 }
+
 /**
  *
  * @export
@@ -134,6 +141,7 @@ export interface Log {
    */
   text: string;
 }
+
 /**
  *
  * @export
@@ -147,6 +155,7 @@ export interface Message {
    */
   message: string;
 }
+
 /**
  *
  * @export
@@ -178,6 +187,7 @@ export interface User {
    */
   updatedAt?: string;
 }
+
 /**
  *
  * @export
@@ -197,6 +207,7 @@ export interface V1ContainerAllGet401Response {
    */
   description?: string;
 }
+
 /**
  *
  * @export
@@ -216,6 +227,7 @@ export interface V1ContainerCreatePost200Response {
    */
   message: string;
 }
+
 /**
  *
  * @export
@@ -253,6 +265,7 @@ export interface V1ContainerCreatePostRequest {
    */
   containerPort?: string;
 }
+
 /**
  *
  * @export
@@ -272,6 +285,7 @@ export interface V1LoginPostRequest {
    */
   password: string;
 }
+
 /**
  *
  * @export

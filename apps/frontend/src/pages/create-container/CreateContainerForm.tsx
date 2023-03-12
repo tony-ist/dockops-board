@@ -30,7 +30,7 @@ export const CreateContainerForm = () => {
           <TextFieldElement
             fullWidth={true}
             name='containerName'
-            label='Conatiner Name'
+            label='Container Name'
             variant='standard'
             required={true}
           />

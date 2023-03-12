@@ -2,7 +2,7 @@ import { DockerEvent, DockerEventAction } from '../types/docker-event-types';
 import { DockerState } from '../types/docker-state';
 import { FastifyInstance } from 'fastify';
 import { WebSocketResponseEvents } from 'common-src';
-import { serializePrismaContainer } from '../serializers/container-serializers';
+import { serializeDbContainer } from '../serializers/container-serializers';
 
 const dockerStatesByEventAction: { [key in DockerEventAction]: DockerState | undefined } = {
   [DockerEventAction.Create]: DockerState.Created,
@@ -37,7 +37,7 @@ export async function listenDockerEvents(fastify: FastifyInstance) {
       });
 
       fastify.io.emit(WebSocketResponseEvents.ContainerUpdateResponse, {
-        container: serializePrismaContainer(fastify.buildManager, updatedContainer),
+        container: serializeDbContainer(fastify.buildManager, updatedContainer),
       });
     } catch (error) {
       fastify.log.error(error);

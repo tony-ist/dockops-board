@@ -27,6 +27,7 @@ import { webSocketConnectionHandler } from './handlers/web-socket-connection-han
 import { socketIoPlugin } from './plugins/socket-io-plugin';
 import { listenDockerEvents } from './handlers/docker-events-handler';
 import { registerSocketIOMiddleware } from './middleware/socket-io-middleware';
+import { dockerSync } from './startup/docker-sync';
 
 async function run() {
   await fastify.register(fastifySwagger, {
@@ -84,6 +85,7 @@ async function run() {
   fastify.io.on('connection', (socket) => webSocketConnectionHandler(fastify, socket));
 
   await listenDockerEvents(fastify);
+  await dockerSync(fastify);
 
   await fastify.listen({ host: '0.0.0.0', port: config.port });
 }

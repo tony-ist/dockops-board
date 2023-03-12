@@ -15,7 +15,7 @@ import {
   WebSocketResponseEvents,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
-import { serializePrismaContainer } from '../serializers/container-serializers';
+import { serializeDbContainer } from '../serializers/container-serializers';
 
 // Error "Target allows only 0 element(s) but source may have more." means you forgot "references" for type in common-src/types/model-types.ts
 // https://github.com/ThomasAribart/json-schema-to-ts#references
@@ -29,7 +29,7 @@ export async function containerController(fastify: FastifyInstance) {
       const { prisma, buildManager } = fastify;
       const containers = await prisma.container.findMany();
       const result: GetContainerAllResponse = containers.map((container) =>
-        serializePrismaContainer(buildManager, container)
+        serializeDbContainer(buildManager, container)
       );
       reply.send(result);
     },
@@ -44,7 +44,7 @@ export async function containerController(fastify: FastifyInstance) {
       const { dbContainerId } = request.params;
       const { prisma, buildManager } = fastify;
       const container = await prisma.container.findFirstOrThrow({ where: { id: parseInt(dbContainerId) } });
-      const serializedContainer = serializePrismaContainer(buildManager, container);
+      const serializedContainer = serializeDbContainer(buildManager, container);
       reply.send(serializedContainer);
     },
   });
@@ -100,7 +100,7 @@ export async function containerController(fastify: FastifyInstance) {
 
       reply.send({
         message: 'Fetching sources, building and creating a container. Sending results via websocket...',
-        container: serializePrismaContainer(buildManager, container),
+        container: serializeDbContainer(buildManager, container),
       });
     },
   });
