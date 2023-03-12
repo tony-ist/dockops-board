@@ -1,4 +1,4 @@
-import { Button, Input } from '@mui/material';
+import { Box, Button, Input, Typography } from '@mui/material';
 import { loginThunk } from '../../features/login/loginSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useEffect, useState } from 'react';
@@ -26,10 +26,29 @@ export const LoginPage = () => {
   }
 
   return (
-    <div>
-      <Input onChange={(event) => setEmail(event.target.value)} placeholder='Email' />
-      <Input onChange={(event) => setPassword(event.target.value)} type='password' placeholder='Password' />
-      <Button onClick={login}>Login</Button>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          padding: 2,
+          '& > *:not(:last-child)': {
+            marginBottom: '20px',
+          },
+        }}
+      >
+        <Typography variant='h4'>Dockops Board Login</Typography>
+        <Input onChange={(event) => setEmail(event.target.value)} type='email' placeholder='Email' />
+        <Input onChange={(event) => setPassword(event.target.value)} type='password' placeholder='Password' />
+        <Button onClick={login}>Login</Button>
+      </Box>
+    </Box>
   );
 };
