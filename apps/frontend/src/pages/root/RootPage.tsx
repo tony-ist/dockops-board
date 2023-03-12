@@ -1,5 +1,5 @@
 import { ContainerList } from '../../components/container-list/ContainerList';
-import { Button, Container } from '@mui/material';
+import { Box, Button, Container } from '@mui/material';
 import { AddBox, Refresh } from '@mui/icons-material';
 import { fetchContainersThunk } from '../../features/container/containersSlice';
 import { useAppDispatch } from '../../store/hooks';
@@ -9,24 +9,37 @@ export const RootPage = () => {
 
   return (
     <>
-      <Container
-        maxWidth='xl'
+      <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'right',
-          '& > button': {
-            marginLeft: 2,
-          },
+          position: 'fixed',
+          top: '60px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 40,
+          width: '100%',
+          textAlign: 'right ',
         }}
       >
-        <Button variant='contained' endIcon={<Refresh />} onClick={() => dispatch(fetchContainersThunk())}>
-          refresh
-        </Button>
-        <Button variant='contained' endIcon={<AddBox />}>
-          new
-        </Button>
-      </Container>
-      <Container maxWidth='xl' sx={{ p: { md: 3, sm: 1, xs: 1 } }}>
+        <Box
+          sx={{
+            marginRight: 2,
+            padding: 2,
+            borderRadius: '5px',
+            float: 'right',
+            '& > button:not(:last-child)': {
+              marginRight: 2,
+            },
+          }}
+        >
+          <Button variant='contained' endIcon={<Refresh />} onClick={() => dispatch(fetchContainersThunk())}>
+            refresh
+          </Button>
+          <Button variant='contained' endIcon={<AddBox />}>
+            new
+          </Button>
+        </Box>
+      </Box>
+      <Container maxWidth='xl' sx={{ marginTop: '50px' }}>
         <ContainerList />
       </Container>
     </>
