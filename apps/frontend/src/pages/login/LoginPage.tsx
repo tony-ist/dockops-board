@@ -1,7 +1,6 @@
-import { Box, Button, FormControl, Typography } from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, Typography } from '@mui/material';
 import { loginThunk } from '../../features/login/loginSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { FormContainer, TextFieldElement } from 'react-hook-form-mui';
 
@@ -13,13 +12,6 @@ interface FormProps {
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
   const loginStatus = useAppSelector((state) => state.login.status);
-
-  useEffect(() => {
-    if (loginStatus === 'failed') {
-      // TODO: Use MUI Alert
-      window.alert('Wrong email or password');
-    }
-  }, [loginStatus]);
 
   if (loginStatus === 'succeeded') {
     return <Navigate to='/' replace={true} />;
@@ -54,6 +46,11 @@ export const LoginPage = () => {
             <Typography variant='h4'>Dockops Board Login</Typography>
             <TextFieldElement name='email' label='email' type='email' required={true} />
             <TextFieldElement name='password' label='password' type='password' required={true} />
+            {loginStatus === 'failed' && (
+              <FormHelperText variant='filled' filled={true} error={true}>
+                Wrong email or password
+              </FormHelperText>
+            )}
             <Button type='submit' sx={{ mb: 2 }}>
               Login
             </Button>
