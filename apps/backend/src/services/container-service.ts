@@ -72,7 +72,7 @@ export class ContainerService {
     });
 
     const container = await fastify.prisma.container.findFirstOrThrow({ where: { dockerId: containerDockerId } });
-    const createdContainerMessage = `Created docker container with docker id "${containerDockerId}" and DB id ${container.id}.`;
+    const createdContainerMessage = `Created docker container with docker id "${containerDockerId}" and DB id "${container.id}".`;
 
     fastify.log.info(createdContainerMessage);
     socket?.emit(WebSocketResponseEvents.CreateContainerResponse, {

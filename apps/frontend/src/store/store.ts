@@ -10,6 +10,7 @@ import { loginReducer } from '../features/login/loginSlice';
 import { getContainerReducer } from '../features/container/getContainerSlice';
 import { buildImageLogsReducer } from '../features/container/buildImageLogsSlice';
 import { updateContainerReducer } from '../features/container/updateContainerSlice';
+import { snackbarReducer } from '../features/snackbar/snackbarSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     webSocket: webSocketReducer,
     sideBar: sideBarReducer,
     login: loginReducer,
+    snackbar: snackbarReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(webSocketMiddleware).concat(jwtTokenMiddleware),
 });

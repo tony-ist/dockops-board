@@ -83,6 +83,15 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
     store.dispatch(webSocketActions.connectionEstablished());
   });
 
+  socket.onAny((event, ...args) => {
+    if (Object.keys(WebSocketResponseEvents).includes(event)) {
+      return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.error(`Websocket received unknown event type "${event}" with args "${JSON.stringify(args)}".`);
+  });
+
   (Object.keys(WebSocketResponseEvents) as Array<keyof typeof WebSocketResponseEvents>).forEach((responseEvent) => {
     // TODO: Proper type for WSResponseMessage instead of any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -101,11 +110,10 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
         return;
       }
 
-      const errorMessage = `Unknown event type ${responseEvent} for web socket message ${message}.`;
       // eslint-disable-next-line no-console
-      console.error(errorMessage);
-      // TODO: Use MUI Alert
-      window.alert(errorMessage);
+      console.error(
+        `No action creator found for event "${responseEvent}", message "${JSON.stringify(message, null, 2)}"`
+      );
     });
   });
 

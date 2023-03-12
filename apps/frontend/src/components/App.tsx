@@ -3,7 +3,7 @@ import { RootPage } from '../pages/root/RootPage';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';
-import { CreateContainerPage } from '../pages/create-contaner/CreateContainerPage';
+import { CreateContainerPage } from '../pages/create-container/CreateContainerPage';
 import { ContainerPage } from '../pages/container/ContainerPage';
 import { MainLayout } from '../layouts/MainLayout';
 
@@ -32,6 +32,13 @@ const appTheme = createTheme({
     button: {
       fontFamily: '"Segoe UI"',
       fontWeight: 600,
+    },
+  },
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: { color: 'red' },
+      },
     },
   },
 });

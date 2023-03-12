@@ -54,3 +54,7 @@
   font-family: 'RobotoMono-ThinItalic';
   src: url('/public/fonts/RobotoMono-ThinItalic.ttf') format('truetype');
 }
+
+body {
+  margin: 0;
+}
