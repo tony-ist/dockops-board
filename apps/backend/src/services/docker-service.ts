@@ -1,4 +1,4 @@
-import Dockerode, { ContainerCreateOptions } from 'dockerode';
+import { ContainerCreateOptions } from 'dockerode';
 import path from 'path';
 import fs from 'node:fs';
 import recursiveReadDir from 'recursive-readdir';
@@ -40,9 +40,11 @@ export class DockerService {
     this.fastify = fastify;
   }
 
-  async getAllContainers(docker: Dockerode) {
+  async getAllContainersInfo() {
+    const { fastify } = this;
+    const { docker } = fastify;
     const containerInfos = await docker.listContainers({ all: true });
-    return containerInfos.map((info) => ({ image: info.Image }));
+    return containerInfos;
   }
 
   async buildImage(options: BuildImageOptions) {

@@ -31,8 +31,9 @@ export const containerSchema = {
     createdAt: { type: 'string' },
     updatedAt: { type: 'string' },
     buildStatus: { type: 'string' },
+    doesExist: { type: 'boolean' },
   },
-  required: ['id', 'dockerName'],
+  required: ['id', 'dockerName', 'doesExist'],
   additionalProperties: false,
 } as const;
 
