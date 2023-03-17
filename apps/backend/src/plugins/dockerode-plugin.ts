@@ -2,7 +2,7 @@ import fastifyPlugin from 'fastify-plugin';
 import { FastifyPluginAsync } from 'fastify';
 import Dockerode from 'dockerode';
 import Docker from 'dockerode';
-import * as config from '../config';
+import { config } from '../config';
 
 declare module 'fastify' {
   interface FastifyInstance {

@@ -1,7 +1,7 @@
 import fastifyPlugin from 'fastify-plugin';
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import { fastifyJwt } from '@fastify/jwt';
-import * as config from '../config';
+import { config } from '../config';
 import { User } from '@prisma/client';
 import { JwtToken } from '../types/jwt-token';
 

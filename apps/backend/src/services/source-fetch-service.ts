@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import unzip from 'unzip-stream';
 import stream from 'node:stream/promises';
 import { FastifyInstance } from 'fastify';
-import * as config from '../config';
+import { config } from '../config';
 
 export interface ExtractZipFromGithubOptions {
   githubURL: string;

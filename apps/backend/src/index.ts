@@ -1,5 +1,5 @@
 import cors from '@fastify/cors';
-import * as config from './config';
+import { config } from './config';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import fastifyStatic from '@fastify/static';

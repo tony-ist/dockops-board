@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import * as config from './config';
+import { config } from './config';
 
 function getLoggerOptions(environment: string) {
   if (environment === 'PRODUCTION') {
