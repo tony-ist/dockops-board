@@ -82,6 +82,7 @@ export const SideBar = () => {
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
   const closedWidth = isSideBarTemporary ? 0 : `calc(${theme.spacing(7)} + 1px)`;
   const sxProps: CSSObject = {
+    overflowY: 'clip',
     width: isOpen ? SIDEBAR_WIDTH : closedWidth,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
