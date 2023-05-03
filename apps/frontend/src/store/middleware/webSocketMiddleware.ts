@@ -1,6 +1,6 @@
 import { WebSocketResponseEvents, WSResponseMessage } from 'common-src';
-import { AnyAction, Dispatch, Middleware, MiddlewareAPI } from 'redux';
-import { io, Socket } from 'socket.io-client';
+import { AnyAction, Middleware } from 'redux';
+import { io } from 'socket.io-client';
 import { webSocketActions } from '../../features/web-socket/webSocketSlice';
 import {
   actionsByResponseEvents,
@@ -10,37 +10,42 @@ import {
 } from '../../features/web-socket/webSocketActions';
 import { ActionCreatorWithOptionalPayload } from '@reduxjs/toolkit';
 import type { AppSocket } from '../../types/appSocketIOTypes';
+import { loginActions } from '../../features/login/loginSlice';
 
-let socket: AppSocket;
+let socket: AppSocket | null = null;
 
 function getWebSocketEvent(actionType: string) {
   return webSocketRequestEventsByActionType[actionType];
 }
 
-function isSocketConnected(socket: Socket, store: MiddlewareAPI<Dispatch>) {
-  return socket !== undefined && store.getState().webSocket.isConnected;
+function isSocketConnected(socket: AppSocket | null): socket is AppSocket {
+  return socket !== null;
 }
 
 function isWebSocketRequestAction(action: AnyAction) {
   return webSocketRequestActions.some((r) => r.match(action));
 }
 
-function isStartConnectingAction(socket: Socket, action: AnyAction) {
-  return socket !== undefined || !webSocketActions.startConnecting.match(action);
+function shouldStartConnecting(action: AnyAction) {
+  return webSocketActions.startConnecting.match(action);
 }
 
 function isWSUnsupportedAction(action: AnyAction) {
   return webSocketActions.unsupported.match(action);
 }
 
+function stringify(obj: object | null) {
+  return JSON.stringify(obj, null, 2);
+}
+
 export const webSocketMiddleware: Middleware = (store) => (next) => (action) => {
   if (isWSUnsupportedAction(action)) {
     // eslint-disable-next-line no-console
-    console.error(`Unsupported WebSocket action: "${JSON.stringify(action, null, 2)}".`);
+    console.error(`Unsupported WebSocket action: "${stringify(action)}".`);
     return next(action);
   }
 
-  if (isSocketConnected(socket, store) && isWebSocketRequestAction(action)) {
+  if (isSocketConnected(socket) && isWebSocketRequestAction(action)) {
     const jwtToken = localStorage.getItem('jwtToken');
     const event = getWebSocketEvent(action.type);
 
@@ -57,7 +62,7 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
     return next(action);
   }
 
-  if (isStartConnectingAction(socket, action)) {
+  if (!shouldStartConnecting(action)) {
     return next(action);
   }
 
@@ -74,9 +79,22 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
   socket.on('connect_error', (error) => {
     // eslint-disable-next-line no-console
     console.error('WebSocket connect error:', error);
+
+    if (error.message.startsWith('AuthorizationError')) {
+      // eslint-disable-next-line no-console
+      console.log('Dispatching logout action...');
+      socket = null;
+      store.dispatch(loginActions.logout());
+    }
   });
 
   socket.on('connect', () => {
+    if (!isSocketConnected(socket)) {
+      // eslint-disable-next-line no-console
+      console.error(`Impossible state: socket is not connected in on connect hook. Socket: "${socket}".".`);
+      return;
+    }
+
     // eslint-disable-next-line no-console
     console.log(`Socket.io connected with id "${socket.id}".`);
     document.cookie = `socketId=${socket.id}; Path=/; SameSite=Lax`;
@@ -89,10 +107,16 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
     }
 
     // eslint-disable-next-line no-console
-    console.error(`Websocket received unknown event type "${event}" with args "${JSON.stringify(args)}".`);
+    console.error(`Websocket received unknown event type "${event}" with args "${stringify(args)}".`);
   });
 
   (Object.keys(WebSocketResponseEvents) as Array<keyof typeof WebSocketResponseEvents>).forEach((responseEvent) => {
+    if (!isSocketConnected(socket)) {
+      // eslint-disable-next-line no-console
+      console.error(`Impossible state: socket is not connected in on "${responseEvent}" hook. Socket: "${socket}".`);
+      return;
+    }
+
     // TODO: Proper type for WSResponseMessage instead of any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     socket.on(WebSocketResponseEvents[responseEvent], (message: WSResponseMessage<any>) => {
@@ -111,11 +135,9 @@ export const webSocketMiddleware: Middleware = (store) => (next) => (action) => 
       }
 
       // eslint-disable-next-line no-console
-      console.error(
-        `No action creator found for event "${responseEvent}", message "${JSON.stringify(message, null, 2)}"`
-      );
+      console.error(`No action creator found for event "${responseEvent}", message "${stringify(message)}"`);
     });
   });
 
-  next(action);
+  return next(action);
 };

@@ -5,6 +5,7 @@ import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';
 import { CreateContainerPage } from '../pages/create-container/CreateContainerPage';
 import { ContainerPage } from '../pages/container/ContainerPage';
+import { PrivateLayout } from '../layouts/PrivateLayout';
 import { MainLayout } from '../layouts/MainLayout';
 
 const appTheme = createTheme({
@@ -48,14 +49,16 @@ export const App = () => {
     <ThemeProvider theme={appTheme}>
       <Router>
         <Routes>
-          <Route element={<PrivateRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path='/' element={<RootPage />} />
-              <Route path='/container/create' element={<CreateContainerPage />} />
-              <Route path='/container/:id' element={<ContainerPage />} />
+          <Route element={<MainLayout />}>
+            <Route element={<PrivateRoute />}>
+              <Route element={<PrivateLayout />}>
+                <Route path='/' element={<RootPage />} />
+                <Route path='/container/create' element={<CreateContainerPage />} />
+                <Route path='/container/:id' element={<ContainerPage />} />
+              </Route>
             </Route>
+            <Route path='/login' element={<LoginPage />} />
           </Route>
-          <Route path='/login' element={<LoginPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

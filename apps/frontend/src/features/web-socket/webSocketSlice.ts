@@ -1,4 +1,5 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
+import { loginActions } from '../login/loginSlice';
 
 export interface WebSocketState {
   isEstablishingConnection: boolean;
@@ -21,6 +22,9 @@ const webSocketSlice = createSlice({
       state.isConnected = true;
       state.isEstablishingConnection = false;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(loginActions.logout, () => initialState);
   },
 });
 
