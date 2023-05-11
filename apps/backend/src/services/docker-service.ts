@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'node:fs';
 import recursiveReadDir from 'recursive-readdir';
 import { FastifyInstance } from 'fastify';
-import * as config from '../config';
+import { config } from '../config';
 
 export interface BuildImageOptions {
   imageName: string;

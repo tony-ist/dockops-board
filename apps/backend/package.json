@@ -7,11 +7,13 @@
     "dev:watch": "nodemon",
     "build": "rimraf dist && tsc",
     "start:production": "node dist/index.js",
-    "lint": "eslint {**/*,*}.{js,ts,jsx,tsx} --ignore-path ../../.gitignore",
+    "lint": "eslint \"{**/*,*}.{js,ts,jsx,tsx}\" --ignore-path ../../.gitignore",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "prisma:generate": "prisma generate",
+    "test": "vitest",
+    "db:test:push": "dotenv -e .env.test -- prisma db push",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:push": "dotenv -e .env.local -- prisma db push",
     "db:status": "dotenv -e .env.local -- prisma migrate status",
@@ -38,8 +40,7 @@
     "recursive-readdir": "^2.2.3",
     "socket.io": "^4.6.1",
     "ts-node": "^10.9.1",
-    "unzip-stream": "^0.3.1",
-    "wtfnode": "^0.9.1"
+    "unzip-stream": "^0.3.1"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.14",
@@ -55,6 +56,7 @@
     "pino-pretty": "^9.3.0",
     "prisma": "^4.10.1",
     "tsconfig": "*",
-    "typescript": "^4.5.3"
+    "typescript": "^4.5.3",
+    "vitest": "^0.29.2"
   }
 }

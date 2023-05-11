@@ -1,14 +1,27 @@
 import dotenv from 'dotenv';
 
-dotenv.config({ path: '.env.local' });
+function loadDotEnv(dotEnvFilePath: string) {
+  dotenv.config({ path: dotEnvFilePath });
+}
 
-export const dockerSockPath = process.env.DOCKER_SOCK_PATH ?? '/var/run/docker.sock';
-export const port = parseInt(process.env.PORT ?? '3000');
-export const nodeEnv = process.env.NODE_ENV ?? 'PRODUCTION';
-export const sqliteURL = process.env.SQLITE_URL ?? 'file:/etc/dockerops-board/db/production.db?connection_limit=1';
-export const serveStatic = process.env.SERVE_STATIC ?? 'TRUE';
-export const temporaryDirectoryPath = process.env.TEMPORARY_DIRECTORY_PATH ?? '/etc/dockerops-board/repos';
-export const frontendURL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
-export const secret = process.env.SECRET;
-export const bcryptSaltWorkFactor = parseInt(process.env.BCRYPT_SALT_WORK_FACTOR ?? '12');
-export const jwtExpiration = process.env.JWT_EXPIRATION ?? '30d';
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+  // Load development config by default
+  loadDotEnv('.env.local');
+}
+
+if (process.env.TEMPORARY_DIRECTORY_PATH === undefined) {
+  throw new Error('Set TEMPORARY_DIRECTORY_PATH environment variable before running dockops-board.');
+}
+
+export const config = {
+  dockerSockPath: process.env.DOCKER_SOCK_PATH ?? '/var/run/docker.sock',
+  port: parseInt(process.env.PORT ?? '3000'),
+  nodeEnv: process.env.NODE_ENV,
+  sqliteURL: process.env.SQLITE_URL,
+  serveStatic: process.env.SERVE_STATIC ?? 'TRUE',
+  temporaryDirectoryPath: process.env.TEMPORARY_DIRECTORY_PATH,
+  frontendURL: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+  secret: process.env.SECRET,
+  bcryptSaltWorkFactor: parseInt(process.env.BCRYPT_SALT_WORK_FACTOR ?? '12'),
+  jwtExpiration: process.env.JWT_EXPIRATION ?? '30d',
+};

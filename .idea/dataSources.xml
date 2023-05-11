@@ -22,5 +22,12 @@
       <jdbc-url>jdbc:sqlite:/etc/dockops-board/db/production.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="dockops-board-test" uuid="eeb5bbee-3aa9-4511-b642-c0e0e15fb37d">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/apps/backend/prisma/local.test.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

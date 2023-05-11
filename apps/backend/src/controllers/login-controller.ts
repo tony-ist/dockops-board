@@ -1,6 +1,6 @@
 import { PostLoginRequest, postLoginSchema } from 'common-src';
 import { FastifyInstance } from 'fastify';
-import * as config from '../config';
+import { config } from '../config';
 
 export async function loginController(fastify: FastifyInstance) {
   fastify.route<{ Body: PostLoginRequest; Reply: string }>({

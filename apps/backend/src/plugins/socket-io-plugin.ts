@@ -1,7 +1,7 @@
 import fastifyPlugin from 'fastify-plugin';
 import { FastifyPluginAsync } from 'fastify';
 import { Server, ServerOptions } from 'socket.io';
-import * as config from '../config';
+import { config } from '../config';
 import { AppIOServer } from '../types/app-socket-io-types';
 
 declare module 'fastify' {
