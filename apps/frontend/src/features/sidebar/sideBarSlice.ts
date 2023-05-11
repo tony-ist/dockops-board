@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface SideBarState {
+  // TODO: Persist this value in localStorage?
   isOpen: boolean;
 }
 

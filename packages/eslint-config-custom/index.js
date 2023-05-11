@@ -1,8 +1,13 @@
 // eslint-disable-next-line no-undef
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:react/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+  ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'react-hooks'],
   ignorePatterns: ['apps/backend/tmp/'],
   settings: {
     react: {
@@ -35,6 +40,7 @@ module.exports = {
     'react/self-closing-comp': ['error', {
       'component': true,
       'html': true
-    }]
+    }],
+    'react-hooks/exhaustive-deps': 'error'
   },
 };

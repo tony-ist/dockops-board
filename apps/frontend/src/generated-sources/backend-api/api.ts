@@ -68,7 +68,7 @@ export interface Container {
    * @type {string}
    * @memberof Container
    */
-  dockerState?: string;
+  dockerState?: ContainerDockerStateEnum;
   /**
    *
    * @type {string}
@@ -87,13 +87,33 @@ export interface Container {
    * @memberof Container
    */
   buildStatus?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Container
+   */
+  doesExist: boolean;
 }
+
+export const ContainerDockerStateEnum = {
+  Created: 'created',
+  Restarting: 'restarting',
+  Running: 'running',
+  Removing: 'removing',
+  Paused: 'paused',
+  Exited: 'exited',
+  Dead: 'dead',
+} as const;
+
+export type ContainerDockerStateEnum = (typeof ContainerDockerStateEnum)[keyof typeof ContainerDockerStateEnum];
+
 /**
  *
  * @export
  * @interface ContainerAllResponse
  */
 export interface ContainerAllResponse extends Array<Container> {}
+
 /**
  *
  * @export
@@ -102,11 +122,12 @@ export interface ContainerAllResponse extends Array<Container> {}
 export interface DbContainerId {
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof DbContainerId
    */
-  dbContainerId: string;
+  dbContainerId: number;
 }
+
 /**
  *
  * @export
@@ -120,6 +141,7 @@ export interface Log {
    */
   text: string;
 }
+
 /**
  *
  * @export
@@ -133,6 +155,7 @@ export interface Message {
    */
   message: string;
 }
+
 /**
  *
  * @export
@@ -164,6 +187,7 @@ export interface User {
    */
   updatedAt?: string;
 }
+
 /**
  *
  * @export
@@ -183,6 +207,7 @@ export interface V1ContainerAllGet401Response {
    */
   description?: string;
 }
+
 /**
  *
  * @export
@@ -194,14 +219,15 @@ export interface V1ContainerCreatePost200Response {
    * @type {Container}
    * @memberof V1ContainerCreatePost200Response
    */
-  container?: Container;
+  container: Container;
   /**
    *
    * @type {string}
    * @memberof V1ContainerCreatePost200Response
    */
-  message?: string;
+  message: string;
 }
+
 /**
  *
  * @export
@@ -239,6 +265,7 @@ export interface V1ContainerCreatePostRequest {
    */
   containerPort?: string;
 }
+
 /**
  *
  * @export
@@ -258,6 +285,7 @@ export interface V1LoginPostRequest {
    */
   password: string;
 }
+
 /**
  *
  * @export
@@ -353,48 +381,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      *
-     * @param {string} dbContainerId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ContainerDbContainerIdAttachPost: async (
-      dbContainerId: string,
-      options: AxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'dbContainerId' is not null or undefined
-      assertParamExists('v1ContainerDbContainerIdAttachPost', 'dbContainerId', dbContainerId);
-      const localVarPath = `/v1/container/{dbContainerId}/attach`.replace(
-        `{${'dbContainerId'}}`,
-        encodeURIComponent(String(dbContainerId))
-      );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ContainerDbContainerIdGet: async (
-      dbContainerId: string,
+      dbContainerId: number,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'dbContainerId' is not null or undefined
@@ -425,13 +417,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {number} [tail]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ContainerDbContainerIdLogsGet: async (
-      dbContainerId: string,
+      dbContainerId: number,
       tail?: number,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
@@ -467,12 +459,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ContainerDbContainerIdStartPost: async (
-      dbContainerId: string,
+      dbContainerId: number,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'dbContainerId' is not null or undefined
@@ -503,12 +495,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1ContainerDbContainerIdStopPost: async (
-      dbContainerId: string,
+      dbContainerId: number,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'dbContainerId' is not null or undefined
@@ -635,28 +627,12 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} dbContainerId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1ContainerDbContainerIdAttachPost(
-      dbContainerId: string,
-      options?: AxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Message>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.v1ContainerDbContainerIdAttachPost(
-        dbContainerId,
-        options
-      );
-      return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-    },
-    /**
-     *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ContainerDbContainerIdGet(
-      dbContainerId: string,
+      dbContainerId: number,
       options?: AxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Container>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ContainerDbContainerIdGet(dbContainerId, options);
@@ -664,13 +640,13 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {number} [tail]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ContainerDbContainerIdLogsGet(
-      dbContainerId: string,
+      dbContainerId: number,
       tail?: number,
       options?: AxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Message>> {
@@ -683,12 +659,12 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ContainerDbContainerIdStartPost(
-      dbContainerId: string,
+      dbContainerId: number,
       options?: AxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Message>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ContainerDbContainerIdStartPost(
@@ -699,12 +675,12 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} dbContainerId
+     * @param {number} dbContainerId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1ContainerDbContainerIdStopPost(
-      dbContainerId: string,
+      dbContainerId: number,
       options?: AxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Message>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.v1ContainerDbContainerIdStopPost(
@@ -769,20 +745,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
     ): AxiosPromise<V1ContainerCreatePost200Response> {
       return localVarFp
         .v1ContainerCreatePost(requestParameters.body, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {DefaultApiV1ContainerDbContainerIdAttachPostRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1ContainerDbContainerIdAttachPost(
-      requestParameters: DefaultApiV1ContainerDbContainerIdAttachPostRequest,
-      options?: AxiosRequestConfig
-    ): AxiosPromise<Message> {
-      return localVarFp
-        .v1ContainerDbContainerIdAttachPost(requestParameters.dbContainerId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -883,20 +845,6 @@ export interface DefaultApiV1ContainerCreatePostRequest {
 }
 
 /**
- * Request parameters for v1ContainerDbContainerIdAttachPost operation in DefaultApi.
- * @export
- * @interface DefaultApiV1ContainerDbContainerIdAttachPostRequest
- */
-export interface DefaultApiV1ContainerDbContainerIdAttachPostRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof DefaultApiV1ContainerDbContainerIdAttachPost
-   */
-  readonly dbContainerId: string;
-}
-
-/**
  * Request parameters for v1ContainerDbContainerIdGet operation in DefaultApi.
  * @export
  * @interface DefaultApiV1ContainerDbContainerIdGetRequest
@@ -904,10 +852,10 @@ export interface DefaultApiV1ContainerDbContainerIdAttachPostRequest {
 export interface DefaultApiV1ContainerDbContainerIdGetRequest {
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof DefaultApiV1ContainerDbContainerIdGet
    */
-  readonly dbContainerId: string;
+  readonly dbContainerId: number;
 }
 
 /**
@@ -918,10 +866,10 @@ export interface DefaultApiV1ContainerDbContainerIdGetRequest {
 export interface DefaultApiV1ContainerDbContainerIdLogsGetRequest {
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof DefaultApiV1ContainerDbContainerIdLogsGet
    */
-  readonly dbContainerId: string;
+  readonly dbContainerId: number;
 
   /**
    *
@@ -939,10 +887,10 @@ export interface DefaultApiV1ContainerDbContainerIdLogsGetRequest {
 export interface DefaultApiV1ContainerDbContainerIdStartPostRequest {
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof DefaultApiV1ContainerDbContainerIdStartPost
    */
-  readonly dbContainerId: string;
+  readonly dbContainerId: number;
 }
 
 /**
@@ -953,10 +901,10 @@ export interface DefaultApiV1ContainerDbContainerIdStartPostRequest {
 export interface DefaultApiV1ContainerDbContainerIdStopPostRequest {
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof DefaultApiV1ContainerDbContainerIdStopPost
    */
-  readonly dbContainerId: string;
+  readonly dbContainerId: number;
 }
 
 /**
@@ -1019,22 +967,6 @@ export class DefaultApi extends BaseAPI {
   ) {
     return DefaultApiFp(this.configuration)
       .v1ContainerCreatePost(requestParameters.body, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {DefaultApiV1ContainerDbContainerIdAttachPostRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof DefaultApi
-   */
-  public v1ContainerDbContainerIdAttachPost(
-    requestParameters: DefaultApiV1ContainerDbContainerIdAttachPostRequest,
-    options?: AxiosRequestConfig
-  ) {
-    return DefaultApiFp(this.configuration)
-      .v1ContainerDbContainerIdAttachPost(requestParameters.dbContainerId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

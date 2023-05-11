@@ -1,14 +1,15 @@
 import { BuildImageOptions, CreateContainerOptions } from './docker-service';
 import { ExtractZipFromGithubOptions } from './source-fetch-service';
 import stream from 'node:stream/promises';
-import { Socket } from 'socket.io';
 import { WebSocketResponseEvents } from 'common-src';
 import { FastifyInstance } from 'fastify';
 import { DockerState } from '../types/docker-state';
+import type { AppSocket } from '../types/app-socket-io-types';
+import { serializeDbContainer } from '../serializers/container-serializers';
 
 export type FetchSourceBuildImageAndCreateContainerOptions = ExtractZipFromGithubOptions &
   BuildImageOptions &
-  CreateContainerOptions & { dbContainerId: number; socket?: Socket };
+  CreateContainerOptions & { dbContainerId: number; socket?: AppSocket };
 
 export class ContainerService {
   fastify: FastifyInstance;
@@ -22,8 +23,8 @@ export class ContainerService {
     const { fastify } = this;
 
     const startExtractingMessage = 'Start downloading and extracting sources.';
-    socket?.emit('message', {
-      event: WebSocketResponseEvents.BuildImageLogsResponse,
+    socket?.emit(WebSocketResponseEvents.BuildImageLogsResponse, {
+      dbContainerId,
       text: startExtractingMessage,
     });
     fastify.log.info(startExtractingMessage);
@@ -31,8 +32,8 @@ export class ContainerService {
     await fastify.sourceFetchService.extractZipFromGithub(options);
 
     const finishedExtractingMessage = 'Finished extracting downloaded archive.';
-    socket?.emit('message', {
-      event: WebSocketResponseEvents.BuildImageLogsResponse,
+    socket?.emit(WebSocketResponseEvents.BuildImageLogsResponse, {
+      dbContainerId,
       text: finishedExtractingMessage,
     });
     fastify.log.info(finishedExtractingMessage);
@@ -40,8 +41,8 @@ export class ContainerService {
     const buildStream = await fastify.dockerService.buildImage(options);
     buildStream.on('data', (data) => {
       const message = data.toString();
-      socket?.emit('message', {
-        event: WebSocketResponseEvents.BuildImageLogsResponse,
+      socket?.emit(WebSocketResponseEvents.BuildImageLogsResponse, {
+        dbContainerId,
         text: data.toString(),
       });
       fastify.log.info(message);
@@ -70,18 +71,13 @@ export class ContainerService {
       },
     });
 
-    const createdContainerMessage = `Created container with docker id "${containerDockerId}".`;
-    fastify.log.info(createdContainerMessage);
-    socket?.emit('message', {
-      event: WebSocketResponseEvents.BuildImageLogsResponse,
-      text: createdContainerMessage,
-    });
-
     const container = await fastify.prisma.container.findFirstOrThrow({ where: { dockerId: containerDockerId } });
+    const createdContainerMessage = `Created docker container with docker id "${containerDockerId}" and DB id "${container.id}".`;
 
-    socket?.emit('message', {
-      event: WebSocketResponseEvents.CreateContainerResponse,
-      container,
+    fastify.log.info(createdContainerMessage);
+    socket?.emit(WebSocketResponseEvents.CreateContainerResponse, {
+      message: createdContainerMessage,
+      container: serializeDbContainer(fastify.buildManager, container),
     });
 
     return container;

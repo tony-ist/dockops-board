@@ -1,0 +1,15 @@
+.containerListItem {
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 5px;
+  transition: border 0.2s ease-out;
+  text-decoration: none;
+}
+
+.containerListItemWrapper:not(:last-child) .containerListItem {
+  margin-bottom: 10px;
+}
+
+.containerListItemWrapper:last-child .containerListItem {
+  margin-bottom: 2px;
+}

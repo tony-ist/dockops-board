@@ -8,20 +8,22 @@ import { containerLogsReducer } from '../features/container/containerLogsSlice';
 import { jwtTokenMiddleware } from './middleware/jwtTokenMiddleware';
 import { loginReducer } from '../features/login/loginSlice';
 import { getContainerReducer } from '../features/container/getContainerSlice';
-import { startContainerReducer } from '../features/container/startContainerSlice';
-import { stopContainerReducer } from '../features/container/stopContainerSlice';
+import { buildImageLogsReducer } from '../features/container/buildImageLogsSlice';
+import { updateContainerReducer } from '../features/container/updateContainerSlice';
+import { snackbarReducer } from '../features/snackbar/snackbarSlice';
 
 export const store = configureStore({
   reducer: {
     containers: containersReducer,
     getContainer: getContainerReducer,
     createContainer: createContainerReducer,
-    startContainer: startContainerReducer,
-    stopContainer: stopContainerReducer,
+    updateContainer: updateContainerReducer,
     containerLogs: containerLogsReducer,
+    buildLogs: buildImageLogsReducer,
     webSocket: webSocketReducer,
     sideBar: sideBarReducer,
     login: loginReducer,
+    snackbar: snackbarReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(webSocketMiddleware).concat(jwtTokenMiddleware),
 });

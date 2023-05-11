@@ -1,4 +1,4 @@
-import { Container, DbContainerId, Log } from './model-types';
+import { Container, DbContainerId, Log, Message } from './model-types';
 import { GetContainerLogsRequest, PostCreateContainerRequest } from './container-types';
 
 export enum WebSocketRequestEvents {
@@ -12,40 +12,26 @@ export enum WebSocketResponseEvents {
   // InteractiveShellResponse = 'InteractiveShellResponse',
   BuildImageLogsResponse = 'BuildImageLogsResponse',
   CreateContainerResponse = 'CreateContainerResponse',
-  ErrorResponse = 'ErrorResponse',
+  ContainerUpdateResponse = 'ContainerUpdateResponse',
 }
 
-// Use WS Request types on frontend only
+export type WSContainerPayload = { container: Container };
+
 export type WSCreateContainerRequestPayload = PostCreateContainerRequest;
-export type WSCreateContainerResponsePayload = { container: Container };
+export type WSCreateContainerResponsePayload = WSContainerPayload & Message;
+export type WSContainerUpdateResponsePayload = WSContainerPayload;
 export type WSContainerLogsSubscribeRequestPayload = GetContainerLogsRequest & DbContainerId;
 export type WSContainerLogsResponsePayload = Log & DbContainerId;
 export type WSBuildImageLogsResponsePayload = Log & DbContainerId;
 
-// Use WS Request Messages on backend only
-// Use WS Response Messages on frontend only
-export interface WSContainerLogsSubscribeRequestMessage extends WebSocketMessage, WSContainerLogsSubscribeRequestPayload {
-  event: WebSocketRequestEvents.ContainerLogsSubscribeRequest;
-}
+export type WSCreateContainerRequestMessage = WSRequestMessage<WSCreateContainerRequestPayload>;
+export type WSCreateContainerResponseMessage = WSResponseMessage<WSCreateContainerResponsePayload>;
+export type WSContainerUpdateResponseMessage = WSResponseMessage<WSContainerUpdateResponsePayload>;
+export type WSContainerLogsSubscribeRequestMessage = WSRequestMessage<WSContainerLogsSubscribeRequestPayload>;
+export type WSContainerLogsResponseMessage = WSResponseMessage<WSContainerLogsResponsePayload>;
+export type WSBuildImageLogsResponseMessage = WSResponseMessage<WSBuildImageLogsResponsePayload>;
 
-export interface WSContainerLogsResponseMessage extends WebSocketMessage, WSContainerLogsResponsePayload {
-  event: WebSocketResponseEvents.ContainerLogsResponse;
-}
+export type WSRequestMessage<Payload> = { jwtToken: string } & Payload;
 
-export interface WSCreateContainerRequestMessage extends WebSocketMessage, WSCreateContainerRequestPayload {
-  event: WebSocketRequestEvents.CreateContainerRequest;
-}
-
-export interface WSCreateContainerResponseMessage extends WebSocketMessage, WSCreateContainerResponsePayload {
-  event: WebSocketResponseEvents.CreateContainerResponse;
-}
-
-export interface WSBuildImageLogsResponseMessage extends WebSocketMessage, WSBuildImageLogsResponsePayload {
-  event: WebSocketResponseEvents.BuildImageLogsResponse;
-}
-
-export interface WebSocketMessage {
-  event: WebSocketRequestEvents | WebSocketResponseEvents;
-  jwtToken?: string;
-  error?: string;
-}
+export type WSErrorResponseMessage = { error: string };
+export type WSResponseMessage<Payload> = Payload | WSErrorResponseMessage;

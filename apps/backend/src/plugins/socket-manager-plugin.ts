@@ -1,7 +1,7 @@
 import fastifyPlugin from 'fastify-plugin';
 import { FastifyPluginAsync } from 'fastify';
 import { SocketManager } from '../services/socket-manager';
-import { Socket } from 'socket.io';
+import type { AppSocket } from '../types/app-socket-io-types';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -9,11 +9,11 @@ declare module 'fastify' {
   }
 
   interface FastifyRequest {
-    ioSocket: Socket | undefined;
+    ioSocket: AppSocket | undefined;
   }
 }
 
-export const socketPlugin: FastifyPluginAsync = fastifyPlugin(async (server) => {
+export const socketManagerPlugin: FastifyPluginAsync = fastifyPlugin(async (server) => {
   const socketManager = new SocketManager();
 
   server.decorate('socketManager', socketManager);

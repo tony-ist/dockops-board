@@ -6,8 +6,8 @@ import { dbContainerIdSchema } from './model-schema';
 import {
   containerAllResponseSchema,
   containerCreateRequestSchema,
-  containerCreateResponseSchema,
-  containerLogsQuerySchema
+  containerLogsQuerySchema,
+  containerWithMessageSchema,
 } from './container-schema';
 
 export const getContainerAllSchema = {
@@ -34,7 +34,7 @@ export const getContainerSchema = {
 export const postContainerCreateSchema = {
   body: containerCreateRequestSchema,
   response: {
-    200: containerCreateResponseSchema,
+    200: containerWithMessageSchema,
   },
 } as const;
 

@@ -8,6 +8,7 @@ It also allows you to monitor these services, manipulate them, see logs, execute
 
 ## Requirements
 
+- Node 18.14.0 via [nvm](https://github.com/nvm-sh/nvm)
 - Java 11.0.17
 - Preferably Ubuntu Linux 22.04 or macOS Ventura, WSL2 works too but worse
 
@@ -16,15 +17,18 @@ It also allows you to monitor these services, manipulate them, see logs, execute
 Install dependencies
 
 ```bash
+nvm install 18.14.0
 sudo apt install default-jre
 ```
 
 Edit configs
 
 ```bash
-cp apps/frontend/.env.template apps/frontend/.env.local # And edit the .env file
-cp apps/backend/.env.template apps/backend/.env.local # And edit the .env file
+cp apps/frontend/.env.template apps/frontend/.env.local
+cp apps/backend/.env.template apps/backend/.env.local
 ```
+
+And edit the `.env.local` files
 
 Install dependencies
 

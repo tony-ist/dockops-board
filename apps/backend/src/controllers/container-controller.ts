@@ -1,36 +1,21 @@
 import {
   Container,
-  DbContainerId,
+  ContainerWithMessageSchema,
+  DbContainerIdString,
   GetContainerAllResponse,
   getContainerAllSchema,
   GetContainerLogsRequest,
   getContainerLogsSchema,
   getContainerSchema,
   Message,
-  postContainerAttachSchema,
   postContainerCreateSchema,
   postContainerStartSchema,
   postContainerStopSchema,
   PostCreateContainerRequest,
-  PostCreateContainerResponse,
   WebSocketResponseEvents,
 } from 'common-src';
 import { FastifyInstance } from 'fastify';
-import { Container as PrismaContainer } from '@prisma/client';
-import { BuildManager } from '../services/build-manager';
-
-function serializePrismaContainer(buildManager: BuildManager, prismaContainer: PrismaContainer): Container {
-  return {
-    id: prismaContainer.id,
-    image: prismaContainer.image ?? undefined,
-    dockerId: prismaContainer.dockerId ?? undefined,
-    dockerState: prismaContainer.dockerState ?? undefined,
-    dockerName: prismaContainer.dockerName,
-    buildStatus: buildManager.get(prismaContainer.id),
-    createdAt: prismaContainer.createdAt.toString(),
-    updatedAt: prismaContainer.updatedAt.toString(),
-  };
-}
+import { serializeDbContainer } from '../serializers/container-serializers';
 
 // Error "Target allows only 0 element(s) but source may have more." means you forgot "references" for type in common-src/types/model-types.ts
 // https://github.com/ThomasAribart/json-schema-to-ts#references
@@ -44,13 +29,13 @@ export async function containerController(fastify: FastifyInstance) {
       const { prisma, buildManager } = fastify;
       const containers = await prisma.container.findMany();
       const result: GetContainerAllResponse = containers.map((container) =>
-        serializePrismaContainer(buildManager, container)
+        serializeDbContainer(buildManager, container)
       );
       reply.send(result);
     },
   });
 
-  fastify.route<{ Params: DbContainerId; Reply: Container }>({
+  fastify.route<{ Params: DbContainerIdString; Reply: Container }>({
     method: 'GET',
     url: '/:dbContainerId',
     schema: getContainerSchema,
@@ -59,12 +44,12 @@ export async function containerController(fastify: FastifyInstance) {
       const { dbContainerId } = request.params;
       const { prisma, buildManager } = fastify;
       const container = await prisma.container.findFirstOrThrow({ where: { id: parseInt(dbContainerId) } });
-      const serializedContainer = serializePrismaContainer(buildManager, container);
+      const serializedContainer = serializeDbContainer(buildManager, container);
       reply.send(serializedContainer);
     },
   });
 
-  fastify.route<{ Body: PostCreateContainerRequest; Reply: PostCreateContainerResponse }>({
+  fastify.route<{ Body: PostCreateContainerRequest; Reply: ContainerWithMessageSchema }>({
     method: 'POST',
     url: '/create',
     schema: postContainerCreateSchema,
@@ -107,8 +92,7 @@ export async function containerController(fastify: FastifyInstance) {
         })
         .catch((error) => {
           buildManager.set(container.id, 'error');
-          socket?.emit('message', {
-            event: WebSocketResponseEvents.CreateContainerResponse,
+          socket?.emit(WebSocketResponseEvents.CreateContainerResponse, {
             error: error.message,
           });
           fastify.log.error(error);
@@ -116,58 +100,50 @@ export async function containerController(fastify: FastifyInstance) {
 
       reply.send({
         message: 'Fetching sources, building and creating a container. Sending results via websocket...',
-        container: serializePrismaContainer(buildManager, container),
+        container: serializeDbContainer(buildManager, container),
       });
     },
   });
 
-  fastify.route<{ Params: DbContainerId; Reply: Message }>({
+  fastify.route<{ Params: DbContainerIdString; Reply: Message }>({
     method: 'POST',
     url: '/:dbContainerId/start',
     schema: postContainerStartSchema,
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
-      const { dbContainerId } = request.params;
-      const result = await fastify.dockerService.startContainer({ dbContainerId: parseInt(dbContainerId) });
+      const { dbContainerId: dbContainerIdString } = request.params;
+      const dbContainerId = parseInt(dbContainerIdString);
+      const result = await fastify.dockerService.startContainer({ dbContainerId });
       reply.send({
-        message: `Container with id "${dbContainerId}" started. Additional info: "${JSON.stringify(result, null, 2)}".`,
+        message: `Container with id "${dbContainerIdString}" started. Additional info: "${JSON.stringify(
+          result,
+          null,
+          2
+        )}".`,
       });
     },
   });
 
-  fastify.route<{ Params: DbContainerId; Reply: Message }>({
+  fastify.route<{ Params: DbContainerIdString; Reply: Message }>({
     method: 'POST',
     url: '/:dbContainerId/stop',
     schema: postContainerStopSchema,
     onRequest: [fastify.authenticate],
     handler: async (request, reply) => {
-      const { dbContainerId } = request.params;
-      const result = await fastify.dockerService.stopContainer({ dbContainerId: parseInt(dbContainerId) });
+      const { dbContainerId: dbContainerIdString } = request.params;
+      const dbContainerId = parseInt(dbContainerIdString);
+      const result = await fastify.dockerService.stopContainer({ dbContainerId });
       reply.send({
-        message: `Container with id "${dbContainerId}" stopped. Additional info: "${JSON.stringify(result, null, 2)}".`,
+        message: `Container with id "${dbContainerIdString}" stopped. Additional info: "${JSON.stringify(
+          result,
+          null,
+          2
+        )}".`,
       });
     },
   });
 
-  fastify.route<{ Params: DbContainerId; Reply: Message }>({
-    method: 'POST',
-    url: '/:dbContainerId/attach',
-    schema: postContainerAttachSchema,
-    onRequest: [fastify.authenticate],
-    handler: async (request, reply) => {
-      const { dbContainerId } = request.params;
-      const socket = request.ioSocket;
-      const runStream = await fastify.dockerService.attachContainer({ dbContainerId: parseInt(dbContainerId) });
-      runStream.on('data', (data) => {
-        const message = data.toString();
-        socket?.emit('message', message);
-        fastify.log.info(message);
-      });
-      reply.send({ message: 'Sending container logs via websocket.' });
-    },
-  });
-
-  fastify.route<{ Params: DbContainerId; Querystring: GetContainerLogsRequest; Reply: Message }>({
+  fastify.route<{ Params: DbContainerIdString; Querystring: GetContainerLogsRequest; Reply: Message }>({
     method: 'GET',
     url: '/:dbContainerId/logs',
     schema: getContainerLogsSchema,
@@ -176,14 +152,17 @@ export async function containerController(fastify: FastifyInstance) {
       const { dbContainerId } = request.params;
       const { tail } = request.query;
       const socket = request.ioSocket;
-      const logsStream = await fastify.dockerService.containerLogs({
+      const logsStream = await fastify.dockerService.listenContainerLogs({
         dbContainerId: parseInt(dbContainerId),
         tail,
       });
       logsStream.on('data', (data) => {
-        const message = data.toString();
-        socket?.emit('message', message);
-        fastify.log.info(message);
+        const text: string = data.toString();
+        socket?.emit(WebSocketResponseEvents.ContainerLogsResponse, {
+          dbContainerId: parseInt(dbContainerId),
+          text: text,
+        });
+        fastify.log.info(text);
       });
       reply.send({ message: 'Sending container logs via websocket.' });
     },

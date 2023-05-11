@@ -25,13 +25,15 @@ export const containerSchema = {
     id: { type: 'number' },
     image: { type: 'string' },
     dockerId: { type: 'string' },
+    // TODO: Rename "name"
     dockerName: { type: 'string' },
-    dockerState: { type: 'string' },
+    dockerState: { enum: ['created', 'restarting', 'running', 'removing', 'paused', 'exited', 'dead'] },
     createdAt: { type: 'string' },
     updatedAt: { type: 'string' },
     buildStatus: { type: 'string' },
+    doesExist: { type: 'boolean' },
   },
-  required: ['id', 'dockerName'],
+  required: ['id', 'dockerName', 'doesExist'],
   additionalProperties: false,
 } as const;
 
@@ -60,6 +62,18 @@ export const logSchema = {
 export const dbContainerIdSchema = {
   $id: 'dockops-board/dbContainerId',
   title: 'DbContainerId',
+  type: 'object',
+  properties: {
+    dbContainerId: { type: 'number' },
+  },
+  required: ['dbContainerId'],
+  additionalProperties: false,
+} as const;
+
+// TODO: Make this schema intermediary instead
+export const dbContainerIdStringSchema = {
+  $id: 'dockops-board/dbContainerIdString',
+  title: 'DbContainerIdString',
   type: 'object',
   properties: {
     dbContainerId: { type: 'string' },

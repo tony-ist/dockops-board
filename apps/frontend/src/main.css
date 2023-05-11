@@ -58,3 +58,7 @@
   font-family: 'JetBrainsMono-ExtraLight';
   src: url('/public/fonts/JetBrainsMono-ExtraLight.ttf') format('truetype');
 }
+
+body {
+  margin: 0;
+}

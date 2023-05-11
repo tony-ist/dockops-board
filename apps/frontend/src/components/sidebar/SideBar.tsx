@@ -25,6 +25,7 @@ interface PageType {
 interface DrawerItemProps {
   isOpen: boolean;
   page: PageType;
+  onClick: () => void;
 }
 
 const pages: Array<PageType> = [
@@ -52,7 +53,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 const DrawerItem = (props: DrawerItemProps) => {
   return (
     <ListItem disablePadding sx={{ display: 'block' }}>
-      <LinkStyled to={props.page.href}>
+      <LinkStyled to={props.page.href} onClick={props.onClick}>
         <ListItemButton
           sx={{
             minHeight: 48,
@@ -81,6 +82,7 @@ export const SideBar = () => {
   const isOpen = useAppSelector((state) => state.sideBar.isOpen);
   const closedWidth = isSideBarTemporary ? 0 : `calc(${theme.spacing(7)} + 1px)`;
   const sxProps: CSSObject = {
+    overflowY: 'clip',
     width: isOpen ? SIDEBAR_WIDTH : closedWidth,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -92,7 +94,13 @@ export const SideBar = () => {
     if (isSideBarTemporary) {
       dispatch(sideBarActions.close());
     }
-  }, [isSideBarTemporary]);
+  }, [dispatch, isSideBarTemporary]);
+
+  function onDrawerItemClick() {
+    if (isSideBarTemporary) {
+      dispatch(sideBarActions.close());
+    }
+  }
 
   return (
     <Drawer
@@ -116,7 +124,7 @@ export const SideBar = () => {
       <Divider />
       <List>
         {pages.map((page, index) => (
-          <DrawerItem key={index.toString()} isOpen={isOpen} page={page} />
+          <DrawerItem key={index.toString()} isOpen={isOpen} page={page} onClick={onDrawerItemClick} />
         ))}
       </List>
       <Divider />

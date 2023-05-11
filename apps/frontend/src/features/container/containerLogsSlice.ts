@@ -1,11 +1,5 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  Log,
-  WSBuildImageLogsResponseMessage,
-  WSContainerLogsResponseMessage,
-  WSContainerLogsSubscribeRequestPayload,
-} from 'common-src';
-import { createContainerActions } from './createContainerSlice';
+import { Log, WSContainerLogsResponsePayload, WSContainerLogsSubscribeRequestPayload } from 'common-src';
 
 export interface ContainerLogsState {
   messages: Log[];
@@ -23,18 +17,10 @@ const containerLogsSlice = createSlice({
   name: 'containerLogs',
   initialState,
   reducers: {
-    wsReceiveContainerLogs: (state, action: PayloadAction<WSContainerLogsResponseMessage>) => {
-      state.messages.push(action.payload);
-    },
-    wsReceiveBuildLogs: (state, action: PayloadAction<WSBuildImageLogsResponseMessage>) => {
+    wsReceive: (state, action: PayloadAction<WSContainerLogsResponsePayload>) => {
       state.messages.push(action.payload);
     },
     clear: () => initialState,
-  },
-  extraReducers(builder) {
-    builder.addCase(createContainerActions.wsError, (state, action) => {
-      state.messages.push({ text: action.payload.error as string });
-    });
   },
 });
 

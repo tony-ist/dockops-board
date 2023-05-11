@@ -1,5 +1,6 @@
 export * from './types/model-types';
 export * from './types/container-types';
+export * from './types/socket-io-types';
 export * from './types/websocket-types';
 export * from './types/login-types';
 export * from './types/user-types';

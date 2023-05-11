@@ -13,10 +13,11 @@ function getLoggerOptions(environment: string) {
           ignore: 'pid,hostname',
         },
       },
+      level: 'debug',
     };
   } else {
     return true;
   }
 }
 
-export const server = Fastify({ logger: getLoggerOptions(config.nodeEnv) });
+export const fastify = Fastify({ logger: getLoggerOptions(config.nodeEnv) });

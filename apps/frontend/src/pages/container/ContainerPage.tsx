@@ -1,28 +1,27 @@
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { containersSelectors } from '../../features/container/containersSlice';
-import { store } from '../../store/store';
 import React, { useEffect } from 'react';
 import { fetchContainerByIdThunk } from '../../features/container/getContainerSlice';
 import { Box, Button } from '@mui/material';
 import { LogsViewer } from '../../components/logs-viewer/LogsViewer';
-import { startContainerThunk } from '../../features/container/startContainerSlice';
-import { stopContainerThunk } from '../../features/container/stopContainerSlice';
 import { containerLogsActions } from '../../features/container/containerLogsSlice';
+import { ContainerStatusIndicator } from '../../components/status-indicator/ContainerStatusIndicator';
+import styles from './ContainerPage.module.css';
+import { startContainerThunk, stopContainerThunk } from '../../features/container/updateContainerSlice';
 
 export const ContainerPage = () => {
   const params = useParams<{ id: string }>();
-  const dbContainerId = params.id as string;
+  const dbContainerId = parseInt(params.id as string);
   const dispatch = useAppDispatch();
-  const container = containersSelectors.selectById(store.getState(), dbContainerId);
-  const status = useAppSelector((state) => state.getContainer.status);
-  const logs = useAppSelector((state) => state.containerLogs.messages);
+  const container = useAppSelector((state) => containersSelectors.selectById(state, dbContainerId));
+  const containerLogs = useAppSelector((state) => state.containerLogs.messages);
+  const updateError = useAppSelector((state) => state.updateContainer.error);
 
   useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchContainerByIdThunk({ dbContainerId }));
-    }
-  }, [dispatch, status]);
+    dispatch(containerLogsActions.clear());
+    dispatch(fetchContainerByIdThunk({ dbContainerId }));
+  }, [dispatch, dbContainerId]);
 
   if (!container) {
     return <div>Loading...</div>;
@@ -58,7 +57,9 @@ export const ContainerPage = () => {
       <Box>{container.dockerId}</Box>
       <Box>{container.dockerState}</Box>
       <Box>{container.createdAt}</Box>
-      {logs.length > 0 && <LogsViewer logs={logs} />}
+      <ContainerStatusIndicator container={container} />
+      {updateError && <Box className={styles.error}>Update container error {updateError}</Box>}
+      {containerLogs.length > 0 && <LogsViewer logs={containerLogs} />}
     </>
   );
 };
