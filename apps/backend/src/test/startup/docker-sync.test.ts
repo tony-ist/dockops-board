@@ -109,8 +109,6 @@ describe('docker-sync', () => {
 
       fastify.docker = dockerodeMock as any;
 
-      // await prisma.container.create({ data: { dockerName: 'test2', dockerId: 'czx321' } })
-
       await dockerSync(fastify);
 
       const containers = await prisma.container.findMany();
