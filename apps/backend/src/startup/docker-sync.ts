@@ -39,7 +39,7 @@ function doesDockerContainerExistsFor(dbContainer: DbContainer, infos: Container
 
 async function markNonExisting(fastify: FastifyInstance, dbContainer: DbContainer) {
   const { prisma } = fastify;
-  prisma.container.update({
+  return prisma.container.update({
     where: { id: dbContainer.id },
     data: { doesExist: false },
   });
