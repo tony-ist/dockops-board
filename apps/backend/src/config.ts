@@ -10,10 +10,10 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
 }
 
 if (process.env.TEMPORARY_DIRECTORY_PATH === undefined) {
-  throw new Error('Set TEMPORARY_DIRECTORY_PATH environment variable before running dockops-board.')
+  throw new Error('Set TEMPORARY_DIRECTORY_PATH environment variable before running dockops-board.');
 }
 
-export const config = ({
+export const config = {
   dockerSockPath: process.env.DOCKER_SOCK_PATH ?? '/var/run/docker.sock',
   port: parseInt(process.env.PORT ?? '3000'),
   nodeEnv: process.env.NODE_ENV,
@@ -24,4 +24,4 @@ export const config = ({
   secret: process.env.SECRET,
   bcryptSaltWorkFactor: parseInt(process.env.BCRYPT_SALT_WORK_FACTOR ?? '12'),
   jwtExpiration: process.env.JWT_EXPIRATION ?? '30d',
-});
+};

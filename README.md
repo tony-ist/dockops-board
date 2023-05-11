@@ -64,6 +64,20 @@ npm run db:migrate
 npm run build
 ```
 
+## Backend Tests
+
+When running first time you will need to create empty test db:
+
+```bash
+npm run db:test:push -w=apps/backend
+```
+
+Then you only need to run:
+
+```bash
+npm run test -w=apps/backend
+```
+
 ## Design document
 
 https://docs.google.com/document/d/1djPd8sRh4rnxgAiJo4fiCWoEEfWvoEshMunfDMTiLag/edit?usp=sharing

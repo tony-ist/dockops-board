@@ -45,7 +45,7 @@ async function markNonExisting(fastify: FastifyInstance, dbContainer: DbContaine
   });
 }
 
-async function syncContainer(fastify: FastifyInstance, info: ContainerInfo) {
+export async function syncContainer(fastify: FastifyInstance, info: ContainerInfo) {
   if (info.Names.length === 0) {
     fastify.log.error(`Found a container without a name while syncing: "${JSON.stringify(info, null, 2)}".`);
   }
