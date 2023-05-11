@@ -1,8 +1,8 @@
 .newButtonContainer {
-    display: flex;
-    justify-content: right;
+  display: flex;
+  justify-content: right;
 }
 
 .newButtonContainer > button {
-    margin-left: 10px;
+  margin-left: 10px;
 }
