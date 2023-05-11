@@ -54,3 +54,7 @@
   font-family: 'RobotoMono-ThinItalic';
   src: url('/public/fonts/RobotoMono-ThinItalic.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'JetBrainsMono-ExtraLight';
+  src: url('/public/fonts/JetBrainsMono-ExtraLight.ttf') format('truetype');
+}

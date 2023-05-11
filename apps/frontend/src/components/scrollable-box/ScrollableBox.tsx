@@ -9,6 +9,7 @@ export const ScrollableBox = (props: BoxProps) => {
     <Box
       {...props}
       sx={{
+        paddingRight: '10px',
         overflowY: 'auto',
         '&::-webkit-scrollbar': {
           width: '7px',

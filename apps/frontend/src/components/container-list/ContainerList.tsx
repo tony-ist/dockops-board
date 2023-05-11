@@ -121,7 +121,6 @@ export const ContainerList = () => {
     <ScrollableBox
       sx={{
         height: 'calc(100vh - 165px)',
-        paddingRight: 2,
         marginTop: 2,
       }}
     >

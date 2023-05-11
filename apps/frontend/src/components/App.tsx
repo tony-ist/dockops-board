@@ -6,7 +6,7 @@ import { webSocketActions } from '../features/web-socket/webSocketSlice';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { LoginPage } from '../pages/login/LoginPage';
 import { PrivateRoute } from './private-route/PrivateRoute';
-import { CreateContainerPage } from '../pages/create-contaner/CreateContainer';
+import { CreateContainerPage } from '../pages/create-contaner/CreateContainerPage';
 import { ContainerPage } from '../pages/container/ContainerPage';
 import { DashboardLayout } from '../layouts/dashboard/dashboard';
 
@@ -33,8 +33,7 @@ const appTheme = createTheme({
       fontWeight: 500,
     },
     button: {
-      fontFamily: '"Segoe UI"',
-      fontWeight: 600,
+      fontFamily: 'RobotoMono-SemiBold',
     },
   },
 });
