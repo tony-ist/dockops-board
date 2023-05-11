@@ -31,8 +31,7 @@ const appTheme = createTheme({
       fontWeight: 500,
     },
     button: {
-      fontFamily: '"Segoe UI"',
-      fontWeight: 600,
+      fontFamily: 'RobotoMono-SemiBold',
     },
   },
   components: {
