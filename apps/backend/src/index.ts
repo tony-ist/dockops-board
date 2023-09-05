@@ -84,8 +84,8 @@ async function run() {
   registerSocketIOMiddleware(fastify);
   fastify.io.on('connection', (socket) => webSocketConnectionHandler(fastify, socket));
 
-  await listenDockerEvents(fastify);
   await dockerSync(fastify);
+  await listenDockerEvents(fastify);
 
   await fastify.listen({ host: '0.0.0.0', port: config.port });
 }

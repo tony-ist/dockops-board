@@ -59,7 +59,7 @@ npm run dev
 ## Creating migration or applying migrations
 
 ```bash
-npm run db:migrate
+npm run db:migrate -w=apps/backend
 ```
 
 ## Build

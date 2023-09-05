@@ -34,6 +34,6 @@ model PortForward {
   updatedAt     DateTime  @updatedAt
   hostPort      String
   containerPort String
-  container     Container @relation(fields: [containerId], references: [id])
-  containerId   Int
+  container     Container @relation(fields: [dbContainerId], references: [id])
+  dbContainerId   Int
 }

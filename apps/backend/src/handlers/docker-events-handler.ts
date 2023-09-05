@@ -13,6 +13,7 @@ const dockerStatesByEventAction: { [key in DockerEventAction]: DockerState | und
 };
 
 export async function listenDockerEvents(fastify: FastifyInstance) {
+  fastify.log.info('Registering listener for docker events...');
   const eventStream = await fastify.docker.getEvents({ filters: { type: ['container'] } });
 
   eventStream.on('data', async (buffer: Buffer) => {
@@ -43,4 +44,6 @@ export async function listenDockerEvents(fastify: FastifyInstance) {
       fastify.log.error(error);
     }
   });
+
+  fastify.log.info('Successfully registered listener.');
 }
