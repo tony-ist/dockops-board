@@ -59,6 +59,22 @@ export const logSchema = {
   additionalProperties: false,
 } as const;
 
+export const portForwardSchema = {
+  $id: 'dockops-board/portForward',
+  title: 'PortForward',
+  type: 'object',
+  properties: {
+    id: { type: 'number' },
+    dbContainerId: { type: 'number' },
+    hostPort: { type: 'string' },
+    containerPort: { type: 'string' },
+    createdAt: { type: 'string' },
+    updatedAt: { type: 'string' },
+  },
+  required: ['id', 'dbContainerId', 'hostPort', 'containerPort'],
+  additionalProperties: false,
+} as const;
+
 export const dbContainerIdSchema = {
   $id: 'dockops-board/dbContainerId',
   title: 'DbContainerId',

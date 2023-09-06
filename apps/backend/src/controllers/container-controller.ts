@@ -17,8 +17,9 @@ import {
 import { FastifyInstance } from 'fastify';
 import { serializeDbContainer } from '../serializers/container-serializers';
 
-// Error "Target allows only 0 element(s) but source may have more." means you forgot "references" for type in common-src/types/model-types.ts
+// N.B. Error "Target allows only 0 element(s) but source may have more." means you forgot "references" for type in common-src/types/model-types.ts
 // https://github.com/ThomasAribart/json-schema-to-ts#references
+// N.B. If you get empty response from similar controllers, make sure you include all used schemas in index.ts via fastify.addSchema function
 export async function containerController(fastify: FastifyInstance) {
   fastify.route<{ Reply: GetContainerAllResponse }>({
     method: 'GET',

@@ -16,6 +16,8 @@ import {
   dbContainerIdSchema,
   logSchema,
   messageSchema,
+  portForwardSchema,
+  portForwardsResponseSchema,
   userSchema,
 } from 'common-src';
 import { fastifyCookie } from '@fastify/cookie';
@@ -28,6 +30,7 @@ import { socketIoPlugin } from './plugins/socket-io-plugin';
 import { listenDockerEvents } from './handlers/docker-events-handler';
 import { registerSocketIOMiddleware } from './middleware/socket-io-middleware';
 import { dockerSync } from './startup/docker-sync';
+import { portForwardController } from './controllers/port-forward-controller';
 
 async function run() {
   await fastify.register(fastifySwagger, {
@@ -53,7 +56,7 @@ async function run() {
     });
   }
 
-  if (config.serveStatic === 'TRUE') {
+  if (config.shouldServeStatic) {
     await fastify.register(fastifyStatic, {
       root: path.join(__dirname, '..', 'dist', 'public'),
     });
@@ -73,6 +76,7 @@ async function run() {
   await fastify.register(loginController, { prefix: '/v1/login' });
   await fastify.register(userController, { prefix: '/v1/user' });
   await fastify.register(containerController, { prefix: '/v1/container' });
+  await fastify.register(portForwardController, { prefix: '/v1/port-forward' });
 
   fastify.addSchema(userSchema);
   fastify.addSchema(containerSchema);
@@ -80,12 +84,17 @@ async function run() {
   fastify.addSchema(logSchema);
   fastify.addSchema(containerAllResponseSchema);
   fastify.addSchema(dbContainerIdSchema);
+  fastify.addSchema(portForwardSchema);
+  fastify.addSchema(portForwardsResponseSchema);
 
   registerSocketIOMiddleware(fastify);
   fastify.io.on('connection', (socket) => webSocketConnectionHandler(fastify, socket));
 
   await dockerSync(fastify);
-  await listenDockerEvents(fastify);
+
+  if (config.shouldListenDockerEvents) {
+    await listenDockerEvents(fastify);
+  }
 
   await fastify.listen({ host: '0.0.0.0', port: config.port });
 }
