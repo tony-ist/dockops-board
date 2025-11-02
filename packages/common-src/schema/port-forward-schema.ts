@@ -14,6 +14,7 @@ export const portForwardsQuerySchema = {
   properties: {
     dbContainerId: { type: 'number' },
   },
+  required: ['dbContainerId'],
   additionalProperties: false,
 } as const;
 

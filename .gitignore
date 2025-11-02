@@ -119,3 +119,5 @@ apps/frontend/openapitools.json
 
 # vite
 apps/frontend/vite.config.ts.*
+
+.repo-brain/
